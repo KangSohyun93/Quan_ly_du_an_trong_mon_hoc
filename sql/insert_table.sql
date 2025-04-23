@@ -1,3 +1,4 @@
+
 -- Chèn dữ liệu vào bảng Users
 INSERT INTO Users (username, email, password, role, is_active, avatar) VALUES
 -- 30 sinh viên
@@ -40,24 +41,24 @@ INSERT INTO Users (username, email, password, role, is_active, avatar) VALUES
 
 -- Chèn dữ liệu vào bảng Classes
 INSERT INTO Classes (class_id, class_name, instructor_id, semester) VALUES
-(100001, 'Công nghệ phần mềm', 31, '2025.1'), -- ProfSmith
-(100002, 'Lập trình web', 32, '2025.1'), -- ProfJones
-(100003, 'Cấu trúc dữ liệu', 33, '2025.2'), -- ProfBrown
-(100004, 'Hệ điều hành', 31, '2025.2'), -- ProfSmith
-(100005, 'Trí tuệ nhân tạo', 32, '2025.2'); -- ProfJones
+(100001, 'Công nghệ phần mềm', 31, '2025.1'), -- ProfSmith phụ trách lớp 'Công nghệ phần mềm', học kỳ 2025.1.
+(100002, 'Lập trình web', 32, '2025.1'), -- ProfJones phụ trách lớp 'Lập trình web', học kỳ 2025.1.
+(100003, 'Cấu trúc dữ liệu', 33, '2025.2'), -- ProfBrown phụ trách lớp 'Cấu trúc dữ liệu', học kỳ 2025.2.
+(100004, 'Hệ điều hành', 31, '2025.2'), -- ProfSmith phụ trách lớp 'Hệ điều hành', học kỳ 2025.2.
+(100005, 'Trí tuệ nhân tạo', 32, '2025.2'); -- ProfJones phụ trách lớp 'Trí tuệ nhân tạo', học kỳ 2025.2.
 
 -- Chèn dữ liệu vào bảng Groups
 INSERT INTO Groups (group_name, class_id, leader_id) VALUES
-('Nhóm 1', 100001, 1),  -- Student1
-('Nhóm 2', 100001, 4),  -- Student4
-('Nhóm 3', 100002, 7),  -- Student7
-('Nhóm 4', 100002, 10), -- Student10
-('Nhóm 5', 100003, 13), -- Student13
-('Nhóm 6', 100003, 16), -- Student16
-('Nhóm 7', 100004, 19), -- Student19
-('Nhóm 8', 100004, 22), -- Student22
-('Nhóm 9', 100005, 25), -- Student25
-('Nhóm 10', 100005, 28); -- Student28
+('Nhóm 1', 100001, 1),  -- Nhóm 1 thuộc lớp 100001, trưởng nhóm là Student1.
+('Nhóm 2', 100001, 4),  -- Nhóm 2 thuộc lớp 100001, trưởng nhóm là Student4.
+('Nhóm 3', 100002, 7),  -- Nhóm 3 thuộc lớp 100002, trưởng nhóm là Student7.
+('Nhóm 4', 100002, 10), -- Nhóm 4 thuộc lớp 100002, trưởng nhóm là Student10.
+('Nhóm 5', 100003, 13), -- Nhóm 5 thuộc lớp 100003, trưởng nhóm là Student13.
+('Nhóm 6', 100003, 16), -- Nhóm 6 thuộc lớp 100003, trưởng nhóm là Student16.
+('Nhóm 7', 100004, 19), -- Nhóm 7 thuộc lớp 100004, trưởng nhóm là Student19.
+('Nhóm 8', 100004, 22), -- Nhóm 8 thuộc lớp 100004, trưởng nhóm là Student22.
+('Nhóm 9', 100005, 25), -- Nhóm 9 thuộc lớp 100005, trưởng nhóm là Student25.
+('Nhóm 10', 100005, 28); -- Nhóm 10 thuộc lớp 100005, trưởng nhóm là Student28.
 
 -- Chèn dữ liệu vào bảng GroupMembers
 INSERT INTO GroupMembers (group_id, user_id) VALUES
@@ -96,7 +97,7 @@ INSERT INTO Projects (project_name, class_id, description, status, github_repo_u
 ('Chatbot thông minh', 100005, 'Xây dựng chatbot thông minh', 'Ongoing', 'https://github.com/group10/smart-chatbot');
 
 -- Chèn dữ liệu vào bảng Tasks
--- Loại bỏ trạng thái 'Cancelled' và thay thế bằng 'To-Do'
+-- Đã thay trạng thái 'Cancelled' thành 'To-Do' để phù hợp với định nghĩa ENUM
 INSERT INTO Tasks (project_id, title, description, assigned_to, status, due_date, completed_at, progress_percentage) VALUES
 -- Dự án 1: Hệ thống quản lý thư viện (Nhóm 1)
 (1, 'Thiết kế giao diện', 'Thiết kế giao diện người dùng', 1, 'Done', '2025-04-10 23:59:00', '2025-04-09 10:00:00', 100),
