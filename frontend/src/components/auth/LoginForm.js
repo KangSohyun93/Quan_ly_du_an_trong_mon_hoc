@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { loginUser } from '../../services/auth-service';
+import { useNavigate } from 'react-router-dom';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import googleLogo from '../../assets/LoginImage/google_logo.png';
 import illustationPhoto from '../../assets/LoginImage/loginphoto1.png';
-// import basil_eye from '../../assets/image/basil_eye-closed-solid.png';
-import './LoginForm.css'; // Nếu bạn dùng CSS riêng
-
+import './LoginForm.css';
 
 function LoginForm() {
   const [email, setEmail] = useState('');
@@ -13,6 +13,8 @@ function LoginForm() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -21,9 +23,17 @@ function LoginForm() {
     try {
       const userData = await loginUser({ email, password });
       console.log('Đăng nhập thành công:', userData);
-      // TODO: Lưu token, chuyển trang, v.v.
+
+      if (rememberMe) {
+        localStorage.setItem('token', userData.token);
+      } else {
+        sessionStorage.setItem('token', userData.token);
+      }
+
+      // Chuyển hướng sau khi đăng nhập
+      navigate('/dashboard');
     } catch (err) {
-      setError(err.message);
+      setError(err.message || 'Login failed');
     } finally {
       setLoading(false);
     }
@@ -38,38 +48,41 @@ function LoginForm() {
           <h1>Login</h1>
           <p>Hi, Welcome 👋</p>
 
-          <label>Email</label>
+          <label htmlFor="email">Email</label>
           <input
+            id="email"
             type="email"
-            placeholder="Enter your email id"
+            placeholder="Enter your email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-          
-          <label>Password</label>
+
+          <label htmlFor="password">Password</label>
           <div className="password-wrapper">
             <input
+              id="password"
               type={showPassword ? 'text' : 'password'}
               placeholder="Enter your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
             />
-            <span
-              className="toggle-password"
-              onClick={() => setShowPassword(!showPassword)}
-            >
-              {showPassword ? '🙈' : '👁️'}
+            <span className="toggle-password" onClick={() => setShowPassword(!showPassword)}>
+              {showPassword ? <FaEye /> : <FaEyeSlash />}
             </span>
-         </div>
+          </div>
 
           <div className="form-options">
-          <label class="remember-label">
-              <input type="checkbox" />
-                Remember Me
+            <label className="remember-label">
+              <input
+                type="checkbox"
+                checked={rememberMe}
+                onChange={() => setRememberMe(!rememberMe)}
+              />
+              Remember Me
             </label>
-            <a href="#" class="forgot-link">Forgot Password?</a>
+            <a href="#" className="forgot-link">Forgot Password?</a>
           </div>
 
           {error && <p className="error">{error}</p>}
@@ -85,7 +98,7 @@ function LoginForm() {
           <div className="divider">or Login with Google</div>
 
           <button type="button" className="google-button">
-          <img src={googleLogo} alt="Google" /> Login with Google
+            <img src={googleLogo} alt="Google" /> Login with Google
           </button>
         </form>
       </div>
