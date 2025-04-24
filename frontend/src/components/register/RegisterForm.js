@@ -64,7 +64,7 @@ export const RegisterForm = () => {
       <Container>
         <Row>
           <Col sm={6} className="d-flex flex-column">
-            <h2 className="logo">Name of website</h2>
+            <h2 className="logo">WorkTrace</h2>
             <Form className="register-form" onSubmit={handleSubmit}>
               <h1 className="mb-4">Sign Up</h1>
 
@@ -105,7 +105,6 @@ export const RegisterForm = () => {
                 >
                   <option value="">Permissions</option>
                   <option value="user">User</option>
-                  <option value="admin">Admin</option>
                   <option value="teacher">Teacher</option>
                 </Form.Select>
               </Form.Group>

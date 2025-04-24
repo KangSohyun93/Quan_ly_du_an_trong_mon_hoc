@@ -42,7 +42,7 @@ function LoginForm() {
   return (
     <div className="login-page">
       <div className="login-form-container">
-        <h2 className="logo">Name of website</h2>
+        <h2 className="logo">WorkTrace</h2>
 
         <form className="login-form" onSubmit={handleSubmit}>
           <h1>Login</h1>
