@@ -1,6 +1,19 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+}
+
+a {
+    text-decoration: none;
+}
+
 body {
     font-family: "Roboto", sans-serif;
     background-color: #ECEFF8;
+}
+
+button {
+    border: none;
 }
 
 h1 {
@@ -38,7 +51,7 @@ label {
 
 }
 
-.body_1{
+.body_1 {
     font-size: 13.33px;
 }
 
@@ -47,14 +60,14 @@ label {
     font-weight: 500;
 }
 
-.blueForActive{
+.blueForActive {
     color: #6AD2FF;
 }
 
-.blueForActive_Background{
+.blueForActive_Background {
     color: #F4F8FF;
 }
 
-.blueBackground{
+.blueBackground {
     color: #ECEFF8;
 }
