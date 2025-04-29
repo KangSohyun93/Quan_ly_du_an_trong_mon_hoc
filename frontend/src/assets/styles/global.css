@@ -1,0 +1,74 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+body {
+    font-family: "Roboto", sans-serif;
+    background-color: #ECEFF8;
+}
+
+h1 {
+    font-size: 26.67px;
+    font-weight: bold;
+}
+
+h2 {
+    font-size: 21.33px;
+    font-weight: bold;
+}
+
+h3 {
+    font-size: 16.67px;
+    font-weight: bold;
+}
+
+h4 {
+    font-size: 13.33px;
+    font-weight: normal;
+}
+
+sub {
+    font-size: 8px;
+
+}
+
+label {
+    font-size: 10.67px;
+    font-weight: bold;
+}
+
+.caption {
+    font-size: 8px;
+
+}
+
+.body_1{
+    font-size: 13.33px;
+}
+
+.body_2 {
+    font-size: 10.67px;
+    font-weight: 500;
+}
+
+.blueForActive{
+    color: #6AD2FF;
+}
+
+.blueForActive_Background{
+    color: #F4F8FF;
+}
+
+.blueBackground{
+    color: #ECEFF8;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 16px;
+  }
+
+.card-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(308px, 1fr));
+    gap: 16px;
+  }

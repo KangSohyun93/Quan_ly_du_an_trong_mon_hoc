@@ -1,0 +1,72 @@
+/* frontend/src/pages/GroupPage.css */
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+  }
+  
+  .page-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: #1a1a1a;
+  }
+  
+  .search-bar {
+    position: relative;
+    width: 300px;
+  }
+  
+  .search-bar input {
+    width: 100%;
+    padding: 8px 16px 8px 40px;
+    border: 1px solid #d9d9d9;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 400;
+    color: #1a1a1a;
+    background-color: #ffffff;
+  }
+  
+  .search-bar input::placeholder {
+    color: #999999;
+  }
+  
+  .search-bar::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 16px;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23999999'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'/%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
+  
+  .join-class-btn {
+    background-color: #6AD2FF;
+    color: #ffffff;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .join-class-btn:hover {
+    background-color: #5AB9E5;
+  }
+  
+  .app-container {
+    display: flex;
+    min-height: 100vh;
+  }
+  
+  .main-content {
+    flex: 1;
+    padding: 16px;
+  }

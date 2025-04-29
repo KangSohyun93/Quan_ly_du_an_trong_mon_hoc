@@ -1,0 +1,12 @@
+/* frontend/src/pages/Project.css */
+.project-page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Đảm bảo chiều cao đầy màn hình */
+  }
+  
+  .project-content {
+    flex: 1;
+    padding: 16px; /* Khớp với padding trong .container của global.css */
+    background-color: #ECEFF8; /* Dùng .blueBackground từ global.css */
+  }
