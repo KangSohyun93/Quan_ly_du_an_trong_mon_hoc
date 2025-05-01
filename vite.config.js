@@ -5,7 +5,7 @@ import path from 'path';
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
-  root: path.resolve(__dirname, 'frontend/pages'), // Chỉ định thư mục chứa index.html
+  root: path.resolve(__dirname, 'public'), // Chỉ định thư mục chứa index.html
   publicDir: path.resolve(__dirname, 'public'), // Chỉ định thư mục public
   server: {
     open: true, // Tự động mở trình duyệt khi server khởi động
