@@ -1,0 +1,11 @@
+.nav_container {
+  background-color: #ffffff !important;
+}
+.icon {
+  width: 16px;
+  height: 16px;
+}
+.nav-link.active {
+  color: #6ad2ff !important; /* Bootstrap blue */
+  font-weight: bold;
+}

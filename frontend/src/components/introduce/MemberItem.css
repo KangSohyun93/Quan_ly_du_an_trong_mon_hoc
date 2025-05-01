@@ -1,0 +1,43 @@
+.member-item {
+  display: flex; /* Sử dụng Flexbox để sắp xếp các phần tử con theo hàng */
+  align-items: center; /* Căn chỉnh các phần tử con theo chiều dọc ở giữa */
+  padding: 8px 16px; /* Thêm padding cho mỗi item */
+  border-bottom: 1px solid #eee; /* Thêm đường kẻ phân cách (tùy chọn) */
+}
+
+.avatar-container {
+  margin-right: 12px; /* Khoảng cách giữa avatar và thông tin chi tiết */
+}
+
+.avatar {
+  width: 32px; /* Kích thước avatar */
+  height: 32px;
+  border-radius: 50%; /* Tạo hình tròn cho avatar */
+  object-fit: cover; /* Đảm bảo ảnh không bị méo */
+}
+
+.member-details {
+  display: flex; /* Sử dụng Flexbox cho tên và vai trò */
+  flex-direction: column; /* Sắp xếp tên và vai trò theo cột */
+}
+
+.member-name {
+  font-weight: bold;
+  margin-bottom: 2px; /* Khoảng cách giữa tên và vai trò */
+}
+
+.member-role {
+  font-size: 0.9em;
+  color: #777;
+}
+
+/* Các style khác cho .members-list (nếu có) */
+.members-list ul {
+  list-style: none;
+  padding: 0;
+}
+
+.members-list h2 {
+  margin-bottom: 10px;
+}
+/*  */

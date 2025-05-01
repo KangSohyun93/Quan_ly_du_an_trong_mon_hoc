@@ -57,16 +57,16 @@ export const RegisterForm = () => {
                 <Form.Label>Role</Form.Label>
                 <Form.Select>
                   <option>Permissions</option>
-                  <option value="1">User</option>
+                  <option value="1">Student</option>
                   <option value="2">Admin</option>
-                  <option value="3">Teacher</option>
+                  <option value="3">Instructor</option>
                 </Form.Select>
               </Form.Group>
 
               {/* Password */}
               <Form.Group className="mb-3" controlId="Password">
                 <Form.Label>Password</Form.Label>
-                <InputGroup>
+                <div className="password-wrapper">
                   <Form.Control
                     type={showPassword ? "text" : "password"}
                     placeholder="Enter your password"
@@ -80,13 +80,13 @@ export const RegisterForm = () => {
                   >
                     {showPassword ? <FaEye /> : <FaEyeSlash />}
                   </span>
-                </InputGroup>
+                </div>
               </Form.Group>
 
               {/* Confirm Password */}
               <Form.Group className="mb-3" controlId="ConfirmPassword">
                 <Form.Label>Confirm Password</Form.Label>
-                <InputGroup>
+                <div className="password-wrapper">
                   <Form.Control
                     type={showPassword ? "text" : "password"}
                     placeholder="Confirm your password"
@@ -100,7 +100,7 @@ export const RegisterForm = () => {
                   >
                     {showPassword ? <FaEye /> : <FaEyeSlash />}
                   </span>
-                </InputGroup>
+                </div>
               </Form.Group>
 
               {/* Submit */}

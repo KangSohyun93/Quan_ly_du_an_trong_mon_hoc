@@ -1,12 +1,30 @@
 import "bootstrap/dist/css/bootstrap.min.css";
+import "./assets/styles/global.css";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import RegisterForm from "./components/register/RegisterForm.js";
+import LoginForm from "./components/auth/LoginForm.js";
+import SV_HomeLayout from "./components/SV_HomeLayout/SV_HomeLayout.js";
+import ProjectInfo from "./components/introduce/ProjectInfo.js";
+import TeamHeader from "./components/TeamHeader/TeamHeader.js";
 
 function App() {
   return (
-    <div className="App">
-      <RegisterForm />
-    </div>
+    <Router>
+      <div className="App">
+        <Routes>
+          <Route path="/register" element={<RegisterForm />} />
+          <Route path="/signup" element={<LoginForm />} />
+          <Route path="/home" element={<SV_HomeLayout />}>
+            <Route path="introduce" element={<ProjectInfo />} />
+            {/* Thêm các route khác ở đây */}
+          </Route>
+          {/* Các route khác */}
+          <Route path="/header" element={<TeamHeader />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
 export default App;
+//
