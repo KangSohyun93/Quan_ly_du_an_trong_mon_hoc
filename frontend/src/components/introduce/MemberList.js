@@ -16,4 +16,3 @@ function MembersList({ members }) {
 }
 
 export default MembersList;
-//

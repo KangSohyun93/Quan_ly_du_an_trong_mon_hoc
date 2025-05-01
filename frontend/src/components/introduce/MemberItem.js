@@ -17,4 +17,3 @@ function MemberItem({ name, role }) {
 }
 
 export default MemberItem;
-//
