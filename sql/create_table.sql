@@ -21,6 +21,7 @@ CREATE TABLE Classes (
     class_name VARCHAR(50) NOT NULL,
     instructor_id INT NOT NULL,
     semester VARCHAR(10),
+    secret_code VARCHAR(10) UNIQUE, -- Thêm trường mã bí mật, giới hạn 10 ký tự, duy nhất
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (instructor_id) REFERENCES Users(user_id) ON DELETE RESTRICT
 );
@@ -137,6 +138,7 @@ CREATE TABLE PeerAssessments (
     quality_score INT,
     team_support_score INT,
     responsibility_score INT,
+    note TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (group_id) REFERENCES Groups(group_id) ON DELETE CASCADE,
     FOREIGN KEY (assessor_id) REFERENCES Users(user_id) ON DELETE CASCADE,

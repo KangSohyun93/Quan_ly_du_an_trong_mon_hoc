@@ -1,12 +1,71 @@
-/* frontend/src/pages/Project.css */
-.project-page {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh; /* Đảm bảo chiều cao đầy màn hình */
-  }
-  
-  .project-content {
-    flex: 1;
-    padding: 16px; /* Khớp với padding trong .container của global.css */
-    background-color: #ECEFF8; /* Dùng .blueBackground từ global.css */
-  }
+/* Reset margin và padding mặc định của body và html */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.project-project-page {
+  display: flex;
+  min-height: 100vh;
+}
+
+.project-content-container {
+  flex: 1;
+  padding: 20px 40px; /* Đồng bộ padding với GroupPage và ProjectRate */
+  background-color: #f5f7fb; /* Đồng bộ màu nền */
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.project-project-content {
+  margin-top: 20px;
+}
+
+.project-task-item {
+  background-color: #fff;
+  padding: 20px;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px; /* Bo góc mềm mại hơn */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); /* Thêm bóng nhẹ */
+  margin-bottom: 20px;
+}
+
+.project-member-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px; /* Tăng nhẹ khoảng cách dưới */
+}
+
+.project-member-info {
+  display: flex;
+  align-items: center;
+}
+
+.project-member-info div {
+  display: flex;
+  flex-direction: column;
+}
+
+.project-member-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 15px;
+}
+
+.project-member-info h4 {
+  font-size: 18px;
+  font-weight: 600; /* Tăng trọng lượng chữ để nổi bật */
+  margin: 0;
+  color: #1a1a1a;
+}
+
+.project-member-stats {
+  font-size: 12px;
+  color: #555;
+  font-weight: 500;
+}

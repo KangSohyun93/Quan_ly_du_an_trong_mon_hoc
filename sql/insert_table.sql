@@ -1,50 +1,50 @@
 -- Chèn dữ liệu vào bảng Users
 INSERT INTO Users (username, email, password, role, is_active, avatar) VALUES
 -- 30 sinh viên
-('Student1', 'student1@example.com', 'hashed_password_1', 'Student', TRUE, 'student1.jpg'),
-('Student2', 'student2@example.com', 'hashed_password_2', 'Student', TRUE, 'student2.jpg'),
-('Student3', 'student3@example.com', 'hashed_password_3', 'Student', TRUE, 'student3.jpg'),
-('Student4', 'student4@example.com', 'hashed_password_4', 'Student', TRUE, 'student4.jpg'),
-('Student5', 'student5@example.com', 'hashed_password_5', 'Student', TRUE, 'student5.jpg'),
-('Student6', 'student6@example.com', 'hashed_password_6', 'Student', TRUE, 'student6.jpg'),
-('Student7', 'student7@example.com', 'hashed_password_7', 'Student', TRUE, 'student7.jpg'),
-('Student8', 'student8@example.com', 'hashed_password_8', 'Student', TRUE, 'student8.jpg'),
-('Student9', 'student9@example.com', 'hashed_password_9', 'Student', TRUE, 'student9.jpg'),
-('Student10', 'student10@example.com', 'hashed_password_10', 'Student', TRUE, 'student10.jpg'),
-('Student11', 'student11@example.com', 'hashed_password_11', 'Student', TRUE, 'student11.jpg'),
-('Student12', 'student12@example.com', 'hashed_password_12', 'Student', TRUE, 'student12.jpg'),
-('Student13', 'student13@example.com', 'hashed_password_13', 'Student', TRUE, 'student13.jpg'),
-('Student14', 'student14@example.com', 'hashed_password_14', 'Student', TRUE, 'student14.jpg'),
-('Student15', 'student15@example.com', 'hashed_password_15', 'Student', TRUE, 'student15.jpg'),
-('Student16', 'student16@example.com', 'hashed_password_16', 'Student', TRUE, 'student16.jpg'),
-('Student17', 'student17@example.com', 'hashed_password_17', 'Student', TRUE, 'student17.jpg'),
-('Student18', 'student18@example.com', 'hashed_password_18', 'Student', TRUE, 'student18.jpg'),
-('Student19', 'student19@example.com', 'hashed_password_19', 'Student', TRUE, 'student19.jpg'),
-('Student20', 'student20@example.com', 'hashed_password_20', 'Student', TRUE, 'student20.jpg'),
-('Student21', 'student21@example.com', 'hashed_password_21', 'Student', TRUE, 'student21.jpg'),
-('Student22', 'student22@example.com', 'hashed_password_22', 'Student', TRUE, 'student22.jpg'),
-('Student23', 'student23@example.com', 'hashed_password_23', 'Student', TRUE, 'student23.jpg'),
-('Student24', 'student24@example.com', 'hashed_password_24', 'Student', TRUE, 'student24.jpg'),
-('Student25', 'student25@example.com', 'hashed_password_25', 'Student', TRUE, 'student25.jpg'),
-('Student26', 'student26@example.com', 'hashed_password_26', 'Student', TRUE, 'student26.jpg'),
-('Student27', 'student27@example.com', 'hashed_password_27', 'Student', TRUE, 'student27.jpg'),
-('Student28', 'student28@example.com', 'hashed_password_28', 'Student', TRUE, 'student28.jpg'),
-('Student29', 'student29@example.com', 'hashed_password_29', 'Student', TRUE, 'student29.jpg'),
-('Student30', 'student30@example.com', 'hashed_password_30', 'Student', TRUE, 'student30.jpg'),
+('Student1', 'student1@example.com', 'hashed_password_1', 'Student', TRUE, '/uploads/student1.jpg'),
+('Student2', 'student2@example.com', 'hashed_password_2', 'Student', TRUE, '/uploads/student2.jpg'),
+('Student3', 'student3@example.com', 'hashed_password_3', 'Student', TRUE, '/uploads/student3.jpg'),
+('Student4', 'student4@example.com', 'hashed_password_4', 'Student', TRUE, '/uploads/student4.jpg'),
+('Student5', 'student5@example.com', 'hashed_password_5', 'Student', TRUE, '/uploads/student5.jpg'),
+('Student6', 'student6@example.com', 'hashed_password_6', 'Student', TRUE, '/uploads/student6.jpg'),
+('Student7', 'student7@example.com', 'hashed_password_7', 'Student', TRUE, '/uploads/student7.jpg'),
+('Student8', 'student8@example.com', 'hashed_password_8', 'Student', TRUE, '/uploads/student8.jpg'),
+('Student9', 'student9@example.com', 'hashed_password_9', 'Student', TRUE, '/uploads/student9.jpg'),
+('Student10', 'student10@example.com', 'hashed_password_10', 'Student', TRUE, '/uploads/student10.jpg'),
+('Student11', 'student11@example.com', 'hashed_password_11', 'Student', TRUE, '/uploads/student11.jpg'),
+('Student12', 'student12@example.com', 'hashed_password_12', 'Student', TRUE, '/uploads/student12.jpg'),
+('Student13', 'student13@example.com', 'hashed_password_13', 'Student', TRUE, '/uploads/student13.jpg'),
+('Student14', 'student14@example.com', 'hashed_password_14', 'Student', TRUE, '/uploads/student14.jpg'),
+('Student15', 'student15@example.com', 'hashed_password_15', 'Student', TRUE, '/uploads/student15.jpg'),
+('Student16', 'student16@example.com', 'hashed_password_16', 'Student', TRUE, '/uploads/student16.jpg'),
+('Student17', 'student17@example.com', 'hashed_password_17', 'Student', TRUE, '/uploads/student17.jpg'),
+('Student18', 'student18@example.com', 'hashed_password_18', 'Student', TRUE, '/uploads/student18.jpg'),
+('Student19', 'student19@example.com', 'hashed_password_19', 'Student', TRUE, '/uploads/student19.jpg'),
+('Student20', 'student20@example.com', 'hashed_password_20', 'Student', TRUE, '/uploads/student20.jpg'),
+('Student21', 'student21@example.com', 'hashed_password_21', 'Student', TRUE, '/uploads/student21.jpg'),
+('Student22', 'student22@example.com', 'hashed_password_22', 'Student', TRUE, '/uploads/student22.jpg'),
+('Student23', 'student23@example.com', 'hashed_password_23', 'Student', TRUE, '/uploads/student23.jpg'),
+('Student24', 'student24@example.com', 'hashed_password_24', 'Student', TRUE, '/uploads/student24.jpg'),
+('Student25', 'student25@example.com', 'hashed_password_25', 'Student', TRUE, '/uploads/student25.jpg'),
+('Student26', 'student26@example.com', 'hashed_password_26', 'Student', TRUE, '/uploads/student26.jpg'),
+('Student27', 'student27@example.com', 'hashed_password_27', 'Student', TRUE, '/uploads/student27.jpg'),
+('Student28', 'student28@example.com', 'hashed_password_28', 'Student', TRUE, '/uploads/student28.jpg'),
+('Student29', 'student29@example.com', 'hashed_password_29', 'Student', TRUE, '/uploads/student29.jpg'),
+('Student30', 'student30@example.com', 'hashed_password_30', 'Student', TRUE, '/uploads/student30.jpg'),
 -- 3 giảng viên
-('ProfSmith', 'smith@example.com', 'hashed_password_31', 'Instructor', TRUE, 'smith.jpg'),
-('ProfJones', 'jones@example.com', 'hashed_password_32', 'Instructor', TRUE, 'jones.jpg'),
-('ProfBrown', 'brown@example.com', 'hashed_password_33', 'Instructor', TRUE, 'brown.jpg'),
+('ProfSmith', 'smith@example.com', 'hashed_password_31', 'Instructor', TRUE, '/uploads/smith.jpg'),
+('ProfJones', 'jones@example.com', 'hashed_password_32', 'Instructor', TRUE, '/uploads/jones.jpg'),
+('ProfBrown', 'brown@example.com', 'hashed_password_33', 'Instructor', TRUE, '/uploads/brown.jpg'),
 -- 1 quản trị viên
-('Admin1', 'admin1@example.com', 'hashed_password_34', 'Admin', TRUE, 'admin1.jpg');
+('Admin1', 'admin1@example.com', 'hashed_password_34', 'Admin', TRUE, '/uploads/admin1.jpg');
 
 -- Chèn dữ liệu vào bảng Classes
-INSERT INTO Classes (class_id, class_name, instructor_id, semester) VALUES
-(100001, 'Công nghệ phần mềm', 31, '2025.1'), -- ProfSmith
-(100002, 'Lập trình web', 32, '2025.1'), -- ProfJones
-(100003, 'Cấu trúc dữ liệu', 33, '2025.2'), -- ProfBrown
-(100004, 'Hệ điều hành', 31, '2025.2'), -- ProfSmith
-(100005, 'Trí tuệ nhân tạo', 32, '2025.2'); -- ProfJones
+INSERT INTO Classes (class_id, class_name, instructor_id, semester, secret_code) VALUES 
+(100001, 'Công nghệ phần mềm', 31, '2025.1', 'SE2025'), -- ProfSmith
+(100002, 'Lập trình web', 32, '2025.1', 'WEB2025'), -- ProfJones
+(100003, 'Cấu trúc dữ liệu', 33, '2025.2', 'DS2025'), -- ProfBrown
+(100004, 'Hệ điều hành', 31, '2025.2', 'OS2025'), -- ProfSmith
+(100005, 'Trí tuệ nhân tạo', 32, '2025.2', 'AI2025'); -- ProfJones
 
 -- Chèn dữ liệu vào bảng Groups
 -- Không chèn group_number vì trigger before_group_insert sẽ tự động gán
@@ -227,38 +227,38 @@ INSERT INTO GitContributions (project_id, user_id, commit_hash, commit_message, 
 (5, 13, 'e5f6g7h8i9j0k1l2m3n4', 'Thu thập dữ liệu sinh viên', 120, 15, '2025-04-04 10:00:00');
 
 -- Chèn dữ liệu vào bảng PeerAssessments
-INSERT INTO PeerAssessments (group_id, assessor_id, assessee_id, deadline_score, friendly_score, quality_score, team_support_score, responsibility_score) VALUES
+INSERT INTO PeerAssessments (group_id, assessor_id, assessee_id, deadline_score, friendly_score, quality_score, team_support_score, responsibility_score, note) VALUES
 -- Nhóm 1
-(1, 2, 1, 5, 5, 4, 4, 5),
-(1, 3, 1, 4, 5, 4, 5, 4),
-(1, 1, 2, 5, 4, 5, 4, 5),
+(1, 2, 1, 5, 5, 4, 4, 5, 'Hoàn thành công việc đúng hạn và hỗ trợ nhóm tốt.'),
+(1, 3, 1, 4, 5, 4, 5, 4, 'Cần cải thiện tốc độ hoàn thành nhiệm vụ.'),
+(1, 1, 2, 5, 4, 5, 4, 5, 'Chất lượng công việc tốt, cần thân thiện hơn.'),
 -- Nhóm 2
-(2, 6, 5, 5, 5, 5, 4, 5),
-(2, 7, 5, 4, 5, 4, 5, 4),
+(2, 6, 5, 5, 5, 5, 4, 5, 'Thành viên xuất sắc, hỗ trợ nhóm rất tốt.'),
+(2, 7, 5, 4, 5, 4, 5, 4, 'Cần chú ý hơn đến chất lượng công việc.'),
 -- Nhóm 3
-(3, 8, 7, 5, 4, 5, 4, 5),
-(3, 9, 7, 4, 5, 4, 5, 4),
+(3, 8, 7, 5, 4, 5, 4, 5, 'Đúng hạn và có trách nhiệm cao.'),
+(3, 9, 7, 4, 5, 4, 5, 4, 'Thân thiện nhưng cần cải thiện chất lượng.'),
 -- Nhóm 4
-(4, 12, 11, 5, 5, 4, 4, 5),
-(4, 13, 11, 4, 5, 5, 4, 4),
+(4, 12, 11, 5, 5, 4, 4, 5, 'Hỗ trợ nhóm tốt, công việc chất lượng.'),
+(4, 13, 11, 4, 5, 5, 4, 4, 'Cần chú ý hơn đến việc đúng hạn.'),
 -- Nhóm 5
-(5, 14, 13, 5, 4, 5, 5, 4),
-(5, 15, 13, 4, 5, 4, 5, 5),
+(5, 14, 13, 5, 4, 5, 5, 4, 'Chất lượng công việc tốt, cần thân thiện hơn.'),
+(5, 15, 13, 4, 5, 4, 5, 5, 'Hỗ trợ nhóm tốt, cần cải thiện deadline.'),
 -- Nhóm 6
-(6, 18, 17, 5, 5, 4, 4, 5),
-(6, 19, 17, 4, 5, 5, 4, 4),
+(6, 18, 17, 5, 5, 4, 4, 5, 'Thành viên trách nhiệm, đúng hạn.'),
+(6, 19, 17, 4, 5, 5, 4, 4, 'Chất lượng tốt nhưng cần hỗ trợ nhóm nhiều hơn.'),
 -- Nhóm 7
-(7, 20, 19, 5, 4, 5, 5, 4),
-(7, 21, 19, 4, 5, 4, 5, 5),
+(7, 20, 19, 5, 4, 5, 5, 4, 'Hỗ trợ nhóm tốt, chất lượng cao.'),
+(7, 21, 19, 4, 5, 4, 5, 5, 'Thân thiện, cần chú ý đến deadline.'),
 -- Nhóm 8
-(8, 24, 23, 5, 5, 4, 4, 5),
-(8, 25, 23, 4, 5, 5, 4, 4),
+(8, 24, 23, 5, 5, 4, 4, 5, 'Hoàn thành công việc đúng hạn, hỗ trợ tốt.'),
+(8, 25, 23, 4, 5, 5, 4, 4, 'Chất lượng tốt, cần cải thiện trách nhiệm.'),
 -- Nhóm 9
-(9, 26, 25, 5, 4, 5, 5, 4),
-(9, 27, 25, 4, 5, 4, 5, 5),
+(9, 26, 25, 5, 4, 5, 5, 4, 'Chất lượng công việc tốt, cần thân thiện hơn.'),
+(9, 27, 25, 4, 5, 4, 5, 5, 'Hỗ trợ nhóm tốt, cần đúng hạn hơn.'),
 -- Nhóm 10
-(10, 30, 29, 5, 5, 4, 4, 5),
-(10, 1, 29, 4, 5, 5, 4, 4);
+(10, 30, 29, 5, 5, 4, 4, 5, 'Thành viên xuất sắc, hỗ trợ nhóm tốt.'),
+(10, 1, 29, 4, 5, 5, 4, 4, 'Chất lượng tốt, cần cải thiện deadline.');
 
 -- Chèn dữ liệu vào bảng InstructorEvaluations
 INSERT INTO InstructorEvaluations (group_id, user_id, instructor_id, score, comments) VALUES

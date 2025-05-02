@@ -1,4 +1,3 @@
-/* backend/controllers/projectController.js */
 const { getProjectById, getTasksBySprintId } = require('../models/projectModel');
 
 const getProject = async (req, res) => {
@@ -9,7 +8,6 @@ const getProject = async (req, res) => {
   }
 
   try {
-    console.log(`Yêu cầu lấy dự án cho projectId: ${projectId}`);
     const project = await getProjectById(projectId);
     if (!project) {
       return res.status(404).json({ error: 'Dự án không tồn tại' });
@@ -17,7 +15,7 @@ const getProject = async (req, res) => {
     res.status(200).json(project);
   } catch (error) {
     console.error('Lỗi trong getProject:', error.message, error.stack);
-    res.status(500).json({ error: `Lỗi server: ${error.message}` });
+    res.status(500).json({ error: 'Lỗi server' });
   }
 };
 
@@ -29,12 +27,11 @@ const getTasks = async (req, res) => {
   }
 
   try {
-    console.log(`Yêu cầu lấy task cho sprint_id: ${sprintId}`);
     const tasks = await getTasksBySprintId(sprintId);
     res.status(200).json(tasks);
   } catch (error) {
     console.error('Lỗi trong getTasks:', error.message, error.stack);
-    res.status(500).json({ error: `Lỗi server: ${error.message}` });
+    res.status(500).json({ error: 'Lỗi server' });
   }
 };
 

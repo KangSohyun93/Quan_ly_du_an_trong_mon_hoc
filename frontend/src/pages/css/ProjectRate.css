@@ -1,0 +1,212 @@
+/* Reset margin và padding mặc định của body và html */
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+.projectrate-project-rate {
+    display: flex;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+.projectrate-content-container {
+    flex: 1;
+    padding: 20px 40px; /* Điều chỉnh padding để cân đối hơn */
+    background-color: #f5f7fb;
+    overflow-y: auto;
+    transition: margin-left 0.3s ease;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.projectrate-project-rate.sidebar-open .projectrate-content-container {
+    margin-left: 256px;
+}
+
+.projectrate-project-rate.sidebar-hidden .projectrate-content-container {
+    margin-left: 0;
+    padding-left: 40px;
+}
+
+.projectrate-rating-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin: 0 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.projectrate-task-item {
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px; /* Bo góc mềm mại hơn */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); /* Thêm bóng nhẹ */
+    margin-bottom: 20px;
+}
+
+.projectrate-member-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px; /* Tăng nhẹ khoảng cách dưới */
+}
+
+.projectrate-member-info {
+    display: flex;
+    align-items: center;
+}
+
+.projectrate-member-info div {
+    display: flex;
+    flex-direction: column;
+}
+
+.projectrate-member-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 15px;
+}
+
+.projectrate-member-info h4 {
+    font-size: 18px;
+    font-weight: 600; /* Tăng trọng lượng chữ để nổi bật */
+    margin: 0;
+    color: #1a1a1a;
+}
+
+.projectrate-member-stats {
+    display: flex;
+    justify-content: space-between; /* Dàn đều hai phần */
+    gap: 20px; /* Tăng khoảng cách giữa các phần */
+    font-size: 14px;
+    color: #333;
+}
+
+.projectrate-rating-section {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 25px; /* Tăng nhẹ khoảng cách dưới */
+}
+
+.projectrate-rating-column {
+    flex: 1;
+}
+
+.projectrate-rating-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px; /* Tăng nhẹ khoảng cách giữa các hàng */
+}
+
+.projectrate-rating-row label {
+    width: 120px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+}
+
+.projectrate-stars {
+    display: flex;
+}
+
+.projectrate-star {
+    font-size: 20px;
+    color: #e0e0e0;
+}
+
+.projectrate-star.filled {
+    color: #ffd700;
+}
+
+.projectrate-star.editable {
+    cursor: pointer;
+}
+
+.projectrate-note-section {
+    margin-bottom: 25px; /* Tăng nhẹ khoảng cách dưới */
+}
+
+.projectrate-note-section label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.projectrate-note-section textarea {
+    width: 100%;
+    height: 60px;
+    padding: 10px;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    font-size: 14px;
+    color: #333;
+    resize: none;
+    background-color: #f9f9f9; /* Thêm nền nhẹ */
+}
+
+.projectrate-note-section textarea::placeholder {
+    color: #999;
+}
+
+.projectrate-note-section .projectrate-note-text {
+    font-size: 14px;
+    color: #333;
+    margin: 0;
+    padding: 10px;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.projectrate-action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.projectrate-action-buttons button {
+    padding: 8px 20px;
+    border: none;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+
+.projectrate-cancel-button {
+    background-color: #d3d3d3;
+    color: #333;
+}
+
+.projectrate-confirm-button {
+    background-color: #6ad2ff;
+    color: #fff;
+}
+
+.projectrate-edit-button {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.projectrate-loading {
+    text-align: center;
+    padding: 20px;
+    font-size: 16px;
+}
+
+.projectrate-error-message {
+    text-align: center;
+    padding: 20px;
+    color: #dc3545;
+    font-size: 16px;
+}

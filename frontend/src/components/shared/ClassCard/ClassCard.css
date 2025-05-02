@@ -14,7 +14,7 @@
   position: relative;
   width: 40px;
   height: 40px;
-  margin-bottom: 25px; /* Khoảng cách dưới avatar */
+  margin-bottom: 20px; /* Giảm nhẹ khoảng cách dưới avatar */
 }
 
 .classcard-avatar-bg {
@@ -39,7 +39,7 @@
 .classcard-name-description {
   display: flex;
   flex-direction: column;
-  margin-bottom: 0px; /* Khoảng cách dưới mô tả */
+  margin-bottom: 5px; /* Thêm khoảng cách dưới mô tả */
 }
 
 .classcard-title {
@@ -47,7 +47,7 @@
   font-weight: bold;
   color: #1a1a1a;
   line-height: 1.2;
-  margin-bottom: 30px; /* Đẩy gần hơn mô tả bên dưới */
+  margin-bottom: 20px; /* Giảm nhẹ khoảng cách dưới title */
 }
 
 .classcard-description-text {
@@ -60,7 +60,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: auto; /* Đẩy members về cuối card */
+  margin-top: 10px; /* Thêm khoảng cách trên members */
 }
 
 .classcard-members-list {

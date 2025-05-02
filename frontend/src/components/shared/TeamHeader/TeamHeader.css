@@ -1,116 +1,239 @@
-/* frontend/src/components/TeamHeader/TeamHeader.css */
 .team-header {
+  background-color: #f8f9fa;
+  padding: 15px 20px;
+  border-bottom: 1px solid #e0e0e0;
+  color: #333333;
+  font-family: "Roboto", sans-serif;
   display: flex;
-  align-items: center;
+  flex-direction: column; /* Đảm bảo các thành phần xếp theo chiều dọc */
+  gap: 20px; /* Tạo khoảng cách giữa các phần */
+}
+
+/* Thanh phía trên */
+.team-header-top {
+  display: flex;
   justify-content: space-between;
-  padding: 16px;
-  background-color: #F4F8FF;
-  border-bottom: 1px solid #d9d9d9;
-}
-
-.team-header-left {
-  display: flex;
   align-items: center;
-  gap: 16px;
+  background-color: #f0f0f0;
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 1px solid #d9d9d9;
 }
 
-.team-name {
-  font-size: 16.67px;
+.team-info {
+  flex: 1;
+}
+
+.team-info p:first-child {
+  font-size: 26.67px;
   font-weight: bold;
-  color: #1a1a1a;
+  color: #333333;
+  margin: 5px 0;
 }
 
-.team-dropdown {
-  font-size: 13.33px;
-  font-weight: normal;
-  color: #666666;
-  cursor: pointer;
-}
-
-.dropdown-arrow {
-  margin-left: 4px;
+.team-info p:last-child {
+  font-size: 14px;
+  color: #999999;
+  margin: 5px 0;
 }
 
 .team-members {
   display: flex;
   align-items: center;
+  gap: 10px;
 }
 
 .team-member {
-  width: 24px;
-  height: 24px;
-  margin-left: -8px;
+  width: 34px;
+  height: 34px;
+  margin-left: -12px;
 }
 
 .team-member:first-child {
   margin-left: 0;
 }
 
-.team-member-img {
+.member-avatar {
   border-radius: 50%;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border: 1px solid #ffffff;
+  border: 2px solid #ffffff;
 }
 
-.team-header-right {
+.more-members {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background-color: #e0e0e0;
+  color: #1a1a1a;
   display: flex;
   align-items: center;
-  gap: 16px;
+  justify-content: center;
+  margin-left: -12px;
+  border: 2px solid #ffffff;
 }
 
-.team-tabs {
+/* Thanh tab phía dưới */
+.team-header-tabs {
   display: flex;
   align-items: center;
-  gap: 16px;
+  justify-content: space-between; /* Đảm bảo các thành phần được căn đều */
+  gap: 15px;
+  padding: 8px 0;
 }
 
-.sprint-label {
-  font-size: 13.33px;
-  font-weight: normal;
-  color: #666666;
-  background-color: #ffffff;
-  padding: 4px 8px;
-  border-radius: 4px;
+.tabs-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Dàn đều các mục */
+  flex: 1; /* Đảm bảo tabs chiếm toàn bộ không gian */
+}
+
+.sprint-select {
+  margin-right: auto; /* Đẩy dropdown sang bên trái */
+}
+
+.sprint-select select {
   border: 1px solid #d9d9d9;
-  cursor: pointer;
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666666' d='M2 4l4 4 4-4H2z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 8px center;
-  padding-right: 24px;
-}
-
-.team-tab {
-  font-size: 13.33px;
-  font-weight: normal;
-  color: #666666;
+  border-radius: 5px;
+  padding: 6px 10px;
+  font-size: 14px;
+  background-color: #ffffff;
+  font-family: "Roboto", sans-serif;
+  transition: border-color 0.3s ease;
   cursor: pointer;
 }
 
-.team-tab.active {
+.sprint-select select:hover {
+  border-color: #6ad2ff;
+}
+
+.tabs {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly; /* Dàn đều các tab */
+  margin-left: 20px;
+  gap: 20px; /* Tăng khoảng cách giữa các tab */
+  flex: 1; /* Đảm bảo tabs chiếm toàn bộ không gian */
+}
+
+.tabs .tab {
+  font-family: "Roboto", sans-serif;
+  font-size: 14px;
+  color: #1a1a1a;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Căn giữa nội dung trong từng tab */
+  flex: 1; /* Đảm bảo mỗi tab chiếm không gian bằng nhau */
+  text-align: center;
+}
+
+.tabs .tab:hover {
+  background-color: #e8ecef;
+}
+
+.tabs .tab.active {
+  background-color: #e0e0e0;
+  border-radius: 5px;
+}
+
+.tab .icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
+  display: inline-block;
+}
+
+.teamheader-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end; /* Đẩy nút Filter sang bên phải */
+  margin-right: 20px; /* Di chuyển nút Filter sang bên trái */
+}
+
+.filter-btn {
+  background-color: #6ad2ff;
+  color: #ffffff;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-size: 14px;
   font-weight: 500;
-  color: #6AD2FF;
-}
-
-.tab-icon {
-  margin-right: 4px;
-}
-
-.team-actions {
-  display: flex;
-  gap: 8px;
-}
-
-.filter-btn,
-.search-btn {
-  font-size: 13.33px;
-  font-weight: normal;
-  color: #666666;
-  background-color: #ffffff;
-  border: 1px solid #d9d9d9;
-  border-radius: 4px;
-  padding: 4px 8px;
   cursor: pointer;
+  font-family: "Roboto", sans-serif;
+  transition: background-color 0.3s ease;
+}
+
+.filter-btn:hover {
+  background-color: #5ab9e5;
+}
+
+.teamheader-actions .team-search-bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  border: 1px solid #d9d9d9;
+  border-radius: 20px;
+  background-color: #ffffff;
+  padding: 0 12px; /* Khoảng cách bên trong */
+}
+
+.teamheader-actions .team-search-bar input {
+  flex: 1; /* Để input chiếm toàn bộ không gian bên trái */
+  border: none;
+  outline: none;
+  font-size: 14px;
+  padding: 8px 0;
+  margin-left: 50px;
+  color: #1a1a1a;
+  background-color: transparent;
+  font-family: "Roboto", sans-serif;
+}
+
+.teamheader-actions .team-search-bar input::placeholder {
+  color: #999999;
+  font-family: "Roboto", sans-serif;
+}
+
+.teamheader-actions .team-search-bar .team-search-icon {
+  width: 16px;
+  height: 16px;
+  margin-left: 8px; /* Khoảng cách giữa input và icon */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23999999'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* Icon styles */
+.introduce-icon {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%231a1a1a'%3E%3Cpath d='M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm0 12a5 5 5 0 1 1 0-10 5 5 0 0 1 0 10z'/%3E%3C/svg%3E");
+}
+
+.dashboard-icon {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%231a1a1a'%3E%3Cpath d='M2 2h5v5H2V2zm7 0h5v5H9V2zm-7 7h5v5H2V9zm7 0h5v5H9V9z'/%3E%3C/svg%3E");
+}
+
+.team-task-icon {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%231a1a1a'%3E%3Cpath d='M2 2h12v2H2V2zm0 4h12v2H2V6zm0 4h12v2H2V-2z'/%3E%3C/svg%3E");
+}
+
+.my-task-icon {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%231a1a1a'%3E%3Cpath d='M2 2h12v12H2V2zm2 2v8h8V4H4z'/%3E%3C/svg%3E");
+}
+
+.roadmap-icon {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%231a1a1a'%3E%3Cpath d='M2 2h12v2H2V2zm0 4h12v2H2V6zm0 4h12v2H2V-2z'/%3E%3C/svg%3E");
+}
+
+.rate-icon {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%231a1a1a'%3E%3Cpath d='M8 1l2.5 5.5h5L11 9l1.5 5L8 11.5 3.5 14 5 9 1.5 6.5h5L8 1z'/%3E%3C/svg%3E");
 }

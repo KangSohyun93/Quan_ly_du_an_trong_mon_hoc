@@ -1,56 +1,119 @@
-/* frontend/src/services/groupService.js */
-export const fetchGroupsByUserId = async (userId) => {
+const API_URL = 'http://localhost:5000/api';
+
+const fetchGroupsByUserId = async (userId) => {
   try {
-    const response = await fetch(`http://localhost:5000/api/groups?user_id=${userId}`);
+    const response = await fetch(`${API_URL}/groups?user_id=${userId}`);
     if (!response.ok) {
-      throw new Error('Không thể lấy danh sách nhóm');
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
     const data = await response.json();
+    if (!Array.isArray(data)) {
+      console.warn('Dữ liệu trả về từ API không phải là mảng:', data);
+      return [];
+    }
     return data;
   } catch (error) {
-    console.error('Lỗi khi lấy danh sách nhóm:', error);
+    console.error('Error in fetchGroupsByUserId:', error.message);
     throw error;
   }
 };
 
-export const fetchProjectById = async (projectId) => {
+const fetchProjectByClassId = async (userId, classId) => {
   try {
-    const response = await fetch(`http://localhost:5000/api/groups/projects/${projectId}`);
+    const response = await fetch(`${API_URL}/groups/by-class?class_id=${classId}&user_id=${userId}`);
     if (!response.ok) {
-      throw new Error('Không thể lấy thông tin dự án');
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error('Lỗi khi lấy thông tin dự án:', error);
+    console.error('Error in fetchProjectByClassId:', error.message);
     throw error;
   }
 };
 
-export const fetchTasksBySprintId = async (sprintId) => {
+const fetchProjectById = async (projectId) => {
   try {
-    const response = await fetch(`http://localhost:5000/api/groups/tasks?sprint_id=${sprintId}`);
+    const response = await fetch(`${API_URL}/groups/projects/${projectId}`);
     if (!response.ok) {
-      throw new Error('Không thể lấy danh sách task');
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error('Lỗi khi lấy danh sách task:', error);
+    console.error('Error in fetchProjectById:', error.message);
     throw error;
   }
 };
 
-export const fetchProjectByClassId = async (classId, userId) => {
+const fetchTasksBySprintId = async (sprintId) => {
   try {
-    const response = await fetch(`http://localhost:5000/api/groups/projects/by-class?class_id=${classId}&user_id=${userId}`);
+    const response = await fetch(`${API_URL}/groups/projects/0/sprints/${sprintId}/tasks`);
     if (!response.ok) {
-      throw new Error('Không thể lấy thông tin dự án');
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error('Lỗi khi lấy thông tin dự án theo classId:', error);
+    console.error('Error in fetchTasksBySprintId:', error.message);
     throw error;
   }
 };
+
+const fetchGroupMembers = async (projectId) => {
+  try {
+    const response = await fetch(`${API_URL}/groups/projects/${projectId}/members`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Error in fetchGroupMembers:', error.message);
+    throw error;
+  }
+};
+
+const fetchPeerAssessments = async (projectId, assessorId) => {
+  try {
+    const response = await fetch(`${API_URL}/groups/projects/${projectId}/assessments/${assessorId}`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Error in fetchPeerAssessments:', error.message);
+    throw error;
+  }
+};
+
+const savePeerAssessment = async (projectId, assessmentData) => {
+  try {
+    const response = await fetch(`${API_URL}/groups/projects/${projectId}/assessments`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(assessmentData),
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Error in savePeerAssessment:', error.message);
+    throw error;
+  }
+};
+
+const fetchMemberTaskStats = async (projectId) => {
+  try {
+    const response = await fetch(`${API_URL}/groups/projects/${projectId}/member-task-stats`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Error in fetchMemberTaskStats:', error.message);
+    throw error;
+  }
+};
+
+export { fetchGroupsByUserId, fetchProjectByClassId, fetchProjectById, fetchTasksBySprintId, fetchGroupMembers, fetchPeerAssessments, savePeerAssessment, fetchMemberTaskStats };

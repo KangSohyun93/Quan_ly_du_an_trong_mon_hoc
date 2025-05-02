@@ -1,72 +1,233 @@
-/* frontend/src/pages/GroupPage.css */
-.page-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 24px;
-  }
-  
-  .page-title {
-    font-size: 24px;
-    font-weight: 600;
-    color: #1a1a1a;
-  }
-  
-  .search-bar {
-    position: relative;
-    width: 300px;
-  }
-  
-  .search-bar input {
-    width: 100%;
-    padding: 8px 16px 8px 40px;
-    border: 1px solid #d9d9d9;
-    border-radius: 20px;
-    font-size: 14px;
-    font-weight: 400;
-    color: #1a1a1a;
-    background-color: #ffffff;
-  }
-  
-  .search-bar input::placeholder {
-    color: #999999;
-  }
-  
-  .search-bar::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 16px;
-    transform: translateY(-50%);
-    width: 16px;
-    height: 16px;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23999999'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'/%3E%3C/svg%3E");
-    background-size: contain;
-    background-repeat: no-repeat;
-  }
-  
-  .join-class-btn {
-    background-color: #6AD2FF;
-    color: #ffffff;
-    border: none;
-    border-radius: 20px;
-    padding: 8px 16px;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  .join-class-btn:hover {
-    background-color: #5AB9E5;
-  }
-  
-  .app-container {
-    display: flex;
-    min-height: 100vh;
-  }
-  
-  .main-content {
-    flex: 1;
-    padding: 16px;
-  }
+/* Reset margin và padding mặc định của body và html */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.grouppage-group-page {
+  display: flex;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+.grouppage-content-container {
+  flex: 1;
+  padding: 20px 60px; /* Tăng padding hai bên để tránh bị nút Sidebar che */
+  background-color: #f5f7fb;
+  overflow-y: auto;
+  transition: margin-left 0.3s ease; /* Hiệu ứng mượt khi Sidebar đóng/mở */
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.grouppage-group-page.sidebar-open .grouppage-content-container {
+  margin-left: 256px; /* Khớp với chiều rộng Sidebar */
+  padding: 20px 60px; /* Đồng bộ padding khi Sidebar mở */
+}
+
+.grouppage-group-page.sidebar-hidden .grouppage-content-container {
+  margin-left: 0;
+  padding: 20px 60px; /* Đồng bộ padding khi Sidebar đóng */
+}
+
+.grouppage-page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.grouppage-page-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.grouppage-search-bar {
+  position: relative;
+  width: 300px;
+}
+
+.grouppage-search-bar input {
+  width: 100%;
+  padding: 8px 16px 8px 40px;
+  border: 1px solid #d9d9d9;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 400;
+  color: #1a1a1a;
+  background-color: #ffffff;
+}
+
+.grouppage-search-bar input::placeholder {
+  color: #999999;
+}
+
+.grouppage-search-bar::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 16px;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23999999'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.grouppage-join-class-btn {
+  background-color: #6AD2FF;
+  color: #ffffff;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.grouppage-join-class-btn:hover {
+  background-color: #5AB9E5;
+}
+
+.grouppage-class-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(308px, 1fr)); /* Đảm bảo các thẻ tự động điều chỉnh */
+  gap: 20px; /* Khoảng cách giữa các thẻ */
+  justify-content: center; /* Căn giữa các thẻ trong khung */
+  margin: 0 auto; /* Đảm bảo lưới được căn giữa */
+  width: calc(100% - 40px); /* Đảm bảo lưới không bị tràn */
+  box-sizing: border-box;
+}
+
+.grouppage-class-card-grid > .grouppage-class-card:nth-child(2):only-child {
+  grid-column: span 2; /* Nếu chỉ có 2 thẻ, thẻ thứ 2 sẽ chiếm 2 cột */
+  justify-self: center; /* Căn giữa thẻ thứ 2 */
+}
+
+.grouppage-class-card-grid > .grouppage-class-card:only-child {
+  justify-self: center; /* Căn giữa thẻ nếu chỉ có 1 thẻ */
+}
+
+.grouppage-class-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  width: 308px;
+  height: 198px;
+  background-color: #ffffff;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.grouppage-class-card .grouppage-classcard-avatar {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  margin-bottom: 20px; /* Giảm nhẹ khoảng cách dưới avatar */
+}
+
+.grouppage-class-card .grouppage-classcard-avatar-bg {
+  border-radius: 0;
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.grouppage-class-card .grouppage-classcard-avatar-number {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.grouppage-class-card .grouppage-classcard-name-description {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 5px; /* Thêm khoảng cách dưới mô tả để cân đối */
+}
+
+.grouppage-class-card .grouppage-classcard-title {
+  font-size: 16.67px;
+  font-weight: bold;
+  color: #1a1a1a;
+  line-height: 1.2;
+  margin-bottom: 20px; /* Giảm nhẹ khoảng cách dưới title */
+}
+
+.grouppage-class-card .grouppage-classcard-description-text {
+  font-size: 13.33px;
+  font-weight: normal;
+  color: #666666;
+}
+
+.grouppage-class-card .grouppage-classcard-members {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px; /* Thêm khoảng cách trên members với description */
+}
+
+.grouppage-class-card .grouppage-classcard-members-list {
+  display: flex;
+  align-items: center;
+}
+
+.grouppage-class-card .grouppage-classcard-member {
+  width: 22px;
+  height: 22px;
+  margin-left: 8px;
+}
+
+.grouppage-class-card .grouppage-classcard-member:first-child {
+  margin-left: 0;
+}
+
+.grouppage-class-card .grouppage-classcard-member-img {
+  border-radius: 50%;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border: 1px solid #ffffff;
+}
+
+.grouppage-class-card .grouppage-classcard-members-count {
+  font-size: 10.67px;
+  font-weight: 500;
+  color: #999999;
+}
+
+.grouppage-class-card .grouppage-classcard-more-icon {
+  position: absolute;
+  right: 16px;
+  top: 16px;
+  font-size: 16px;
+  color: #666666;
+  line-height: 1;
+}
+
+.grouppage-error-message {
+  text-align: center;
+  padding: 20px;
+  color: #dc3545;
+  font-size: 16px;
+}
+
+.grouppage-project-content {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}

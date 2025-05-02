@@ -1,60 +1,83 @@
-/* frontend/src/pages/GroupPage.js */
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+import Sidebar from '../components/shared/SideBar/Sidebar';
 import ClassCard from '../components/shared/ClassCard/ClassCard';
-import '../assets/styles/global.css';
-import './css/GroupPage.css';
 import { fetchGroupsByUserId } from '../services/groupService';
+import './css/GroupPage.css';
 
 const GroupPage = () => {
   const { userId } = useParams();
+  const navigate = useNavigate();
   const [groups, setGroups] = useState([]);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const loadGroups = async () => {
+    const loadData = async () => {
+      setLoading(true);
       try {
+        if (!userId || isNaN(userId)) {
+          throw new Error('userId không hợp lệ');
+        }
         const data = await fetchGroupsByUserId(userId);
         setGroups(data);
       } catch (err) {
-        setError('Không thể tải danh sách nhóm');
+        setError('Không thể tải dữ liệu. Vui lòng thử lại sau.');
+        console.error('Error in loadData:', err.message);
+      } finally {
+        setLoading(false);
       }
     };
-    loadGroups();
+    loadData();
   }, [userId]);
 
+  const handleClassCardClick = (classId, projectId) => {
+    if (!classId || !projectId) {
+      console.error('classId hoặc projectId không hợp lệ');
+      return;
+    }
+    navigate(`/userID/${userId}/classes/${classId}/projects/${projectId}/introduce`);
+  };
+
   if (error) {
-    return <div>{error}</div>;
+    return <div className="grouppage-error-message">{error}</div>;
   }
 
   return (
-    <div className="container">
-      <div className="page-header">
-        <h1 className="page-title">Classes</h1>
-        <div className="search-bar">
-          <input type="text" placeholder="Search..." />
+    <div className="grouppage-group-page">
+      <Sidebar />
+      <div className="grouppage-content-container">
+        <div className="grouppage-page-header">
+          <h1 className="grouppage-page-title">Classes</h1>
+          <div className="grouppage-search-bar">
+            <input type="text" placeholder="Search for classes..." />
+          </div>
+          <button className="grouppage-join-class-btn">Join Class</button>
         </div>
-        <button className="join-class-btn">Join Class</button>
-      </div>
-
-      <div className="card-container">
-        {groups.length > 0 ? (
-          groups.map((group, index) => (
-            <ClassCard
-              key={index}
-              classId={group.classId} // Thêm classId
-              className={group.className}
-              groupName={group.groupName}
-              projectName={group.projectName}
-              memberCount={group.memberCount}
-              avatarNumber={group.avatarNumber}
-              avatarColor={group.avatarColor}
-              members={group.members}
-            />
-          ))
-        ) : (
-          <p>Không tìm thấy nhóm nào.</p>
-        )}
+        <div className="grouppage-class-card-grid">
+          {loading ? (
+            <p>Đang tải...</p>
+          ) : groups.length > 0 ? (
+            groups.map((group, index) => (
+              <ClassCard
+                key={index}
+                classId={group.classId}
+                className={group.className}
+                groupName={group.group_name}
+                projectName={group.projectName}
+                projectId={group.projectId}
+                memberCount={group.memberCount}
+                avatar={group.avatar || '/uploads/default.jpg'} // Sử dụng đường dẫn từ database
+                avatarNumber={group.group_id} // Giữ lại số avatar
+                avatarColor={group.avatarColor || `hsl(${(group.group_id * 137.508) % 360}, 70%, 60%)`} // Giữ lại logic màu
+                members={group.members}
+                onClick={() => handleClassCardClick(group.classId, group.projectId)}
+              />
+            ))
+          ) : (
+            <p>Không có nhóm nào để hiển thị.</p>
+          )}
+        </div>
       </div>
     </div>
   );
