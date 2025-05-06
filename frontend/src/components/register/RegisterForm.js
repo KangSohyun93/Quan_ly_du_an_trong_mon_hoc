@@ -11,22 +11,65 @@ import {
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import illustationPhoto from "../../assets/LoginImage/loginphoto1.png";
 import "./RegisterForm.css";
+import { registerUser } from "../../services/auth-service";
 
 export const RegisterForm = () => {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [role, setRole] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+
+  const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setMessage("");
+
+    if (password !== confirmPassword) {
+      setError("The password does not match.");
+      return;
+    }
+
+    if (!role) {
+      setError("Please choose a role.");
+      return;
+    }
+
+    try {
+      const result = await registerUser({
+        email,
+        username,
+        password,
+        role,
+      });
+
+      setMessage("Registration successful!");
+      // Clear form
+      setEmail("");
+      setUsername("");
+      setPassword("");
+      setConfirmPassword("");
+      setRole("");
+    } catch (err) {
+      setError(err.message);
+    }
+  };
 
   return (
     <div className="register_page">
       <Container>
         <Row>
           <Col sm={6} className="d-flex flex-column">
-            <h2 className="logo">Name of website</h2>
-            <Form className="register-form">
+            <h2 className="logo">WorkTrace</h2>
+            <Form className="register-form" onSubmit={handleSubmit}>
               <h1 className="mb-4">Sign Up</h1>
+
+              {error && <p className="text-danger">{error}</p>}
+              {message && <p className="text-success">{message}</p>}
 
               {/* Email */}
               <Form.Group className="mb-3 mt-4" controlId="Email">
@@ -55,18 +98,21 @@ export const RegisterForm = () => {
               {/* Role */}
               <Form.Group className="mb-3" controlId="Role">
                 <Form.Label>Role</Form.Label>
-                <Form.Select>
-                  <option>Permissions</option>
-                  <option value="1">Student</option>
-                  <option value="2">Admin</option>
-                  <option value="3">Instructor</option>
+                <Form.Select
+                  value={role}
+                  onChange={(e) => setRole(e.target.value)}
+                  required
+                >
+                  <option value="">Permissions</option>
+                  <option value="user">User</option>
+                  <option value="teacher">Teacher</option>
                 </Form.Select>
               </Form.Group>
 
               {/* Password */}
               <Form.Group className="mb-3" controlId="Password">
                 <Form.Label>Password</Form.Label>
-                <div className="password-wrapper">
+                <InputGroup>
                   <Form.Control
                     type={showPassword ? "text" : "password"}
                     placeholder="Enter your password"
@@ -80,13 +126,13 @@ export const RegisterForm = () => {
                   >
                     {showPassword ? <FaEye /> : <FaEyeSlash />}
                   </span>
-                </div>
+                </InputGroup>
               </Form.Group>
 
               {/* Confirm Password */}
               <Form.Group className="mb-3" controlId="ConfirmPassword">
                 <Form.Label>Confirm Password</Form.Label>
-                <div className="password-wrapper">
+                <InputGroup>
                   <Form.Control
                     type={showPassword ? "text" : "password"}
                     placeholder="Confirm your password"
@@ -100,12 +146,14 @@ export const RegisterForm = () => {
                   >
                     {showPassword ? <FaEye /> : <FaEyeSlash />}
                   </span>
-                </div>
+                </InputGroup>
               </Form.Group>
 
               {/* Submit */}
               <Form.Group className="mt-4 text-center">
-                <Button className="w-100">Register</Button>
+                <Button type="submit" className="w-100">
+                  Register
+                </Button>
                 <p className="text-center mt-3">
                   Already have an account?{" "}
                   <a href="/signup">

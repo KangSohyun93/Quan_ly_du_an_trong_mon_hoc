@@ -1,47 +1,56 @@
-import React from "react";
-import "./ProjectInfo.css"; // Import CSS cho ProjectInfo
-import MembersList from "./MemberList.js"; // Đảm bảo đường dẫn đúng
+import React, { useEffect, useState } from "react";
+import "./ProjectInfo.css";
+import MembersList from "./MemberList";
 import { FaGithub } from "react-icons/fa";
+import { useParams } from "react-router-dom";
+import { fetchGroupData } from "../../services/group-service"; // Đường dẫn service đúng
 
 function ProjectInfo() {
-  const projectName = "Phát triển phần mềm theo chuẩn kỹ năng ITSS";
-  const projectCode = "IT4549";
-  const groupCode = "5";
-  const groupName = "5 anh em siêu nhân";
-  const description =
-    "Trang web giúp đỡ quản lý dự án, hỗ trợ theo dõi tiến trình công việc, đánh giá chéo công bằng giữa các thành viên.";
-  const technologies = ["HTML", "CSS", "NodeJs", "ReactJS"];
-  const githubLink =
-    "https://github.com/KangSohyun93/Quan_ly_du_an_trong_mon_hoc"; // Thay bằng link GitHub thực tế
-  const members = [
-    { name: "Alice", role: "Project Manager" },
-    { name: "Bob", role: "Member" },
-    { name: "Charlie", role: "Member" },
-    { name: "David", role: "Member" },
-    { name: "Eve", role: "Member" },
-  ];
+  const [data, setData] = useState(null);
+  const [error, setError] = useState("");
+  const { id } = useParams();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const result = await fetchGroupData(id); // Gọi nhóm có ID = 5
+        setData(result);
+      } catch (err) {
+        setError(err.message);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (error) return <div className="error">Lỗi: {error}</div>;
+  if (!data) return <div className="loading">Đang tải dữ liệu...</div>;
+
+  const { project, group, members } = data;
+
   return (
     <div className="project-info-container">
       <div className="project-details">
-        <h1>{projectName}</h1>
-        <h2 className="project-code">{projectCode}</h2>
+        <h1>{project.name}</h1>
+        <h2 className="project-code">{project.code}</h2>
         <div className="group-info-gr">
-          <h2>Group {groupCode}: </h2>
-          <p className="group-name-gr">{groupName}</p>
+          <h2>Group {group.code}: </h2>
+          <p className="group-name-gr">{group.name}</p>
         </div>
         <div className="group-info">
           <h2>Mô tả chủ đề: </h2>
-          <p className="description">{description}</p>
+          <p className="description">{project.description}</p>
         </div>
         <div className="technologies">
-          <strong>Công cụ:</strong> {technologies.join(", ")}
+          <strong>Công cụ:</strong> {project.technologies?.join(", ")}
         </div>
-        <div className="github-link">
-          <a href={githubLink}>
-            <strong>Link GitHub</strong>
-            <FaGithub className="icon" />
-          </a>
-        </div>
+        {project.githubLink && (
+          <div className="github-link">
+            <a href={project.githubLink} target="_blank" rel="noreferrer">
+              <strong>Link GitHub</strong> <FaGithub className="icon" />
+            </a>
+          </div>
+        )}
       </div>
       <span className="vertical-separator"></span>
       <div className="project-members">

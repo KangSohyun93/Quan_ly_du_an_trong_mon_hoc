@@ -1,15 +1,27 @@
 const express = require("express");
+const app = express();
+const mongoose = require("mongoose");
+const dotenv = require("dotenv");
 const cors = require("cors");
 
-const app = express();
+dotenv.config();
+
 app.use(cors());
 app.use(express.json());
 
-app.get("/api/hello", (req, res) => {
-  res.json({ message: "Hello from backend!" });
-});
+// Kết nối MongoDB
+mongoose
+  .connect(process.env.MONGODB_URI || "mongodb://localhost:27017/myapp")
+  .then(() => console.log("Successful connect with MongoDB"))
+  .catch((err) => console.error("Cannot connect with MongoDB:", err));
 
-const PORT = 8080;
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
+// Routes
+const authRoutes = require("./routes/auth-routes");
+app.use("/api/auth", authRoutes);
+const groupRoutes = require("./routes/group-routes");
+app.use("/api/group/:id", groupRoutes);
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () =>
+  console.log(`Sever is running on http://localhost:${PORT}`)
+);

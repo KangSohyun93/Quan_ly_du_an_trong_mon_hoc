@@ -13,9 +13,9 @@ function App() {
       <div className="App">
         <Routes>
           <Route path="/register" element={<RegisterForm />} />
-          <Route path="/signup" element={<LoginForm />} />
+          <Route path="/login" element={<LoginForm />} />
           <Route path="/home" element={<SV_HomeLayout />}>
-            <Route path="introduce" element={<ProjectInfo />} />
+            <Route path="group/:id/introduce" element={<ProjectInfo />} />
             {/* Thêm các route khác ở đây */}
           </Route>
           {/* Các route khác */}
