@@ -43,13 +43,73 @@ exports.updateChecklistItem = async (req, res) => {
   const { is_completed } = req.body;
 
   try {
+    console.log("Updating checklist item:", { checklistId, is_completed }); // Debug log
     await pool.query(
       "UPDATE TaskChecklists SET is_completed = ? WHERE checklist_id = ?",
       [is_completed, checklistId]
     );
+    console.log("Checklist item updated successfully"); // Debug log
     res.status(200).json({ message: "Checklist item updated" });
   } catch (error) {
     console.error("Error updating checklist item:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// Update task status
+exports.updateTaskStatus = async (req, res) => {
+  const { taskId } = req.params;
+  const { status } = req.body;
+
+  try {
+    console.log("Updating task status:", { taskId, status }); // Debug log
+    await pool.query(
+      "UPDATE Tasks SET status = ? WHERE task_id = ?",
+      [status, taskId]
+    );
+    console.log("Task status updated successfully"); // Debug log
+    res.status(200).json({ message: "Task status updated" });
+  } catch (error) {
+    console.error("Error updating task status:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// Fetch all projects
+exports.getProjects = async (req, res) => {
+  try {
+    const [rows] = await pool.query("SELECT project_id, project_name FROM Projects");
+    res.status(200).json(rows);
+  } catch (error) {
+    console.error("Error fetching projects:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// Create a new task with subtasks
+exports.createTask = async (req, res) => {
+  const { title, description, project_id, due_date, status, subtasks } = req.body;
+
+  try {
+    // Insert the task into the Tasks table
+    const [taskResult] = await pool.query(
+      "INSERT INTO Tasks (title, description, project_id, due_date, status) VALUES (?, ?, ?, ?, ?)",
+      [title, description || null, project_id, due_date || null, status]
+    );
+    const taskId = taskResult.insertId;
+
+    // Insert subtasks into the TaskChecklists table
+    if (subtasks && subtasks.length > 0) {
+      const subtaskValues = subtasks.map((subtask) => [taskId, subtask, false]);
+      await pool.query(
+        "INSERT INTO TaskChecklists (task_id, item_description, is_completed) VALUES ?",
+        [subtaskValues]
+      );
+    }
+
+    res.status(201).json({ message: "Task created successfully", taskId });
+  } catch (error) {
+    console.error("Error creating task:", error);
     res.status(500).json({ message: "Server error" });
   }
 };
