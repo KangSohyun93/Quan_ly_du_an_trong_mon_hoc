@@ -12,7 +12,6 @@ export async function fetchGroupData(groupId) {
         },
       }
     );
-
     if (!response.ok) {
       const error = await response.json();
       throw new Error(error.message || "Không thể lấy dữ liệu nhóm");

@@ -11,7 +11,7 @@ app.use(express.json());
 
 // Kết nối MongoDB
 mongoose
-  .connect(process.env.MONGODB_URI || "mongodb://localhost:27017/myapp")
+  .connect(process.env.MONGODB_URI || "mongodb://localhost:27017/test")
   .then(() => console.log("Successful connect with MongoDB"))
   .catch((err) => console.error("Cannot connect with MongoDB:", err));
 

@@ -27,11 +27,10 @@ function ProjectInfo() {
   if (!data) return <div className="loading">Đang tải dữ liệu...</div>;
 
   const { project, group, members } = data;
-
   return (
     <div className="project-info-container">
       <div className="project-details">
-        <h1>{project.name}</h1>
+        <h1>{group.className}</h1>
         <h2 className="project-code">{project.code}</h2>
         <div className="group-info-gr">
           <h2>Group {group.code}: </h2>
@@ -42,15 +41,13 @@ function ProjectInfo() {
           <p className="description">{project.description}</p>
         </div>
         <div className="technologies">
-          <strong>Công cụ:</strong> {project.technologies?.join(", ")}
+          <strong>Công cụ:</strong> {project.technologies}
         </div>
-        {project.githubLink && (
-          <div className="github-link">
-            <a href={project.githubLink} target="_blank" rel="noreferrer">
-              <strong>Link GitHub</strong> <FaGithub className="icon" />
-            </a>
-          </div>
-        )}
+        <div className="github-link">
+          <a href={project.githubLink} target="_blank" rel="noreferrer">
+            <strong>Link GitHub</strong> <FaGithub className="icon" />
+          </a>
+        </div>
       </div>
       <span className="vertical-separator"></span>
       <div className="project-members">

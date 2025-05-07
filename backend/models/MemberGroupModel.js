@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+
 const groupMemberSchema = new mongoose.Schema(
   {
     groupId: {
@@ -14,11 +15,11 @@ const groupMemberSchema = new mongoose.Schema(
     joinedAt: { type: Date, default: Date.now },
   },
   {
-    timestamps: false,
+    timestamps: true,
   }
 );
 
-// Đảm bảo không trùng thành viên cùng nhóm
+// Đảm bảo 1 người không thể có 2 vai trò trong cùng 1 nhóm
 groupMemberSchema.index({ groupId: 1, userId: 1 }, { unique: true });
 
 module.exports = mongoose.model("GroupMember", groupMemberSchema);

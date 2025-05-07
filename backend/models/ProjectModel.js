@@ -1,9 +1,15 @@
 const mongoose = require("mongoose");
 
 const projectSchema = new mongoose.Schema({
-  name: String,
-  classId: Number,
+  projectName: { type: String, required: true },
+  groupId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Group",
+    unique: true,
+    required: true,
+  },
   description: String,
+  toolsUsed: String,
   status: {
     type: String,
     enum: ["Ongoing", "Completed", "Cancelled"],
