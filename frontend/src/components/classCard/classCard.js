@@ -1,0 +1,76 @@
+import React from "react";
+import placeholderMember from "../../assets/images/placeholders/placeholder-member.jpg";
+import "./ClassCard.css";
+
+const ClassCard = ({
+  classId,
+  className,
+  groupName,
+  projectName,
+  projectId,
+  memberCount,
+  avatar,
+  avatarNumber,
+  avatarColor,
+  members,
+  onClick,
+}) => {
+  // Log để kiểm tra dữ liệu truyền vào
+  console.log("ClassCard props:", { classId, className, memberCount, members });
+
+  // Sử dụng members.length nếu members tồn tại, nếu không thì dùng memberCount hoặc 0
+  const displayMemberCount =
+    members && members.length > 0 ? members.length : memberCount || 0;
+
+  return (
+    <div className="classcard-container" onClick={onClick}>
+      <div
+        className="classcard-avatar"
+        style={{ backgroundColor: avatarColor }}
+      >
+        <div className="classcard-avatar-number">{avatarNumber}</div>
+      </div>
+      <div className="classcard-content">
+        <div className="classcard-name-description">
+          <div className="classcard-title">{className}</div>
+          <div className="classcard-description-text">
+            {groupName}: {projectName}
+          </div>
+        </div>
+        <div className="classcard-members">
+          <div className="classcard-members-list">
+            {members && members.length > 0 ? (
+              members.slice(0, 4).map((member, index) => (
+                <div key={index} className="classcard-member">
+                  <img
+                    className="classcard-member-img"
+                    src={member.avatar || placeholderMember} // Sử dụng đường dẫn trực tiếp từ database
+                    alt={`Thành viên ${index + 1}`}
+                    onError={(e) => {
+                      e.target.src = placeholderMember;
+                    }}
+                  />
+                </div>
+              ))
+            ) : (
+              <span className="no-members">No members</span>
+            )}
+          </div>
+          <div className="classcard-members-count">
+            {displayMemberCount}{" "}
+            {displayMemberCount === 1 ? "member" : "members"}
+          </div>
+        </div>
+      </div>
+      <div className="classcard-more-icon">…</div>
+    </div>
+  );
+};
+
+// Đặt defaultProps nếu cần thiết (có thể giúp tránh lỗi khi thiếu props)
+ClassCard.defaultProps = {
+  memberCount: 0,
+  members: [],
+};
+
+export default ClassCard;

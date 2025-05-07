@@ -1,0 +1,136 @@
+.join-class-container {
+  display: flex;
+  align-items: center;
+  background-color: #eceff8;
+  border-radius: 8px;
+  padding: 12px 16px;
+  max-width: 100%;
+  width: 100%;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
+  gap: 285px;
+}
+
+.join-class-label {
+  font-weight: 600;
+  margin-right: 16px;
+  color: #4a4a4a;
+}
+
+.join-class-search-box {
+  position: relative;
+  width: 500px; /* Thay vì flex-grow */
+  max-width: 100%; /* Đảm bảo responsive */
+}
+
+.join-class-input {
+  width: 100%;
+  padding: 8px 12px 8px 32px;
+  border: none;
+  border-radius: 9999px;
+  background-color: #ffffff;
+  outline: none;
+}
+
+.search-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #aaa;
+}
+
+.join-class-button {
+  margin-left: 16px;
+  background-color: #a0c0e0;
+  color: black;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.2s;
+}
+
+.join-class-button:hover {
+  background-color: #8bb0d0;
+}
+.popup-join-team {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.popup-content {
+  position: relative;
+  background: white;
+  padding: 32px 24px;
+  border-radius: 12px;
+  width: 320px;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.popup-image-placeholder {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 16px;
+  background-color: #e0e0e0;
+  color: #555;
+  font-size: 32px;
+  line-height: 64px;
+  border-radius: 12px;
+}
+
+.popup-title {
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+.popup-input {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  outline: none;
+}
+
+.popup-join-button {
+  width: 100%;
+  background-color: #4285f4;
+  color: white;
+  font-weight: bold;
+  padding: 10px 0;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.popup-join-button:hover {
+  background-color: #357ae8;
+}
+.popup-close-button {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: #888;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.popup-close-button:hover {
+  color: #333;
+}
