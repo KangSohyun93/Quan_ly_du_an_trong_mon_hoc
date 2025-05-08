@@ -12,7 +12,17 @@ export const fetchTasks = async () => {
   if (!response.ok) {
     throw new Error("Failed to fetch tasks");
   }
-  return response.json();
+  const data = await response.json();
+  return data.map((task) => ({
+    task_id: task.task_id,
+    title: task.title,
+    due_date: task.due_date,
+    status: task.status,
+    checklists: task.checklists,
+    comment_count: task.comment_count,
+    progress_percentage: task.progress_percentage, // Add progress_percentage
+    assigned_to: task.assigned_to || task.task_id, // Fallback to task_id if assigned_to is null
+  }));
 };
 
 export const updateChecklistItem = async (checklistId, isCompleted) => {
@@ -30,14 +40,17 @@ export const updateChecklistItem = async (checklistId, isCompleted) => {
   return response.json();
 };
 
-export const updateTaskStatus = async (taskId, status) => {
+export const updateTaskStatus = async (taskId, status, progressPercentage = null) => {
   const response = await fetch(`${API_BASE_URL}/api/tasks/${taskId}/status`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
       // Add authentication headers if needed
     },
-    body: JSON.stringify({ status: status.toUpperCase() }), // Convert to uppercase for backend (To-Do, In-Progress, Done)
+    body: JSON.stringify({
+      status: status.toUpperCase(), // Convert to uppercase for backend
+      progress_percentage: progressPercentage, // Include progress_percentage
+    }),
   });
   if (!response.ok) {
     throw new Error("Failed to update task status");

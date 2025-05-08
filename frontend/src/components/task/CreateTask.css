@@ -1,72 +1,149 @@
 /* frontend/src/components/task/CreateTask.css */
 .create-task-container {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-  
-  .form-group {
-    margin-bottom: 15px;
-  }
-  
-  .form-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-  }
-  
-  .form-group input,
-  .form-group textarea,
-  .form-group select {
-    width: 100%;
-    padding: 8px;
-    box-sizing: border-box;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  
-  .form-group textarea {
-    resize: vertical;
-  }
-  
-  .subtask-input {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-  }
-  
-  .subtask-input input {
-    flex: 1;
-    margin-right: 10px;
-  }
-  
-  .remove-subtask-btn,
-  .add-subtask-btn,
-  .submit-btn {
-    padding: 8px 16px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .add-subtask-btn {
-    background-color: #4caf50;
-    color: white;
-  }
-  
-  .remove-subtask-btn {
-    background-color: #f44336;
-    color: white;
-  }
-  
-  .submit-btn {
-    background-color: #2196f3;
-    color: white;
-    width: 100%;
-  }
-  
-  .submit-btn:hover,
-  .add-subtask-btn:hover,
-  .remove-subtask-btn:hover {
-    opacity: 0.9;
-  }
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  width: 100%;
+  margin: 0;
+}
+
+.create-task-container h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+  color: #333;
+  text-align: center;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #555;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 16px;
+  transition: border-color 0.3s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  border-color: #2196f3;
+  outline: none;
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.subtask-input {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.subtask-input input {
+  flex: 1;
+  margin-right: 10px;
+}
+
+.remove-subtask-btn,
+.add-subtask-btn,
+.submit-btn,
+.cancel-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.add-subtask-btn {
+  background-color: #4caf50;
+  color: white;
+  display: block;
+  width: 100%;
+}
+
+.remove-subtask-btn {
+  background-color: #f44336;
+  color: white;
+}
+
+.submit-btn {
+  background-color: #2196f3;
+  color: white;
+}
+
+.cancel-btn {
+  background-color: #ccc;
+  color: #333;
+  margin-left: 10px;
+}
+
+.submit-btn:hover {
+  background-color: #1976d2;
+}
+
+.cancel-btn:hover {
+  background-color: #b0b0b0;
+}
+
+.add-subtask-btn:hover {
+  background-color: #45a049;
+}
+
+.remove-subtask-btn:hover {
+  background-color: #e53935;
+}
+
+.form-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+/* Modal styles */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.modal-content {
+  max-width: 90%;
+  width: 800px;
+  max-height: 80vh;
+  overflow-y: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  border-radius: 10px 10px 10px 10px;
+}
+
+.modal-content::-webkit-scrollbar{
+  display: none;
+}

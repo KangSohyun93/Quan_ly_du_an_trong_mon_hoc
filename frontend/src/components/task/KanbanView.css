@@ -326,3 +326,31 @@ h4.body_1 {
   top: 8px;
   left: 4px;
 }
+/* frontend/src/components/task/KanbanView.css */
+/* Existing styles remain unchanged, append the following at the end */
+
+/* Container for the Add Task button */
+.add-task-btn-container {
+  margin-top: 20px;
+  text-align: center;
+}
+
+/* Style for the long "+" button */
+.add-task-btn {
+  width: 100%;
+  padding: 10px;
+  background-color: #e0e0e0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  color: #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.add-task-btn:hover {
+  background-color: #d0d0d0;
+}

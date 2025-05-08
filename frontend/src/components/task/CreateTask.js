@@ -1,9 +1,9 @@
 // frontend/src/components/task/CreateTask.js
 import React, { useState, useEffect } from "react";
 import { fetchProjects, createTask } from "../../services/api-client";
-import "./CreateTask.css"; // Optional: Create a CSS file for styling
+import "./CreateTask.css";
 
-const CreateTask = () => {
+const CreateTask = ({ onTaskCreated, onCancel }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [projectId, setProjectId] = useState("");
@@ -66,9 +66,20 @@ const CreateTask = () => {
       setProjectId(projects[0]?.project_id || "");
       setDueDate("");
       setSubTasks([""]);
+      // Call the callback to refresh the task list
+      if (onTaskCreated) {
+        onTaskCreated();
+      }
     } catch (error) {
       console.error("Error creating task:", error);
       alert("Failed to create task.");
+    }
+  };
+
+  // Handle cancel action
+  const handleCancelClick = () => {
+    if (onCancel) {
+      onCancel();
     }
   };
 
@@ -149,9 +160,14 @@ const CreateTask = () => {
           </button>
         </div>
 
-        <button type="submit" className="submit-btn">
-          Create Task
-        </button>
+        <div className="form-buttons">
+          <button type="submit" className="submit-btn">
+            Create Task
+          </button>
+          <button type="button" onClick={handleCancelClick} className="cancel-btn">
+            Cancel
+          </button>
+        </div>
       </form>
     </div>
   );

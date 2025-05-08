@@ -1,7 +1,7 @@
 // backend/config/db-connect.js
 module.exports = {
-  host: ,
-  user: ,
-  password: ,
-  database: ,
+  host: 'localhost',
+  user: 'root',
+  password: 'trang',
+  database: 'project_management'
 };

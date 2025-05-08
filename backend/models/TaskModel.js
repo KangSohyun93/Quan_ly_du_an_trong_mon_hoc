@@ -13,12 +13,13 @@ const Task = sequelize.define('Tasks', {
   task_id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
   project_id: { type: DataTypes.INTEGER, allowNull: false },
   title: { type: DataTypes.STRING(100), allowNull: false },
-  description: { type: DataTypes.TEXT, allowNull: true }, // Added description field
+  description: { type: DataTypes.TEXT, allowNull: true },
   status: { type: DataTypes.ENUM('To-Do', 'In-Progress', 'Done'), defaultValue: 'To-Do' },
-  due_date: { type: DataTypes.DATE, allowNull: true }, // Changed to DATE type
-  date: { type: DataTypes.STRING(50) }, // Kept for KanbanView compatibility
-  time: { type: DataTypes.STRING(50) }, // Kept for KanbanView compatibility
-  avatar: { type: DataTypes.STRING(255) }, // Kept for KanbanView compatibility
+  due_date: { type: DataTypes.DATE, allowNull: true },
+  date: { type: DataTypes.STRING(50) },
+  time: { type: DataTypes.STRING(50) },
+  avatar: { type: DataTypes.STRING(255) },
+  progress_percentage: { type: DataTypes.DECIMAL(5, 2), defaultValue: 0.00 }, // Added progress_percentage
 }, {
   timestamps: false,
 });

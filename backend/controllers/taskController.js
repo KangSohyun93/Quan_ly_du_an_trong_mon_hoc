@@ -5,7 +5,7 @@ const dbConfig = require("../config/db-connect");
 // Create a connection pool
 const pool = mysql.createPool(dbConfig);
 
-// Fetch all tasks with their checklists and comment counts
+// Fetch all tasks with their checklists, comment counts, and progress_percentage
 exports.getTasks = async (req, res) => {
   try {
     const [rows] = await pool.query(`
@@ -13,18 +13,19 @@ exports.getTasks = async (req, res) => {
           t.task_id,
           t.title,
           CASE
-            WHEN t.status = 'Done' then t.completed_at
+            WHEN t.status = 'Done' THEN t.completed_at
             ELSE t.due_date
           END AS due_date,
           t.status,
+          t.progress_percentage,
           JSON_ARRAYAGG(
               JSON_OBJECT(
                   'checklist_id', tc.checklist_id,
                   'item_description', tc.item_description,
                   'is_completed', tc.is_completed
               )
-          ) as checklists,
-          (SELECT COUNT(*) FROM TaskComments tcmt WHERE tcmt.task_id = t.task_id) as comment_count
+          ) AS checklists,
+          (SELECT COUNT(*) FROM TaskComments tcmt WHERE tcmt.task_id = t.task_id) AS comment_count
       FROM Tasks t
       LEFT JOIN TaskChecklists tc ON tc.task_id = t.task_id
       GROUP BY t.task_id
@@ -37,7 +38,7 @@ exports.getTasks = async (req, res) => {
   }
 };
 
-// Update a checklist item
+// Update a checklist item and recalculate progress_percentage
 exports.updateChecklistItem = async (req, res) => {
   const { checklistId } = req.params;
   const { is_completed } = req.body;
@@ -48,7 +49,28 @@ exports.updateChecklistItem = async (req, res) => {
       "UPDATE TaskChecklists SET is_completed = ? WHERE checklist_id = ?",
       [is_completed, checklistId]
     );
-    console.log("Checklist item updated successfully"); // Debug log
+
+    // Fetch the task and its checklists to recalculate progress_percentage
+    const [checklistRows] = await pool.query(
+      "SELECT task_id FROM TaskChecklists WHERE checklist_id = ?",
+      [checklistId]
+    );
+    const taskId = checklistRows[0].task_id;
+
+    const [subtaskRows] = await pool.query(
+      "SELECT is_completed FROM TaskChecklists WHERE task_id = ?",
+      [taskId]
+    );
+    const totalSubtasks = subtaskRows.length;
+    const completedSubtasks = subtaskRows.filter((sub) => sub.is_completed).length;
+    const progress = totalSubtasks > 0 ? (completedSubtasks / totalSubtasks) * 100 : 0;
+
+    await pool.query(
+      "UPDATE Tasks SET progress_percentage = ? WHERE task_id = ?",
+      [parseFloat(progress.toFixed(2)), taskId]
+    );
+
+    console.log("Checklist item updated successfully, new progress:", progress); // Debug log
     res.status(200).json({ message: "Checklist item updated" });
   } catch (error) {
     console.error("Error updating checklist item:", error);
@@ -56,16 +78,20 @@ exports.updateChecklistItem = async (req, res) => {
   }
 };
 
-// Update task status
+// Update task status and optionally progress_percentage
 exports.updateTaskStatus = async (req, res) => {
   const { taskId } = req.params;
-  const { status } = req.body;
+  const { status, progress_percentage } = req.body;
 
   try {
-    console.log("Updating task status:", { taskId, status }); // Debug log
+    console.log("Updating task status:", { taskId, status, progress_percentage }); // Debug log
+    const updates = {};
+    if (status) updates.status = status;
+    if (progress_percentage !== undefined) updates.progress_percentage = progress_percentage;
+
     await pool.query(
-      "UPDATE Tasks SET status = ? WHERE task_id = ?",
-      [status, taskId]
+      "UPDATE Tasks SET ? WHERE task_id = ?",
+      [updates, taskId]
     );
     console.log("Task status updated successfully"); // Debug log
     res.status(200).json({ message: "Task status updated" });
@@ -93,8 +119,8 @@ exports.createTask = async (req, res) => {
   try {
     // Insert the task into the Tasks table
     const [taskResult] = await pool.query(
-      "INSERT INTO Tasks (title, description, project_id, due_date, status) VALUES (?, ?, ?, ?, ?)",
-      [title, description || null, project_id, due_date || null, status]
+      "INSERT INTO Tasks (title, description, project_id, due_date, status, progress_percentage) VALUES (?, ?, ?, ?, ?, ?)",
+      [title, description || null, project_id, due_date || null, status, 0.00] // Default progress_percentage to 0.00
     );
     const taskId = taskResult.insertId;
 
