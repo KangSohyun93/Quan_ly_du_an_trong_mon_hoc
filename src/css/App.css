@@ -1,0 +1,9 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+}
+
+.screen {
+    display: grid;
+    grid-template-columns: 255.2px calc(100% - 255.2px);
+}

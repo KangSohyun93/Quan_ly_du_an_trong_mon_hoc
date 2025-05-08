@@ -1,0 +1,36 @@
+.recent-commits-container {
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    padding: 20px;
+    max-height: 300px;
+    margin: 10px;
+}
+
+.recent-commits-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.recent-commits-title {
+    padding: 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.github-icon {
+    font-size: 18px;
+}
+
+.commits-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px
+}
+
+.commit-item {
+    color: #666666;
+    padding: 10px;
+    font-weight: 400;
+}
