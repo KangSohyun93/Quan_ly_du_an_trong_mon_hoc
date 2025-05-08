@@ -1,0 +1,170 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+.dashboard-container {
+    /* display: flex; */
+    background-color: #EDEEFC;
+    /* margin-left: 255.2px; */
+    /* width: 100%; */
+    grid-column: 2 / span 1;
+}
+
+.dashboard-content {
+    /* flex: 1; */
+    padding: 0 30px;
+    /* width: 100%; */
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    background-color: #fff;
+    padding: 20px;
+    gap: 30px;
+}
+
+.dashboard-title {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.project-name {
+    font-family: 'Roboto', sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+}
+
+.project-select {
+    border: none;
+    outline: none;
+    color: #666666;
+    margin-left: -4px;
+}
+
+.vertical-line {
+    height: 34px;
+    width: 0.83px;
+    background-color: #666666;
+}
+
+.project-members {
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.member-avatar {
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    /* border: #fff solid 0.68px; */
+    position: relative;
+    margin-left: -11px;
+}
+
+.dashboard-controls {
+    display: flex;
+    background-color: #fff;
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    border-radius: 6.67px;
+    justify-content: space-between;
+}
+
+.tab-section {
+    display: flex;
+    gap: 20px;
+}
+
+.sprint-select {
+    outline: none;
+    border: none;
+    background-color: #dbeafe;
+    color: #3b82f6;
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+}
+
+.sprint-select,
+.dashboard-btn,
+.filter {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+}
+
+.dashboard-btn {
+    background-color: white;
+    padding: 0.5rem 0;
+}
+
+.dashboard-btn-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.dashboard-btn-active,
+.dashboard-btn-active button {
+    color: #3b82f6;
+    border: none;
+}
+
+.rate-icon {
+    color: #eeee5b;
+}
+
+.control-section {
+    display: flex;
+    gap: 20px;
+}
+
+.filter-icon {
+    color: #3b82f6;
+}
+
+.filter {
+    border: none;
+    outline: none;
+}
+
+.dashboard-stats-container {
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
+
+.dashboard-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 19px;
+    padding: 10px;
+}
+
+.dashboard-charts {
+    /* display: grid;
+    grid-template-columns: auto auto; */
+    /* gap: 1rem; */
+    /* flex-direction: column; */
+    padding-bottom: 20px;
+}
+
+.col-1 {
+    flex-basis: 100%;
+}
+
+.chart-large {
+    grid-column: 1;
+}
+
+.chart-small,
+.chart-medium {
+    background-color: white;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}

@@ -1,0 +1,70 @@
+.chart-container {
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    padding: 20px;
+    max-height: 300px;
+    margin: 10px;
+}
+
+.linechart-header {
+    display: flex;
+    gap: 10px;
+    font-family: 'Inter', sans-serif;
+    align-items: center;
+}
+
+.linechart-title {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.linechart-title button {
+    background-color: #f8f9fa;
+    padding: 10px;
+    font-size: 16px;
+}
+
+.title-active {
+    font-weight: 600;
+}
+
+.title-deactive {
+    font-weight: 400;
+    color: #959596;
+}
+
+.legend-vertical-line {
+    height: 14px;
+    width: 2px;
+    background-color: #c7c7c8;
+}
+
+.linechart-legend {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+    font-size: 14px;
+}
+
+.legend-container {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    padding: 10px;
+}
+
+.legend-point {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+}
+
+.bg-black {
+    background-color: black;
+}
+
+.bg-blue {
+    background-color: #aec7ed;
+}

@@ -1,6 +1,11 @@
 .sidebar {
   font-family: "Inter", sans-serif;
-  position: relative;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 1000;
+  grid-column: 1 / span 1;
 }
 
 .sidebar .icon {
@@ -65,7 +70,7 @@
 }
 
 .h-screen {
-  height: 100vh;
+  height: 100%;
 }
 
 .border-r {

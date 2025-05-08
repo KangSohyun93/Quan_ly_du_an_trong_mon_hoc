@@ -1,0 +1,29 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+.bg-violet {
+    background-color: #EDEEFC;
+}
+
+.bg-blue {
+    background-color: #E6F1FD
+}
+
+.statcard {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border-radius: 10.67px;
+    padding: 20px;
+}
+
+.statcard-title {
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+}
+
+.statcard-value {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 24px;
+}

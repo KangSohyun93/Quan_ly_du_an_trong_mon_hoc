@@ -1,0 +1,14 @@
+.barchart-container {
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    padding: 20px;
+    max-height: 300px;
+    margin: 10px;
+}
+
+.barchart-title {
+    padding: 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+}

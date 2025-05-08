@@ -1,0 +1,94 @@
+.member-info-container {
+    background: linear-gradient(135deg, #f0f7ff 0%, #e6f0fa 100%);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+    height: 100%;
+}
+
+.member-info-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.member-select {
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #d1d5db;
+    background-color: #ffffff;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: #1F2937;
+    cursor: pointer;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.member-select:hover {
+    border-color: #3B82F6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.member-details {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.member-info-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 2px solid #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.member-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.member-info-name {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1F2937;
+}
+
+.member-info-role {
+    font-size: 14px;
+    color: #3B82F6;
+    font-weight: 500;
+}
+
+.member-stats {
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    max-height: 300px;
+    /* Chiều cao cố định cho 3 sprint */
+    overflow-y: auto;
+    /* Thanh cuộn dọc nếu thêm sprint */
+}
+
+.stats-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1F2937;
+    margin-bottom: 12px;
+}
+
+.stats-item {
+    font-size: 14px;
+    color: #4B5563;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.stats-item span {
+    font-weight: 600;
+    color: #1F2937;
+}
