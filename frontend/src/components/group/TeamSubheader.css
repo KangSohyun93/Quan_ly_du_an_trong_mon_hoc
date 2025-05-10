@@ -1,0 +1,101 @@
+/* src/components/roadmap/TeamSubheader.css */
+.team-subheader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 25px;
+    background-color: #f4f5f7; /* Màu nền giống hình */
+    border-bottom: 1px solid #dfe1e6;
+    min-height: 50px;
+}
+
+.sprint-selector-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.sprint-label {
+    font-size: 0.9em;
+    color: #5e6c84;
+    font-weight: 500;
+}
+
+.sprint-selector-wrapper {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+.sprint-selector {
+    appearance: none;
+    background-color: transparent;
+    border: 1px solid #ccc; /* Cho dễ nhìn hơn chút */
+    padding: 6px 25px 6px 10px;
+    font-size: 0.9em;
+    color: #172b4d;
+    cursor: pointer;
+    border-radius: 3px;
+    min-width: 150px; /* Độ rộng tối thiểu */
+    max-width: 250px; /* Giới hạn độ rộng nếu tên sprint quá dài */
+    text-overflow: ellipsis; /* Hiển thị ... nếu quá dài */
+    white-space: nowrap;
+    overflow: hidden;
+    transition: border-color 0.2s ease;
+}
+.sprint-selector:hover {
+    border-color: #888;
+}
+.sprint-selector:focus {
+    outline: none;
+    border-color: #0052cc;
+    box-shadow: 0 0 0 1px #0052cc;
+}
+
+.sprint-selector-icon {
+    position: absolute;
+    right: 8px;
+    width: 16px;
+    height: 16px;
+    color: #5e6c84;
+    pointer-events: none;
+}
+
+.no-sprints-text {
+    font-size: 0.9em;
+    color: #7a869a;
+    padding: 6px 10px;
+}
+
+.subheader-nav {
+    display: flex;
+    align-items: center;
+    gap: 5px; /* Khoảng cách giữa các item */
+}
+
+.subheader-nav-item {
+    padding: 8px 12px;
+    text-decoration: none;
+    color: #5e6c84; /* Màu chữ mặc định */
+    font-size: 0.9em;
+    font-weight: 500;
+    border-radius: 3px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.subheader-nav-item:hover {
+    background-color: #e9eaec;
+    color: #172b4d;
+}
+
+.subheader-nav-item.active {
+    background-color: #e7f0ff; /* Màu nền khi active */
+    color: #0052cc; /* Màu chữ khi active */
+    font-weight: 600;
+}
+
+.subheader-actions {
+    display: flex;
+    align-items: center;
+    /* Nếu có nút filter, search thì thêm style ở đây */
+}
