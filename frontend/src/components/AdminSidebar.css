@@ -1,0 +1,137 @@
+/* frontend/src/components/layout/AdminSidebar.css */
+.admin-sidebar {
+    width: 240px; /* Tăng độ rộng một chút nếu cần */
+    background-color: #ffffff; /* Nền trắng */
+    color: #333; /* Màu chữ tối */
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    border-right: 1px solid #e0e0e0; /* Đường kẻ mỏng bên phải */
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; /* Font giống hệ thống */
+}
+
+.sidebar-header {
+    padding: 20px 25px; /* Tăng padding ngang */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* border-bottom: 1px solid #f0f0f0; /* Đường kẻ phân cách có thể bỏ nếu không thích */
+    /* margin-bottom: 15px; Khoảng cách với profile */
+}
+
+.sidebar-logo-brand {
+    /* height: 35px; Điều chỉnh kích thước logo */
+    /* width: auto; Nếu logo SVG đã có tỷ lệ đúng */
+    text-align: center;
+    margin-right: 10px; /* Khoảng cách nếu có chữ bên cạnh */
+}
+/* Nếu logo là chữ "WorkTrace" thì có thể style thêm cho nó */
+
+.admin-profile {
+    display: flex;
+    align-items: center;
+    padding: 10px 25px; /* Padding cho profile */
+    margin-bottom: 20px; /* Khoảng cách với menu */
+    border-bottom: 2px solid #e0e0e0;
+    border-top: 2px solid #e0e0e0;
+}
+
+.admin-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 12px;
+    object-fit: cover; /* Đảm bảo ảnh avatar không bị méo */
+    
+}
+
+.admin-name {
+    font-weight: 600;
+    font-size: 0.95em;
+    color: #2c3e50; /* Màu chữ đậm cho tên admin */
+}
+
+
+.sidebar-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-nav li {
+    margin: 0 15px; /* Tạo khoảng cách trái phải cho li để bo tròn đẹp hơn */
+}
+
+.sidebar-nav li a {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px; /* Điều chỉnh padding cho item menu */
+    color: #555; /* Màu chữ cho link */
+    text-decoration: none;
+    transition: background-color 0.2s, color 0.2s;
+    border-radius: 8px; /* Bo tròn cho item menu */
+    margin-bottom: 5px; /* Khoảng cách giữa các item */
+}
+
+.sidebar-nav li a:hover {
+    background-color: #f0f2f5; /* Màu nền xám nhạt khi hover */
+    color: #2979ff; /* Màu chữ xanh khi hover (ví dụ) */
+}
+
+.sidebar-nav li.active a {
+    background-color: #e3f2fd; /* Màu nền xanh dương rất nhạt khi active */
+    color: #1976d2; /* Màu chữ xanh dương đậm khi active */
+    font-weight: 500; /* Chữ đậm hơn chút khi active */
+}
+.sidebar-nav li.active a .nav-icon {
+    color: #1976d2; /* Icon cũng có màu xanh khi active */
+}
+
+
+.nav-icon {
+    margin-right: 16px;
+    font-size: 1.3em; /* Kích thước icon */
+    display: flex; /* Để căn chỉnh icon tốt hơn */
+    align-items: center;
+    color: #777; /* Màu icon mặc định */
+    transition: color 0.2s;
+}
+.sidebar-nav li a:hover .nav-icon {
+    color: #2979ff; /* Icon cũng có màu xanh khi hover */
+}
+
+
+.nav-label {
+    font-size: 0.9em;
+}
+
+.sidebar-footer {
+    margin-top: auto;
+    margin-top: auto;
+    padding: 20px 25px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    /* border-top: 1px solid #f0f0f0; /* Có thể bỏ đường kẻ này */
+}
+
+.logout-link {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px; /* Giống item menu */
+    color: #555;
+    text-decoration: none;
+    transition: background-color 0.2s, color 0.2s;
+    border-radius: 8px;
+}
+
+.logout-link:hover {
+    background-color: #f0f2f5;
+    color: #d32f2f; /* Màu đỏ khi hover logout */
+}
+.logout-link:hover .nav-icon {
+    color: #d32f2f; /* Icon cũng đỏ khi hover logout */
+}

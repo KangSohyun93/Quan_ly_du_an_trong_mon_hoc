@@ -1,0 +1,14 @@
+/* frontend/src/components/layout/AdminLayout.css */
+.admin-layout {
+    /* display: flex; */
+}
+
+.admin-content {
+    margin-left: 250px; /*Bằng với width của sidebar*/
+    flex-grow: 1; /* Cho phép nội dung chính chiếm hết không gian còn lại */
+    /* padding: 20px; // Bạn có thể đặt padding ở đây hoặc trong từng page */
+    /* background-color: #f4f6f9; // Màu nền cho content area */
+    min-height: 100vh; /* Đảm bảo content area ít nhất bằng chiều cao màn hình */
+    /*overflow-y: auto; /* Cho phép cuộn nếu nội dung dài */
+}
+

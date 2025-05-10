@@ -1,5 +1,6 @@
 const express = require("express");
 const taskRoutes = require("./routes/task-routes");
+const userRoutes = require('./routes/user-routes');
 const cors = require("cors"); // Import CORS
 require("dotenv").config();
 
@@ -14,6 +15,7 @@ app.use(cors({
 
 app.use(express.json());
 app.use("/api", taskRoutes);
+app.use("/api/users", userRoutes); // Use the user routes
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

@@ -1,0 +1,301 @@
+/* frontend/src/pages/UserManagerPage.css */
+.user-manager-page {
+    display: flex; /* Nếu bạn có sidebar và content */
+    flex-direction: column;
+    /* Ví dụ: font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; */
+}
+
+.user-manager-content {
+    flex-grow: 1;
+    padding: 25px;
+    /* background-color: #f0f2f5; Màu nền xám nhạt giống hình */
+}
+
+.controls-bar {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.search-input,
+.filter-dropdown {
+    padding: 5px 8px;
+    border: 1px solid #d9d9d9;
+    border-radius: 20px; /* Bo tròn mạnh */
+    font-size: 14px;
+    outline: none;
+}
+.search-input:focus,
+.filter-dropdown:focus {
+    border-color: #4A90E2; /* Màu xanh khi focus */
+    box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+}
+
+.search-input {
+    width: 20%;
+    flex-grow: 1;
+    background-image: url(data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%23aaa%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M11.742%2010.344a6.5%206.5%200%201%200-1.397%201.398h-.001c.03.04.062.078.098.115l3.85%203.85a1%201%200%200%200%201.415-1.414l-3.85-3.85a1.007%201.007%200%200%200-.115-.1zM12%206.5a5.5%205.5%200%201%201-11%200%205.5%205.5%200%200%201%2011%200z%22/%3E%3C/svg%3E);
+    background-repeat: no-repeat;
+    background-position: 15px center;
+    padding-left: 40px;
+}
+
+.filter-dropdown {
+    min-width: 100px; /* Kích thước tối thiểu cho dropdown */
+    background-color: #fff; /* Đảm bảo nền trắng */
+}
+.date-filter-placeholder {
+    color: #777;
+    cursor: default;
+}
+
+.add-user-button {
+    padding: 10px 20px;
+    background-color: #4A90E2; /* Màu xanh dương đậm */
+    color: white;
+    border: none;
+    border-radius: 20px; /* Bo tròn mạnh */
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+    transition: background-color 0.2s;
+}
+.add-user-button:hover {
+    background-color: #357ABD; /* Màu xanh đậm hơn khi hover */
+}
+
+.feedback-message {
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    text-align: center;
+}
+.error-text.feedback-message {
+    background-color: #fff1f0;
+    border: 1px solid #ffccc7;
+    color: #cf1322;
+}
+.loading-text.table-feedback,
+.no-data-text.table-feedback,
+.loading-text {
+    text-align: center;
+    padding: 20px;
+    font-style: italic;
+    color: #555;
+}
+
+
+/* Table Styles */
+.user-table-container {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+    overflow-x: auto; /* Cho phép cuộn ngang nếu bảng quá rộng */
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse; /* Gộp đường viền */
+}
+
+th:first-child, td:first-child{
+    text-align: center;
+}
+
+th:last-child, td:last-child{
+    text-align: center;
+}
+
+th, td {
+    padding: 14px 18px; /* Tăng padding cho dễ nhìn */
+    text-align: left;
+    border-bottom: 1px solid #f0f0f0; /* Đường kẻ ngang mỏng hơn */
+    font-size: 14px;
+}
+
+th {
+    background-color: #fafafa; /* Màu nền xám rất nhạt cho header */
+    font-weight: 600; /* Chữ đậm hơn cho header */
+    color: #595959;
+}
+
+tr:last-child td {
+    border-bottom: none; /* Bỏ đường kẻ ở hàng cuối */
+}
+
+tr:hover {
+    background-color: #f9f9f9; /* Màu nền khi hover hàng */
+}
+
+.status-badge {
+    padding: 5px 12px; /* Tăng padding cho badge */
+    border-radius: 16px; /* Bo tròn mạnh hơn cho badge */
+    font-size: 12px;
+    font-weight: 500;
+    display: inline-block; /* Để padding có tác dụng đúng */
+    text-transform: capitalize;
+}
+
+.status-active {
+    background-color: #e6f7ff; /* Xanh lá cây nhạt (giống Ant Design Active) */
+    color: #1890ff; /* Xanh lá cây đậm */
+}
+
+.status-banned {
+    background-color: #fff1f0; /* Đỏ nhạt (giống Ant Design Banned) */
+    color: #f5222d; /* Đỏ đậm */
+}
+
+.action-icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px; /* Kích thước icon */
+    margin: 0 5px;
+    padding: 5px;
+    color: #555;
+    transition: color 0.2s;
+}
+.action-icon:hover {
+    color: #4A90E2; /* Màu xanh khi hover icon */
+}
+.delete-icon:hover {
+    color: #f5222d; /* Màu đỏ khi hover icon xóa */
+}
+
+/* Pagination Controls */
+.pagination-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    font-size: 14px;
+}
+
+.rows-per-page, .page-navigator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.rows-per-page select {
+    padding: 6px 10px;
+    border-radius: 4px;
+    border: 1px solid #d9d9d9;
+}
+
+.page-navigator button {
+    padding: 6px 12px;
+    border: 1px solid #d9d9d9;
+    background-color: white;
+    cursor: pointer;
+    border-radius: 4px;
+    color: #595959;
+    transition: border-color 0.2s, color 0.2s;
+}
+.page-navigator button:hover:not(:disabled) {
+    border-color: #4A90E2;
+    color: #4A90E2;
+}
+.page-navigator button.active {
+    background-color: #4A90E2;
+    color: white;
+    border-color: #4A90E2;
+}
+.page-navigator button:disabled {
+    color: #bfbfbf;
+    cursor: not-allowed;
+    border-color: #d9d9d9;
+}
+.page-ellipsis {
+    padding: 0 5px;
+    color: #888;
+}
+
+/* Modal Styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6); /* Tăng độ mờ */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000; /* Đảm bảo modal ở trên cùng */
+}
+
+.modal-content {
+    background: white;
+    padding: 25px 30px; /* Tăng padding */
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 450px; /* Tăng max-width chút */
+}
+
+.modal-content h4 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 20px; /* Tăng font size */
+    color: #333;
+}
+
+.modal-content p {
+    margin-bottom: 25px; /* Tăng margin */
+    font-size: 15px;
+    color: #555;
+    line-height: 1.6;
+}
+.modal-content p strong {
+    color: #222;
+}
+
+.modal-error { /* CSS cho lỗi trong modal */
+    background-color: #fff1f0;
+    border: 1px solid #ffccc7;
+    color: #cf1322;
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px; /* Tăng gap */
+}
+
+.modal-actions button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 500; /* Chữ vừa phải */
+    font-size: 14px;
+    transition: opacity 0.2s;
+}
+.modal-actions button:hover {
+    opacity: 0.85;
+}
+
+.button-secondary {
+    background-color: #f0f2f5; /* Xám nhạt */
+    color: #595959;
+    border: 1px solid #d9d9d9;
+}
+.button-danger {
+    background-color: #ff4d4f; /* Đỏ (Ant Design danger) */
+    color: white;
+}
