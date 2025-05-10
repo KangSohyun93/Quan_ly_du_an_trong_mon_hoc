@@ -60,6 +60,20 @@ INSERT INTO Groups (group_name, class_id, leader_id) VALUES
 ('Nhóm 9', 100005, 25), -- Student25, class Trí tuệ nhân tạo
 ('Nhóm 10', 100005, 29); -- Student29, class Trí tuệ nhân tạo
 
+-- Chèn dữ liệu vào bảng ClassMembers
+-- Gán tất cả sinh viên vào các lớp dựa trên nhóm hoặc lớp tương ứng
+INSERT INTO ClassMembers (class_id, user_id) VALUES
+-- Lớp 100001 (Công nghệ phần mềm): Student1-8 (đã có nhóm), Student9-10 (chưa có nhóm)
+(100001, 1), (100001, 2), (100001, 3), (100001, 4), (100001, 5), (100001, 6), (100001, 7), (100001, 8), (100001, 9), (100001, 10),
+-- Lớp 100002 (Lập trình web): Student7-14 (đã có nhóm), Student15-16 (chưa có nhóm)
+(100002, 7), (100002, 8), (100002, 9), (100002, 10), (100002, 11), (100002, 12), (100002, 13), (100002, 14), (100002, 15), (100002, 16),
+-- Lớp 100003 (Cấu trúc dữ liệu): Student13-20 (đã có nhóm), Student21-22 (chưa có nhóm)
+(100003, 13), (100003, 14), (100003, 15), (100003, 16), (100003, 17), (100003, 18), (100003, 19), (100003, 20), (100003, 21), (100003, 22),
+-- Lớp 100004 (Hệ điều hành): Student19-26 (đã có nhóm), Student27-28 (chưa có nhóm)
+(100004, 19), (100004, 20), (100004, 21), (100004, 22), (100004, 23), (100004, 24), (100004, 25), (100004, 26), (100004, 27), (100004, 28),
+-- Lớp 100005 (Trí tuệ nhân tạo): Student25-30 (đã có nhóm), Student1-2 (trùng từ lớp khác, bỏ)
+(100005, 25), (100005, 26), (100005, 27), (100005, 28), (100005, 29), (100005, 30);
+
 -- Chèn dữ liệu vào bảng GroupMembers
 -- Đảm bảo mỗi sinh viên chỉ tham gia 1 nhóm trong mỗi lớp
 INSERT INTO GroupMembers (group_id, user_id) VALUES
@@ -96,6 +110,7 @@ INSERT INTO Projects (project_name, group_id, description, tools_used, status, g
 ('Hệ điều hành mini', 8, 'Xây dựng hệ điều hành mini', 'C, Assembly', 'Ongoing', 'https://github.com/group8/mini-os'),
 ('AI nhận diện hình ảnh', 9, 'Ứng dụng AI nhận diện hình ảnh', 'Python, TensorFlow, OpenCV', 'Ongoing', 'https://github.com/group9/image-recognition'),
 ('Chatbot thông minh', 10, 'Xây dựng chatbot thông minh', 'Python, Flask, NLTK', 'Ongoing', 'https://github.com/group10/smart-chatbot');
+
 -- Chèn dữ liệu vào bảng Sprints
 -- Mỗi project có 2 sprint
 INSERT INTO Sprints (project_id, sprint_name, start_date, end_date) VALUES
