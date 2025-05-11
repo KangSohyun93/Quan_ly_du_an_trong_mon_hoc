@@ -14,7 +14,7 @@
   position: relative;
   width: 40px;
   height: 40px;
-  margin-bottom: 20px; /* Giảm nhẹ khoảng cách dưới avatar */
+  margin-bottom: 40px; /* Giảm nhẹ khoảng cách dưới avatar */
 }
 
 .classcard-avatar-bg {
@@ -39,7 +39,7 @@
 .classcard-name-description {
   display: flex;
   flex-direction: column;
-  margin-bottom: 5px; /* Thêm khoảng cách dưới mô tả */
+  margin-bottom: 25px; /* Thêm khoảng cách dưới mô tả */
 }
 
 .classcard-title {

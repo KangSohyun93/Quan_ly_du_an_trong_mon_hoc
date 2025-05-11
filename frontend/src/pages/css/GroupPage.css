@@ -15,22 +15,25 @@ html, body {
 
 .grouppage-content-container {
   flex: 1;
-  padding: 20px 60px; /* Tăng padding hai bên để tránh bị nút Sidebar che */
+  padding: 20px 60px 0px 0px; /* Giảm padding-left từ 60px xuống 20px */
   background-color: #f5f7fb;
   overflow-y: auto;
   transition: margin-left 0.3s ease; /* Hiệu ứng mượt khi Sidebar đóng/mở */
   width: 100%;
   box-sizing: border-box;
+  display: flex; /* Thêm flex để căn giữa nội dung */
+  flex-direction: column;
+  align-items: center; /* Căn giữa nội dung bên trong container */
 }
 
 .grouppage-group-page.sidebar-open .grouppage-content-container {
   margin-left: 256px; /* Khớp với chiều rộng Sidebar */
-  padding: 20px 60px; /* Đồng bộ padding khi Sidebar mở */
+  padding: 20px 60px 20px 20px; /* Đồng bộ padding khi Sidebar mở */
 }
 
 .grouppage-group-page.sidebar-hidden .grouppage-content-container {
   margin-left: 0;
-  padding: 20px 60px; /* Đồng bộ padding khi Sidebar đóng */
+  padding: 20px 60px 20px 20px; /* Đồng bộ padding khi Sidebar đóng */
 }
 
 .grouppage-page-header {
@@ -38,6 +41,8 @@ html, body {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 24px;
+  width: 100%; /* Đảm bảo header chiếm toàn bộ chiều rộng */
+  max-width: 954px; /* Giới hạn chiều rộng tối đa để đồng bộ với lưới */
 }
 
 .grouppage-page-title {
@@ -97,21 +102,13 @@ html, body {
 
 .grouppage-class-card-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(308px, 1fr)); /* Đảm bảo các thẻ tự động điều chỉnh */
-  gap: 20px; /* Khoảng cách giữa các thẻ */
+  grid-template-columns: repeat(3, 1fr); /* Lưới cố định 3 cột */
+  gap: 45px; /* Khoảng cách giữa các thẻ */
   justify-content: center; /* Căn giữa các thẻ trong khung */
   margin: 0 auto; /* Đảm bảo lưới được căn giữa */
-  width: calc(100% - 40px); /* Đảm bảo lưới không bị tràn */
+  width: 1050px; /* Chiều rộng cố định: 308px * 3 + 5px * 2 (gap giữa các cột) = 934px + 20px dự phòng */
+  max-width: 100%; /* Đảm bảo không vượt quá container */
   box-sizing: border-box;
-}
-
-.grouppage-class-card-grid > .grouppage-class-card:nth-child(2):only-child {
-  grid-column: span 2; /* Nếu chỉ có 2 thẻ, thẻ thứ 2 sẽ chiếm 2 cột */
-  justify-self: center; /* Căn giữa thẻ thứ 2 */
-}
-
-.grouppage-class-card-grid > .grouppage-class-card:only-child {
-  justify-self: center; /* Căn giữa thẻ nếu chỉ có 1 thẻ */
 }
 
 .grouppage-class-card {
@@ -124,6 +121,8 @@ html, body {
   display: flex;
   flex-direction: column;
   position: relative;
+  margin: 0; /* Đảm bảo không có margin mặc định */
+  justify-self: center; /* Căn giữa thẻ trong cột của lưới */
 }
 
 .grouppage-class-card .grouppage-classcard-avatar {
@@ -230,4 +229,6 @@ html, body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  width: 100%; /* Đảm bảo project-content chiếm toàn bộ chiều rộng */
+  max-width: 954px; /* Giới hạn chiều rộng tối đa để đồng bộ với lưới */
 }

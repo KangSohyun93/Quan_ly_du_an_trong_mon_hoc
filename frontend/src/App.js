@@ -5,12 +5,13 @@ import Project from './pages/Project';
 import ProjectRate from './pages/ProjectRate';
 import './assets/styles/global.css';
 import Profile from './pages/Profile';
-
+import InstructorGroupPage from './pages/InstructorGroupPage';
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/userID/:userId" element={<GroupPage />} />
+        <Route path="/userID/:userId/instructor" element={<InstructorGroupPage />} />
         <Route path="/userID/:userId/classes/:classId/projects/:projectId/:tab" element={<Project />} />
         <Route path="/userID/:userId/classes/:classId/projects/:projectId/sprints/:sprintId" element={<Project />} />
         <Route path="/userID/:userId/classes/:classId/projects/:projectId/rate" element={<ProjectRate />} />

@@ -155,7 +155,7 @@ const Profile = () => {
 
   return (
     <div className="profile-profile-page">
-      <Sidebar />
+      <Sidebar userId={userId} />
       <div className="profile-content-container">
         <div className="profile-content">
           <div className="profile-header">

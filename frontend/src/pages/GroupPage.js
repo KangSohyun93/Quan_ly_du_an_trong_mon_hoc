@@ -20,7 +20,11 @@ const GroupPage = () => {
           throw new Error('userId không hợp lệ');
         }
         const data = await fetchGroupsByUserId(userId);
-        setGroups(data);
+        const enhancedGroups = data.map((group, index) => ({
+          ...group,
+          avatarNumber: index + 1,
+        }));
+        setGroups(enhancedGroups);
       } catch (err) {
         setError('Không thể tải dữ liệu. Vui lòng thử lại sau.');
         console.error('Error in loadData:', err.message);
@@ -45,7 +49,7 @@ const GroupPage = () => {
 
   return (
     <div className="grouppage-group-page">
-      <Sidebar />
+      <Sidebar userId={userId} />
       <div className="grouppage-content-container">
         <div className="grouppage-page-header">
           <h1 className="grouppage-page-title">Classes</h1>
@@ -67,9 +71,9 @@ const GroupPage = () => {
                 projectName={group.projectName}
                 projectId={group.projectId}
                 memberCount={group.memberCount}
-                avatar={group.avatar || '/uploads/default.jpg'} // Sử dụng đường dẫn từ database
-                avatarNumber={group.group_id} // Giữ lại số avatar
-                avatarColor={group.avatarColor || `hsl(${(group.group_id * 137.508) % 360}, 70%, 60%)`} // Giữ lại logic màu
+                avatar={group.avatar || '/uploads/default.jpg'}
+                avatarNumber={group.avatarNumber}
+                avatarColor={group.avatarColor || `hsl(${(index * 137.508) % 360}, 70%, 60%)`}
                 members={group.members}
                 onClick={() => handleClassCardClick(group.classId, group.projectId)}
               />

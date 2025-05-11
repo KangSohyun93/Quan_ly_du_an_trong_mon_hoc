@@ -39,6 +39,16 @@ CREATE TABLE Groups (
     CONSTRAINT unique_group_number UNIQUE (class_id, group_number)
 );
 
+-- Bảng ClassMembers: Lưu thông tin thành viên lớp học (không bắt buộc nhóm)
+CREATE TABLE ClassMembers (
+    class_id INT NOT NULL,
+    user_id INT NOT NULL,
+    joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (class_id, user_id),
+    FOREIGN KEY (class_id) REFERENCES Classes(class_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
+);
+
 -- Bảng GroupMembers: Lưu thông tin thành viên của nhóm
 CREATE TABLE GroupMembers (
     group_id INT NOT NULL,
@@ -205,26 +215,6 @@ BEGIN
         FROM Sprints
         WHERE project_id = NEW.project_id
     );
-END //
-DELIMITER ;
-
--- Trigger đảm bảo sinh viên chỉ tham gia 1 nhóm trong 1 lớp
-DELIMITER //
-CREATE TRIGGER before_group_member_insert
-BEFORE INSERT ON GroupMembers
-FOR EACH ROW
-BEGIN
-    IF EXISTS (
-        SELECT 1
-        FROM GroupMembers gm
-        JOIN Groups g ON gm.group_id = g.group_id
-        WHERE gm.user_id = NEW.user_id
-        AND g.class_id = (SELECT class_id FROM Groups WHERE group_id = NEW.group_id)
-        AND gm.group_id != NEW.group_id
-    ) THEN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Sinh viên chỉ được tham gia tối đa 1 nhóm trong một lớp';
-    END IF;
 END //
 DELIMITER ;
 

@@ -1,70 +1,78 @@
 const pool = require('../config/db');
 
-const getClassesByInstructorId = async (instructorId) => {
+const getGroupsByInstructorId = async (instructorId) => {
   try {
-    console.log(`Bắt đầu truy vấn lớp cho instructor_id: ${instructorId}`);
+    console.log(`Bắt đầu truy vấn nhóm cho instructorId: ${instructorId}`);
 
+    // Truy vấn chính: Lấy thông tin duy nhất của mỗi lớp và tổng hợp dữ liệu nhóm/thành viên
     const [rows] = await pool.query(
       `
       SELECT 
-        c.class_id,
-        c.class_name,
-        COUNT(DISTINCT g.group_id) as group_count,
-        COUNT(gm.user_id) as member_count
+        c.class_id AS classId,
+        c.class_name AS className,
+        c.semester,
+        (SELECT COUNT(DISTINCT g.group_id) 
+         FROM Groups g 
+         WHERE g.class_id = c.class_id) AS groupCount,
+        (SELECT COUNT(DISTINCT cm.user_id) 
+         FROM ClassMembers cm
+         WHERE cm.class_id = c.class_id) AS studentCount
       FROM Classes c
-      LEFT JOIN Groups g ON c.class_id = g.class_id
-      LEFT JOIN GroupMembers gm ON g.group_id = gm.group_id
-      WHERE c.instructor_id = ?
-      GROUP BY c.class_id, c.class_name;
+      WHERE c.instructor_id = ?;
       `,
       [instructorId]
     );
 
-    console.log(`Truy vấn trả về ${rows.length} lớp`);
+    console.log('Dữ liệu lớp thô từ truy vấn chính:', rows);
 
-    const classes = await Promise.all(
-      rows.map(async (classItem, index) => {
-        const [projects] = await pool.query(
+    // Nếu không có lớp nào, trả về mảng rỗng
+    if (!rows || rows.length === 0) {
+      console.log('Không tìm thấy lớp nào cho instructorId:', instructorId);
+      return [];
+    }
+
+    // Tổng hợp tất cả thành viên từ các nhóm trong cùng classId
+    const groupsWithMembers = await Promise.all(
+      rows.map(async (row) => {
+        if (!row.classId) {
+          return {
+            ...row,
+            members: [],
+            avatar: '/uploads/default.jpg'
+          };
+        }
+
+        // Lấy tất cả thành viên từ các nhóm trong cùng classId
+        const [allMemberRows] = await pool.query(
           `
-          SELECT p.project_name
-          FROM Projects p
-          JOIN Groups g ON p.group_id = g.group_id
-          WHERE g.class_id = ?
+        SELECT DISTINCT u.user_id, u.avatar
+        FROM ClassMembers cm
+        JOIN Users u ON cm.user_id = u.user_id
+        WHERE cm.class_id = ?;
           `,
-          [classItem.class_id]
+          [row.classId]
         );
 
-        const [members] = await pool.query(
-          `
-          SELECT DISTINCT u.user_id, u.avatar
-          FROM GroupMembers gm
-          JOIN Groups g ON gm.group_id = g.group_id
-          JOIN Users u ON gm.user_id = u.user_id
-          WHERE g.class_id = ?
-          `,
-          [classItem.class_id]
-        );
+        console.log(`Tất cả thành viên của classId ${row.classId}:`, allMemberRows);
 
+        const members = allMemberRows.map(member => ({
+          user_id: member.user_id,
+          avatar: member.avatar || '/uploads/default.jpg'
+        }));
         return {
-          className: classItem.class_name,
-          groupCount: classItem.group_count,
-          projectNames: projects.map(p => p.project_name || 'Chưa có dự án'),
-          memberCount: classItem.member_count,
-          avatarNumber: (index + 1).toString(),
-          avatarColor: ['#18a0fb', '#ff0000', '#00ff00', '#ffff00', '#0000ff', '#800080'][index % 6],
-          members: members.map((member) => ({
-            userId: member.user_id,
-            avatar: member.avatar,
-          })),
+          ...row,
+          members: members,
+          avatar: (members.length > 0 ? members[0].avatar : '/uploads/default.jpg')
         };
       })
     );
 
-    return classes;
+    console.log('Dữ liệu lớp cuối cùng:', groupsWithMembers);
+    return groupsWithMembers;
   } catch (error) {
-    console.error('Lỗi trong getClassesByInstructorId:', error.message, error.stack);
-    throw new Error(`Lỗi khi lấy danh sách lớp: ${error.message}`);
+    console.error('Lỗi trong getGroupsByInstructorId:', error.message, error.stack);
+    throw new Error('Lỗi khi lấy danh sách nhóm');
   }
 };
 
-module.exports = { getClassesByInstructorId };
+module.exports = { getGroupsByInstructorId };

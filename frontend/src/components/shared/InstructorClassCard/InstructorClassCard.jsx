@@ -1,42 +1,86 @@
 import React from 'react';
-import './InstructorClassCard.css'; // Tái sử dụng CSS từ ClassCard
-import avatarMap from '../../../utils/avatarMap';
 import placeholderMember from '../../../assets/images/placeholders/placeholder-member.jpg';
+import ClassCardMenu from '../ClassCardMenu/ClassCardMenu'; // Import component menu
+import './InstructorClassCard.css';
 
-const InstructorClassCard = ({ className, groupCount, projectNames, memberCount, avatarNumber, avatarColor, members }) => {
+const InstructorClassCard = ({
+  classId,
+  className,
+  groupCount,
+  studentCount,
+  semester,
+  projectId,
+  avatar,
+  avatarNumber,
+  avatarColor,
+  members,
+  onClick,
+}) => {
+  console.log('InstructorClassCard props:', { classId, className, groupCount, studentCount, semester, members, membersLength: members ? members.length : 0 });
+
+  const displayStudentCount = studentCount || 0;
+
   return (
-    <div className="instructorclasscard-container">
-      <div className="instructorclasscard-avatar">
-        <div className="instructorclasscard-avatar-bg" style={{ backgroundColor: avatarColor }}></div>
-        <div className="instructorclasscard-avatar-number">{avatarNumber}</div>
+    <div className="instructorclasscard-container" onClick={onClick}>
+      <div className="instructorclasscard-header">
+        <div className="instructorclasscard-avatar" style={{ backgroundColor: avatarColor }}>
+          <div className="instructorclasscard-avatar-number">{avatarNumber}</div>
+        </div>
+        <div className="instructorclasscard-title">{className}</div>
       </div>
-      <div className="instructorclasscard-name-description">
-        <div className="instructorclasscard-name">
-          <div className="instructorclasscard-title">{className}</div>
+      <div className="instructorclasscard-content">
+        <div className="instructorclasscard-description-text">
+          Kỳ học: {semester || 'Chưa xác định'} | Số nhóm: {groupCount || 0}
+        </div>
+        <div className="instructorclasscard-members">
+          <div className="instructorclasscard-members-list">
+            {members && members.length > 0 ? (
+              <>
+                {members.slice(0, 5).map((member, index) => (
+                  <div key={index} className="instructorclasscard-member">
+                    <img
+                      className="instructorclasscard-member-img"
+                      src={member.avatar || placeholderMember}
+                      alt={`Sinh viên ${index + 1}`}
+                      onError={(e) => { e.target.src = placeholderMember; }}
+                    />
+                  </div>
+                ))}
+                {members.length > 5 && (
+                  <div className="instructorclasscard-more-members">
+                    +{members.length - 5}
+                  </div>
+                )}
+              </>
+            ) : (
+              <span className="no-members">No student</span>
+            )}
+          </div>
+          <div className="instructorclasscard-members-count">{displayStudentCount} students</div>
         </div>
       </div>
-      <div className="instructorclasscard-members">
-        <div className="instructorclasscard-members-list">
-          {members && members.length > 0 ? (
-            members.slice(0, 5).map((member, index) => (
-              <div key={index} className="instructorclasscard-member">
-                <img
-                  className="instructorclasscard-member-img"
-                  src={avatarMap[member.avatar] || placeholderMember}
-                  alt={`Thành viên ${index + 1}`}
-                  onError={(e) => {
-                    e.target.src = placeholderMember;
-                  }}
-                />
-              </div>
-            ))
-          ) : (
-            <p>No member</p>
-          )}
-        </div>
-        <div className="instructorclasscard-members-count">{memberCount} members</div>
+      <div style={{ position: 'absolute', top: '10px', right: '10px' }}>
+        <ClassCardMenu
+          classId={classId}
+          onGetLink={() => alert(`Link for class ${classId}: http://example.com/class/${classId}`)} // Ví dụ, thay bằng API thực tế
+          onDelete={() => {
+            if (window.confirm(`Bạn có chắc muốn xóa lớp ${classId}?`)) {
+              fetch(`http://localhost:5000/api/classes/delete/${classId}`, {
+                method: 'DELETE',
+              })
+                .then(response => {
+                  if (response.ok) {
+                    alert('Lớp đã được xóa');
+                    window.location.reload(); // Tải lại trang để cập nhật danh sách
+                  } else {
+                    throw new Error('Failed to delete class');
+                  }
+                })
+                .catch(err => alert(err.message));
+            }
+          }}
+        />
       </div>
-      <div className="instructorclasscard-more-icon">…</div>
     </div>
   );
 };

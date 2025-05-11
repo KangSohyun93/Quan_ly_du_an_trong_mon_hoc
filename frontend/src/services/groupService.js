@@ -18,6 +18,24 @@ const fetchGroupsByUserId = async (userId) => {
   }
 };
 
+const fetchGroupsByInstructorId = async (instructorId) => {
+  try {
+    const response = await fetch(`${API_URL}/groups/instructor?instructor_id=${instructorId}`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    if (!Array.isArray(data)) {
+      console.warn('Dữ liệu trả về từ API không phải là mảng:', data);
+      return [];
+    }
+    return data;
+  } catch (error) {
+    console.error('Error in fetchGroupsByInstructorId:', error.message);
+    throw error;
+  }
+};
+
 const fetchProjectByClassId = async (userId, classId) => {
   try {
     const response = await fetch(`${API_URL}/groups/by-class?class_id=${classId}&user_id=${userId}`);
@@ -116,4 +134,4 @@ const fetchMemberTaskStats = async (projectId) => {
   }
 };
 
-export { fetchGroupsByUserId, fetchProjectByClassId, fetchProjectById, fetchTasksBySprintId, fetchGroupMembers, fetchPeerAssessments, savePeerAssessment, fetchMemberTaskStats };
+export { fetchGroupsByUserId, fetchGroupsByInstructorId, fetchProjectByClassId, fetchProjectById, fetchTasksBySprintId, fetchGroupMembers, fetchPeerAssessments, savePeerAssessment, fetchMemberTaskStats };

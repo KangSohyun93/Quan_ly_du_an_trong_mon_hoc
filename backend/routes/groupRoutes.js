@@ -4,9 +4,13 @@ const groupController = require('../controllers/groupController');
 const projectController = require('../controllers/projectController');
 const peerAssessmentController = require('../controllers/peerAssessmentController');
 const { getProjectByClassId } = require('../models/projectModel');
+const instructorGroupController = require('../controllers/instructorGroupController');
 
-// Route để lấy danh sách nhóm theo userId
+// Route cho sinh viên
 router.get('/', groupController.getGroups);
+
+// Route cho giảng viên
+router.get('/instructor', instructorGroupController.getInstructorGroups);
 
 // Route để lấy dự án theo classId
 router.get('/by-class', async (req, res) => {
