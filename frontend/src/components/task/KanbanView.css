@@ -354,3 +354,15 @@ h4.body_1 {
 .add-task-btn:hover {
   background-color: #d0d0d0;
 }
+/* Add to frontend/src/components/task/KanbanView.css */
+.progress-text {
+  font-size: 14px;
+  color: #666;
+  margin-left: 10px;
+}
+.no-subtask-message {
+  padding: 10px;
+  text-align: center;
+  color: #666;
+  font-style: italic;
+}

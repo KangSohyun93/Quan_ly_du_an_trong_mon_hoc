@@ -1,72 +1,71 @@
 // frontend/src/components/task/CreateTask.js
 import React, { useState, useEffect } from "react";
-import { fetchProjects, createTask } from "../../services/api-client";
+import { fetchGroupMembersByProject, createTask } from "../../services/api-client";
 import "./CreateTask.css";
 
-const CreateTask = ({ onTaskCreated, onCancel }) => {
+const CreateTask = ({ onTaskCreated, onCancel, selectedSprintId }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [projectId, setProjectId] = useState("");
+  const [assignedTo, setAssignedTo] = useState("");
   const [dueDate, setDueDate] = useState("");
-  const [subTasks, setSubTasks] = useState([""]); // Array to hold subtask descriptions
-  const [projects, setProjects] = useState([]); // List of projects fetched from backend
+  const [subTasks, setSubTasks] = useState([""]);
+  const [groupMembers, setGroupMembers] = useState([]);
+  const [error, setError] = useState(null);
 
-  // Fetch projects when component mounts
   useEffect(() => {
-    const loadProjects = async () => {
+    const loadGroupMembers = async () => {
       try {
-        const data = await fetchProjects();
-        setProjects(data);
-        if (data.length > 0) {
-          setProjectId(data[0].project_id); // Default to the first project
+        const data = await fetchGroupMembersByProject();
+        console.log("Group members loaded in CreateTask:", data);
+        if (data.length === 0) {
+          setError("No group members found for this project.");
+        } else {
+          setGroupMembers(data);
+          setAssignedTo(data[0].user_id); // Mặc định chọn member đầu tiên
         }
       } catch (error) {
-        console.error("Error fetching projects:", error);
+        console.error("Error fetching group members:", error);
+        setError("Failed to load group members.");
       }
     };
-    loadProjects();
+    loadGroupMembers();
   }, []);
 
-  // Handle adding a new subtask input field
   const addSubTask = () => {
     setSubTasks([...subTasks, ""]);
   };
 
-  // Handle removing a subtask input field
   const removeSubTask = (index) => {
     const newSubTasks = subTasks.filter((_, i) => i !== index);
     setSubTasks(newSubTasks);
   };
 
-  // Handle subtask input change
   const handleSubTaskChange = (index, value) => {
     const newSubTasks = [...subTasks];
     newSubTasks[index] = value;
     setSubTasks(newSubTasks);
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const taskData = {
         title,
         description,
-        project_id: projectId,
+        assigned_to: parseInt(assignedTo),
         due_date: dueDate,
-        status: "To-Do", // Default status
-        subtasks: subTasks.filter((subtask) => subtask.trim() !== ""), // Filter out empty subtasks
+        status: "To-Do",
+        subtasks: subTasks.filter((subtask) => subtask.trim() !== ""),
+        sprint_id: selectedSprintId || 1,
       };
 
       await createTask(taskData);
       alert("Task created successfully!");
-      // Reset form
       setTitle("");
       setDescription("");
-      setProjectId(projects[0]?.project_id || "");
+      setAssignedTo(groupMembers[0]?.user_id || "");
       setDueDate("");
       setSubTasks([""]);
-      // Call the callback to refresh the task list
       if (onTaskCreated) {
         onTaskCreated();
       }
@@ -76,7 +75,6 @@ const CreateTask = ({ onTaskCreated, onCancel }) => {
     }
   };
 
-  // Handle cancel action
   const handleCancelClick = () => {
     if (onCancel) {
       onCancel();
@@ -86,6 +84,7 @@ const CreateTask = ({ onTaskCreated, onCancel }) => {
   return (
     <div className="create-task-container">
       <h2>Create New Task</h2>
+      {error && <div className="error-message">{error}</div>}
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label htmlFor="title">Task Title:</label>
@@ -109,18 +108,23 @@ const CreateTask = ({ onTaskCreated, onCancel }) => {
         </div>
 
         <div className="form-group">
-          <label htmlFor="project">Project:</label>
+          <label htmlFor="assignedTo">Assigned To:</label>
           <select
-            id="project"
-            value={projectId}
-            onChange={(e) => setProjectId(e.target.value)}
+            id="assignedTo"
+            value={assignedTo}
+            onChange={(e) => setAssignedTo(e.target.value)}
             required
+            disabled={groupMembers.length === 0}
           >
-            {projects.map((project) => (
-              <option key={project.project_id} value={project.project_id}>
-                {project.project_name}
-              </option>
-            ))}
+            {groupMembers.length === 0 ? (
+              <option value="">No group members available</option>
+            ) : (
+              groupMembers.map((member) => (
+                <option key={member.user_id} value={member.user_id}>
+                  {member.username}
+                </option>
+              ))
+            )}
           </select>
         </div>
 

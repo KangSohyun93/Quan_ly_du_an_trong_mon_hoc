@@ -1,13 +1,13 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-// import { KanbanView } from "./components/task/KanbanView";
+import { KanbanView } from "./components/task/KanbanView";
 // import CreateTask from "./components/task/CreateTask";
-import ProjectManagerKanban from "./components/task/ProjectManagerKanban";
+// import ProjectManagerKanban from "./components/task/ProjectManagerKanban";
 function App() {
   return (
     <div className="App">
       <Routes>
-        <Route path="/" element={<ProjectManagerKanban />} />
+        <Route path="/" element={< KanbanView/>} />
       </Routes>
     </div>
   );

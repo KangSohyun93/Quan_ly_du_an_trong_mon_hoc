@@ -3,17 +3,17 @@
   background: #ffffff;
   padding: 30px;
   border-radius: 10px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  max-width: 600px;
+  box-shadow: 0 4px 40px rgba(0, 0, 0, 0.1);
+  max-width: 450px;
   width: 100%;
-  margin: 0;
 }
 
 .create-task-container h2 {
   margin-bottom: 20px;
   font-size: 24px;
-  color: #333;
+  color: #000;
   text-align: center;
+  font-family: 'Roboto', sans-serif;
 }
 
 .form-group {
@@ -25,6 +25,7 @@
   margin-bottom: 8px;
   font-weight: 600;
   color: #555;
+  font-family: 'Roboto', sans-serif;
 }
 
 .form-group input,

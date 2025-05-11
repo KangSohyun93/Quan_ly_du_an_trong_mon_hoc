@@ -5,32 +5,59 @@ const dbConfig = require("../config/db-connect");
 // Create a connection pool
 const pool = mysql.createPool(dbConfig);
 
-// Fetch all tasks with their checklists, comment counts, and progress_percentage
+// Hard-coded user ID and project ID for testing (replace with actual authentication in production)
+const getCurrentUserId = () => 1; // Hard-coded user_id = 1
+const getCurrentProjectId = () => 1; // Hard-coded project_id = 1
+
+// Fetch tasks with their checklists, comment counts, and progress_percentage
 exports.getTasks = async (req, res) => {
   try {
-    const [rows] = await pool.query(`
+    const projectId = getCurrentProjectId();
+    const userId = getCurrentUserId();
+    const { mode } = req.query; // "user" for Team task, "all" for My task
+
+    let query = `
       SELECT 
           t.task_id,
           t.title,
           CASE
-            WHEN t.status = 'Done' THEN t.completed_at
+            WHEN t.status = 'Completed' THEN t.completed_at
             ELSE t.due_date
           END AS due_date,
           t.status,
           t.progress_percentage,
-          JSON_ARRAYAGG(
-              JSON_OBJECT(
+          t.assigned_to,
+          t.sprint_id,
+          IFNULL(
+            (
+              SELECT JSON_ARRAYAGG(
+                JSON_OBJECT(
                   'checklist_id', tc.checklist_id,
                   'item_description', tc.item_description,
                   'is_completed', tc.is_completed
+                )
               )
+              FROM TaskChecklists tc
+              WHERE tc.task_id = t.task_id
+            ),
+            JSON_ARRAY()
           ) AS checklists,
           (SELECT COUNT(*) FROM TaskComments tcmt WHERE tcmt.task_id = t.task_id) AS comment_count
       FROM Tasks t
-      LEFT JOIN TaskChecklists tc ON tc.task_id = t.task_id
-      GROUP BY t.task_id
-    `);
+      JOIN Sprints s ON t.sprint_id = s.sprint_id
+      JOIN Projects p ON s.project_id = p.project_id
+      WHERE p.project_id = ?
+    `;
+    const params = [projectId];
 
+    if (mode === "user") {
+      query += " AND t.assigned_to = ?";
+      params.push(userId);
+    }
+
+    query += " GROUP BY t.task_id";
+
+    const [rows] = await pool.query(query, params);
     res.status(200).json(rows);
   } catch (error) {
     console.error("Error fetching tasks:", error);
@@ -38,39 +65,106 @@ exports.getTasks = async (req, res) => {
   }
 };
 
-// Update a checklist item and recalculate progress_percentage
+// Fetch task details with subtasks and comments
+exports.getTaskDetails = async (req, res) => {
+  const { taskId } = req.params;
+  try {
+    const [task] = await pool.query(`
+      SELECT 
+        t.task_id,
+        t.title,
+        t.description,
+        t.assigned_to,
+        u.username AS assigned_username,
+        IFNULL(
+          (
+            SELECT JSON_ARRAYAGG(
+              JSON_OBJECT(
+                'checklist_id', tc.checklist_id,
+                'item_description', tc.item_description,
+                'is_completed', tc.is_completed
+              )
+            )
+            FROM TaskChecklists tc
+            WHERE tc.task_id = t.task_id
+          ),
+          JSON_ARRAY()
+        ) AS checklists,
+        IFNULL(
+          (
+            SELECT JSON_ARRAYAGG(
+              JSON_OBJECT(
+                'comment_id', tcmt.comment_id,
+                'user_id', tcmt.user_id,
+                'username', u2.username,
+                'comment_text', tcmt.comment_text,
+                'created_at', tcmt.created_at
+              )
+            )
+            FROM TaskComments tcmt
+            JOIN Users u2 ON tcmt.user_id = u2.user_id
+            WHERE tcmt.task_id = t.task_id
+          ),
+          JSON_ARRAY()
+        ) AS comments
+      FROM Tasks t
+      LEFT JOIN Users u ON t.assigned_to = u.user_id
+      WHERE t.task_id = ?
+    `, [taskId]);
+
+    if (!task || task.length === 0) {
+      return res.status(404).json({ message: "Task not found" });
+    }
+
+    res.status(200).json(task[0]);
+  } catch (error) {
+    console.error("Error fetching task details:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// Add a new comment
+exports.addComment = async (req, res) => {
+  const { task_id, user_id, comment_text } = req.body;
+  try {
+    await pool.query(
+      "INSERT INTO TaskComments (task_id, user_id, comment_text) VALUES (?, ?, ?)",
+      [task_id, user_id, comment_text]
+    );
+    res.status(201).json({ message: "Comment added successfully" });
+  } catch (error) {
+    console.error("Error adding comment:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// Update a checklist item (progress_percentage and status are handled by DB triggers)
 exports.updateChecklistItem = async (req, res) => {
   const { checklistId } = req.params;
   const { is_completed } = req.body;
+  const currentUserId = getCurrentUserId();
 
   try {
-    console.log("Updating checklist item:", { checklistId, is_completed }); // Debug log
+    const [task] = await pool.query(`
+      SELECT t.assigned_to
+      FROM TaskChecklists tc
+      JOIN Tasks t ON tc.task_id = t.task_id
+      WHERE tc.checklist_id = ?
+    `, [checklistId]);
+
+    if (!task || task.length === 0) {
+      return res.status(404).json({ message: "Checklist item not found" });
+    }
+
+    if (task[0].assigned_to !== currentUserId) {
+      return res.status(403).json({ message: "Only the assigned user can update this checklist item" });
+    }
+
     await pool.query(
       "UPDATE TaskChecklists SET is_completed = ? WHERE checklist_id = ?",
       [is_completed, checklistId]
     );
 
-    // Fetch the task and its checklists to recalculate progress_percentage
-    const [checklistRows] = await pool.query(
-      "SELECT task_id FROM TaskChecklists WHERE checklist_id = ?",
-      [checklistId]
-    );
-    const taskId = checklistRows[0].task_id;
-
-    const [subtaskRows] = await pool.query(
-      "SELECT is_completed FROM TaskChecklists WHERE task_id = ?",
-      [taskId]
-    );
-    const totalSubtasks = subtaskRows.length;
-    const completedSubtasks = subtaskRows.filter((sub) => sub.is_completed).length;
-    const progress = totalSubtasks > 0 ? (completedSubtasks / totalSubtasks) * 100 : 0;
-
-    await pool.query(
-      "UPDATE Tasks SET progress_percentage = ? WHERE task_id = ?",
-      [parseFloat(progress.toFixed(2)), taskId]
-    );
-
-    console.log("Checklist item updated successfully, new progress:", progress); // Debug log
     res.status(200).json({ message: "Checklist item updated" });
   } catch (error) {
     console.error("Error updating checklist item:", error);
@@ -78,22 +172,30 @@ exports.updateChecklistItem = async (req, res) => {
   }
 };
 
-// Update task status and optionally progress_percentage
+// Update task status (progress_percentage is handled by DB triggers)
 exports.updateTaskStatus = async (req, res) => {
   const { taskId } = req.params;
-  const { status, progress_percentage } = req.body;
+  const { status } = req.body;
+  const currentUserId = getCurrentUserId();
 
   try {
-    console.log("Updating task status:", { taskId, status, progress_percentage }); // Debug log
-    const updates = {};
-    if (status) updates.status = status;
-    if (progress_percentage !== undefined) updates.progress_percentage = progress_percentage;
+    const [task] = await pool.query(
+      "SELECT assigned_to FROM Tasks WHERE task_id = ?",
+      [taskId]
+    );
+
+    if (!task || task.length === 0) {
+      return res.status(404).json({ message: "Task not found" });
+    }
+
+    if (task[0].assigned_to !== currentUserId) {
+      return res.status(403).json({ message: "Only the assigned user can update this task" });
+    }
 
     await pool.query(
-      "UPDATE Tasks SET ? WHERE task_id = ?",
-      [updates, taskId]
+      "UPDATE Tasks SET status = ? WHERE task_id = ?",
+      [status, taskId]
     );
-    console.log("Task status updated successfully"); // Debug log
     res.status(200).json({ message: "Task status updated" });
   } catch (error) {
     console.error("Error updating task status:", error);
@@ -112,19 +214,45 @@ exports.getProjects = async (req, res) => {
   }
 };
 
+// Fetch all sprints
+exports.getSprints = async (req, res) => {
+  try {
+    const projectId = 1; // Fix cứng project_id
+    const [rows] = await pool.query(
+      "SELECT sprint_id, sprint_name, sprint_number, project_id FROM Sprints WHERE project_id = ?",
+      [projectId]
+    );
+    res.status(200).json(rows);
+  } catch (error) {
+    console.error("Error fetching sprints:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 // Create a new task with subtasks
 exports.createTask = async (req, res) => {
-  const { title, description, project_id, due_date, status, subtasks } = req.body;
+  const { title, description, sprint_id, due_date, status, subtasks, assigned_to } = req.body;
 
   try {
-    // Insert the task into the Tasks table
+    // Bỏ kiểm tra quyền leader_id để tránh lỗi liên quan đến bảng Groups
+    // Kiểm tra sprint_id có tồn tại không
+    const [sprint] = await pool.query(
+      "SELECT sprint_id FROM Sprints WHERE sprint_id = ?",
+      [sprint_id]
+    );
+
+    if (!sprint || sprint.length === 0) {
+      return res.status(404).json({ message: "Sprint not found" });
+    }
+
+    // Tạo task mới
     const [taskResult] = await pool.query(
-      "INSERT INTO Tasks (title, description, project_id, due_date, status, progress_percentage) VALUES (?, ?, ?, ?, ?, ?)",
-      [title, description || null, project_id, due_date || null, status, 0.00] // Default progress_percentage to 0.00
+      "INSERT INTO Tasks (title, description, sprint_id, due_date, status, progress_percentage, assigned_to) VALUES (?, ?, ?, ?, ?, ?, ?)",
+      [title, description || null, sprint_id, due_date || null, status || 'To-Do', 0, assigned_to || null]
     );
     const taskId = taskResult.insertId;
 
-    // Insert subtasks into the TaskChecklists table
+    // Thêm subtasks nếu có
     if (subtasks && subtasks.length > 0) {
       const subtaskValues = subtasks.map((subtask) => [taskId, subtask, false]);
       await pool.query(
@@ -136,6 +264,29 @@ exports.createTask = async (req, res) => {
     res.status(201).json({ message: "Task created successfully", taskId });
   } catch (error) {
     console.error("Error creating task:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// Fetch group members by project
+exports.getGroupMembersByProject = async (req, res) => {
+  try {
+    const projectId = 1; // Fix cứng project_id = 1
+    const [rows] = await pool.query(
+      `SELECT u.user_id, u.username
+       FROM Users u
+       JOIN GroupMembers gm ON u.user_id = gm.user_id
+       JOIN Projects p ON gm.group_id = p.group_id
+       WHERE p.project_id = ?`,
+      [projectId]
+    );
+    console.log("Group members fetched:", rows); // Log để kiểm tra
+    if (rows.length === 0) {
+      return res.status(404).json({ message: "No group members found for this project" });
+    }
+    res.status(200).json(rows);
+  } catch (error) {
+    console.error("Error fetching group members by project:", error);
     res.status(500).json({ message: "Server error" });
   }
 };
