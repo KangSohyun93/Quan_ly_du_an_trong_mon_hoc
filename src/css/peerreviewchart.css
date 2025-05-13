@@ -1,0 +1,77 @@
+.peerreview-chart-container {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border-radius: 10px;
+    padding: 20px;
+    margin: 10px;
+    min-height: 300px;
+}
+
+.peerreview-chart-container h3 {
+    font-family: 'Inter', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: #1F2937;
+    margin-bottom: 20px;
+}
+
+.peerreview-chart-container table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Inter', sans-serif;
+}
+
+.peerreview-chart-container th,
+.peerreview-chart-container td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.peerreview-chart-container th {
+    font-weight: 600;
+    color: #1F2937;
+}
+
+.peerreview-chart-container td {
+    color: #4B5563;
+}
+
+.peerreview-chart-container tr:hover {
+    background-color: #f0f7ff;
+    cursor: pointer;
+}
+
+.mini-bar {
+    height: 10px;
+    border-radius: 5px;
+    margin-right: 10px;
+    display: inline-block;
+}
+
+.details {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.details h4 {
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: #1F2937;
+    margin-bottom: 10px;
+}
+
+.details ul {
+    list-style: none;
+    padding: 0;
+}
+
+.details li {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: #4B5563;
+    margin-bottom: 8px;
+}
