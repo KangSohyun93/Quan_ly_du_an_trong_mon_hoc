@@ -1,14 +1,14 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/db-connect');
 
-const GroupMember = sequelize.define('GroupMember', {
-  group_id: {
+const ClassMember = sequelize.define('ClassMember', {
+  class_id: {
     type: DataTypes.INTEGER,
     allowNull: false,
     primaryKey: true,
     references: {
-      model: 'Groups',
-      key: 'group_id'
+      model: 'Classes',
+      key: 'class_id'
     },
     onDelete: 'CASCADE'
   },
@@ -27,8 +27,8 @@ const GroupMember = sequelize.define('GroupMember', {
     defaultValue: DataTypes.NOW
   }
 }, {
-  tableName: 'GroupMembers',
+  tableName: 'ClassMembers',
   timestamps: false
 });
 
-module.exports = GroupMember;
+module.exports = ClassMember;

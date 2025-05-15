@@ -1,39 +1,39 @@
-import React, { useState } from 'react';
-import { loginUser } from '../../services/auth-service';
-import { useNavigate } from 'react-router-dom';
-import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import googleLogo from '../../assets/LoginImage/google_logo.png';
-import illustationPhoto from '../../assets/LoginImage/loginphoto1.png';
-import './LoginForm.css';
+import React, { useState } from "react";
+import { loginUser } from "../../services/auth-service";
+import { useNavigate } from "react-router-dom";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import googleLogo from "../../assets/LoginImage/google_logo.png";
+import illustationPhoto from "../../assets/LoginImage/loginphoto1.png";
+import "./LoginForm.css";
 
 function LoginForm() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
     setLoading(true);
 
     try {
       const userData = await loginUser({ email, password });
-      console.log('Đăng nhập thành công:', userData);
+      console.log("Đăng nhập thành công:", userData);
 
       if (rememberMe) {
-        localStorage.setItem('token', userData.token);
+        localStorage.setItem("token", userData.token);
       } else {
-        sessionStorage.setItem('token', userData.token);
+        sessionStorage.setItem("token", userData.token);
       }
 
       // Chuyển hướng sau khi đăng nhập
-      navigate('/dashboard');
+      navigate("/home");
     } catch (err) {
-      setError(err.message || 'Login failed');
+      setError(err.message || "Login failed");
     } finally {
       setLoading(false);
     }
@@ -62,13 +62,16 @@ function LoginForm() {
           <div className="password-wrapper">
             <input
               id="password"
-              type={showPassword ? 'text' : 'password'}
+              type={showPassword ? "text" : "password"}
               placeholder="Enter your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
             />
-            <span className="toggle-password" onClick={() => setShowPassword(!showPassword)}>
+            <span
+              className="toggle-password"
+              onClick={() => setShowPassword(!showPassword)}
+            >
               {showPassword ? <FaEye /> : <FaEyeSlash />}
             </span>
           </div>
@@ -82,17 +85,22 @@ function LoginForm() {
               />
               Remember Me
             </label>
-            <a href="#" className="forgot-link">Forgot Password?</a>
+            <a href="#" className="forgot-link">
+              Forgot Password?
+            </a>
           </div>
 
           {error && <p className="error">{error}</p>}
 
           <button type="submit" disabled={loading}>
-            {loading ? 'Logging in...' : 'Login'}
+            {loading ? "Logging in..." : "Login"}
           </button>
 
           <p className="signup-link">
-            Not registered yet? <a href="/signup">Create an account <b>SignUp</b></a>
+            Not registered yet?{" "}
+            <a href="/signup">
+              Create an account <b>SignUp</b>
+            </a>
           </p>
 
           <div className="divider">or Login with Google</div>

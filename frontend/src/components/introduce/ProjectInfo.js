@@ -31,13 +31,16 @@ function ProjectInfo() {
     <div className="project-info-container">
       <div className="project-details">
         <h1>{group.className}</h1>
-        <h2 className="project-code">{project.code}</h2>
         <div className="group-info-gr">
           <h2>Group {group.code}: </h2>
           <p className="group-name-gr">{group.name}</p>
         </div>
+        <div className="group-info-gr">
+          <h2>Tên dự án: </h2>
+          <p className="group-name-gr">{project.name}</p>
+        </div>
         <div className="group-info">
-          <h2>Mô tả chủ đề: </h2>
+          <h2>Mô tả dự án: </h2>
           <p className="description">{project.description}</p>
         </div>
         <div className="technologies">

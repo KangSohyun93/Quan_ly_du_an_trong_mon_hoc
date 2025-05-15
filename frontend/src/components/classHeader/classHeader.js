@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./classHeader.css";
 import { SearchClass, JoinClass } from "../../services/class-service";
 const JoinClassBar = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [joinCode, setJoinCode] = useState("");
   const [searchText, setSearchText] = useState("");
+  const [result, setResult] = useState([]);
 
   const handleJoinClick = () => setShowPopup(true);
   const handlePopupClose = () => setShowPopup(false);
@@ -17,6 +18,18 @@ const JoinClassBar = () => {
       console.error("Có lỗi khi tham gia:", error);
     }
   };
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(async () => {
+      if (searchText.trim() !== "") {
+        const searchResponse = await SearchClass({ searchText });
+        console.log(searchResponse);
+      } else {
+        setResult([]); // nếu không có gì thì xoá kết quả
+      }
+    }, 300); // 300ms debounce
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchText]);
 
   return (
     <>

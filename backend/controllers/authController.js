@@ -1,46 +1,61 @@
-const User = require('../models/UserModel');
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
+const { User } = require("../models");
 
 const createToken = (user) => {
   return jwt.sign(
-    { id: user._id, email: user.email },
-    process.env.JWT_SECRET || 'secret-key',
-    { expiresIn: '1d' }
+    { id: user.user_id, email: user.email },
+    process.env.JWT_SECRET || "secret-key",
+    { expiresIn: "1d" }
   );
 };
 
 exports.register = async (req, res) => {
   try {
     const { email, password, name } = req.body;
-    const existingUser = await User.findOne({ email });
+    const existingUser = await User.findOne({ where: { email } });
 
-    if (existingUser) return res.status(400).json({ message: 'Email was exits' });
+    if (existingUser) {
+      return res.status(400).json({ message: "Email đã tồn tại" });
+    }
 
-    const newUser = new User({ email, password, name });
-    await newUser.save();
-
+    const newUser = await User.create({ email, password, name });
     const token = createToken(newUser);
 
-    res.status(201).json({ token, user: { id: newUser._id, email: newUser.email, name: newUser.name } });
+    res.status(201).json({
+      token,
+      user: { id: newUser.id, email: newUser.email, name: newUser.name },
+    });
   } catch (error) {
-    res.status(500).json({ message: 'Sever error when register' });
+    console.error(error);
+    res.status(500).json({ message: "Lỗi server khi đăng ký" });
   }
 };
 
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ where: { email } });
 
-    if (!user) return res.status(400).json({ message: 'The account is invalid' });
+    if (!user) {
+      return res.status(400).json({ message: "Tài khoản không tồn tại" });
+    }
 
-    const isMatch = await user.comparePassword(password);
-    if (!isMatch) return res.status(400).json({ message: 'Wrong password' });
+    // const isMatch = await user.comparePassword(password);
+    // if (!isMatch) {
+    //   return res.status(400).json({ message: "Sai mật khẩu" });
+    // }
+    // So sánh trực tiếp mật khẩu người dùng nhập và mật khẩu trong cơ sở dữ liệu
+    if (password !== user.password) {
+      return res.status(400).json({ message: "Sai mật khẩu" });
+    }
 
     const token = createToken(user);
-
-    res.status(200).json({ token, user: { id: user._id, email: user.email, name: user.name } });
+    res.status(200).json({
+      token,
+      user: { id: user.id, email: user.email, name: user.name },
+    });
   } catch (error) {
-    res.status(500).json({ message: 'Sever error when lognin' });
+    console.error(error);
+    res.status(500).json({ message: "Lỗi server khi đăng nhập" });
   }
 };

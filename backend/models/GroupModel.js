@@ -1,27 +1,51 @@
-const mongoose = require("mongoose");
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/db-connect'); // File config kết nối Sequelize
 
-const groupSchema = new mongoose.Schema(
-  {
-    groupName: { type: String, required: true },
-    classId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Class",
-      required: true,
-    },
-    leader: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
-    groupNumber: { type: Number, required: true },
-    createdAt: { type: Date, default: Date.now },
+const Group = sequelize.define('Group', {
+  group_id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
   },
-  {
-    timestamps: true,
+  group_name: {
+    type: DataTypes.STRING(50),
+    allowNull: false
+  },
+  class_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'Classes',
+      key: 'class_id'
+    },
+    onDelete: 'CASCADE'
+  },
+  leader_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'Users',
+      key: 'user_id'
+    },
+    onDelete: 'RESTRICT'
+  },
+  group_number: {
+    type: DataTypes.INTEGER,
+    allowNull: false
+  },
+  created_at: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW
   }
-);
+}, {
+  tableName: 'Groups',
+  timestamps: false,
+  indexes: [
+    {
+      unique: true,
+      fields: ['class_id', 'group_number']
+    }
+  ]
+});
 
-// Đảm bảo mỗi class chỉ có 1 groupNumber duy nhất
-groupSchema.index({ classId: 1, groupNumber: 1 }, { unique: true });
-
-module.exports = mongoose.model("Group", groupSchema);
+module.exports = Group;

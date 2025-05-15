@@ -1,22 +1,47 @@
-const mongoose = require("mongoose");
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/db-connect');
 
-const projectSchema = new mongoose.Schema({
-  projectName: { type: String, required: true },
-  groupId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Group",
+const Project = sequelize.define('Project', {
+  project_id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
+  project_name: {
+    type: DataTypes.STRING(100),
+    allowNull: false
+  },
+  group_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
     unique: true,
-    required: true,
+    references: {
+      model: 'Groups',
+      key: 'group_id'
+    },
+    onDelete: 'CASCADE'
   },
-  description: String,
-  toolsUsed: String,
+  description: {
+    type: DataTypes.TEXT
+  },
+  tools_used: {
+    type: DataTypes.TEXT
+  },
   status: {
-    type: String,
-    enum: ["Ongoing", "Completed", "Cancelled"],
-    default: "Ongoing",
+    type: DataTypes.ENUM('Ongoing', 'Completed', 'Cancelled'),
+    allowNull: false,
+    defaultValue: 'Ongoing'
   },
-  githubRepoUrl: String,
-  createdAt: { type: Date, default: Date.now },
+  github_repo_url: {
+    type: DataTypes.STRING(255)
+  },
+  created_at: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW
+  }
+}, {
+  tableName: 'Projects',
+  timestamps: false
 });
 
-module.exports = mongoose.model("Project", projectSchema);
+module.exports = Project;

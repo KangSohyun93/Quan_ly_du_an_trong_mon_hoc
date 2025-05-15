@@ -1,0 +1,21 @@
+.import-container {
+    display: flex;
+    align-items: center;
+    background-color: #eceff8;
+    border-radius: 8px;
+    padding: 12px 16px;
+    max-width: 100%;
+    width: 100%;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
+    gap: 4px;
+  }
+  
+  .import-label {
+    font-weight: 600;
+    margin-right: 16px;
+    font-size: 16px;
+    color: #4a4a4a;
+  }
+  .import-icon {
+    font-size: 20px;
+  }

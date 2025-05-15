@@ -23,11 +23,11 @@
 .group-info-gr {
   display: flex;
   align-items: baseline; /* Căn chỉnh các phần tử theo chiều dọc ở giữa */
+  padding-bottom: 7px;
 }
 
 .group-name-gr {
   margin-left: 5px;
-  margin-bottom: 0;
   font-size: 21.33px;
 }
 .description {
@@ -37,7 +37,7 @@ strong {
   font-size: 21.33px;
 }
 .technologies {
-  font-size: 18px;
+  font-size: 21.33px;
   padding-bottom: 10px;
 }
 .icon {

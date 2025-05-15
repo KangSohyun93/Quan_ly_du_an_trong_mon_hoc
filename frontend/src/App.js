@@ -17,6 +17,8 @@ function App() {
           <Route path="/home" element={<SV_HomeLayout />}>
             <Route path="group/:id/introduce" element={<ProjectInfo />} />
             {/* Thêm các route khác ở đây */}
+            <Route path="class/join" />
+            <Route path="class/:id" />
           </Route>
           {/* Các route khác */}
           <Route path="/header" element={<TeamHeader />} />
