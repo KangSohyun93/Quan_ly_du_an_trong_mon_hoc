@@ -135,7 +135,7 @@ async function getPeerAssessments(groupId) {
             const avgScore = memberAssessments.reduce((sum, a) => sum + Number(a.score), 0) / memberAssessments.length || 0;
             const details = memberAssessments.map(a => ({
                 reviewer: a.reviewer,
-                score: Number(a.detail_score.toFixed(1)),
+                score: a.detail_score ? Number(Number(a.detail_score).toFixed(1)) : 0,
                 comment: a.comment || 'Không có bình luận'
             }));
             peerReviewData.push({

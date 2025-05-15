@@ -237,12 +237,12 @@ const Dashboard = () => {
                         <LineChart />
                         <CommitActivityChart />
                         <LOCGrowthChart />
-                        <PeerReviewChart />
-                        <TaskChart />
-                        <PRSizeChart />
-                        <BarChart />
-                        <ContributorContributionChart />
-                        <SprintPerformanceChart />
+                        <PeerReviewChart groupId={groupId} />
+                        <TaskChart groupId={groupId} />
+                        {/* <PRSizeChart /> */}
+                        <BarChart groupId={groupId} />
+                        {/* <ContributorContributionChart /> */}
+                        <SprintPerformanceChart groupId={groupId} />
                     </div>
                 </div>
             </div>
