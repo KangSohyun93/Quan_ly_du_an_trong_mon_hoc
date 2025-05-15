@@ -10,9 +10,17 @@ export default defineConfig({
   server: {
     open: true, // Tự động mở trình duyệt khi server khởi động
     port: 5173, // Đảm bảo cổng là 5173
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, '/api'),
+      },
+    },
   },
   build: {
     outDir: path.resolve(__dirname, 'dist'), // Thư mục build
+    emptyOutDir: true,
   },
   resolve: {
     alias: [

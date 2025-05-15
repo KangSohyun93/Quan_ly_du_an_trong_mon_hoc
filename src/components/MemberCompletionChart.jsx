@@ -1,4 +1,4 @@
-// import React, { useState } from 'react';
+// import React from 'react';
 // import { Bar } from 'react-chartjs-2';
 // import { Chart as ChartJS, BarElement, LinearScale, Title, Tooltip, CategoryScale } from 'chart.js';
 // import MemberInfo from './MemberInfo';
@@ -8,11 +8,11 @@
 
 // const MemberCompletionChart = () => {
 //     const members = [
-//         { name: 'Alice', completed: 45, total: 50, role: 'PM', avatar: 'https://i.pravatar.cc/150?img=1', joinDate: '2025-01-01', workDays: 90 },
-//         { name: 'Blice', completed: 38, total: 50, role: 'Member', avatar: 'https://i.pravatar.cc/150?img=2', joinDate: '2025-01-15', workDays: 75 },
-//         { name: 'Clice', completed: 30, total: 40, role: 'Member', avatar: 'https://i.pravatar.cc/150?img=3', joinDate: '2025-02-01', workDays: 60 },
-//         { name: 'Dlice', completed: 25, total: 30, role: 'Member', avatar: 'https://i.pravatar.cc/150?img=4', joinDate: '2025-02-15', workDays: 45 },
-//         { name: 'Elice', completed: 15, total: 20, role: 'Member', avatar: 'https://i.pravatar.cc/150?img=5', joinDate: '2025-03-01', workDays: 30 },
+//         { name: 'Alice', completed: 45, total: 50, inProgress: 3, notStarted: 2, role: 'PM', avatar: 'https://i.pravatar.cc/150?img=1', joinDate: '2025-01-01', workDays: 90 },
+//         { name: 'Blice', completed: 38, total: 50, inProgress: 5, notStarted: 7, role: 'Member', avatar: 'https://i.pravatar.cc/150?img=2', joinDate: '2025-01-15', workDays: 75 },
+//         { name: 'Clice', completed: 30, total: 40, inProgress: 4, notStarted: 6, role: 'Member', avatar: 'https://i.pravatar.cc/150?img=3', joinDate: '2025-02-01', workDays: 60 },
+//         { name: 'Dlice', completed: 25, total: 30, inProgress: 2, notStarted: 3, role: 'Member', avatar: 'https://i.pravatar.cc/150?img=4', joinDate: '2025-02-15', workDays: 45 },
+//         { name: 'Elice', completed: 15, total: 20, inProgress: 1, notStarted: 4, role: 'Member', avatar: 'https://i.pravatar.cc/150?img=5', joinDate: '2025-03-01', workDays: 30 },
 //     ];
 
 //     const sprintData = {
@@ -43,16 +43,30 @@
 //         ],
 //     };
 
+//     const lateTasks = members.map(member => sprintData[member.name].reduce((sum, sprint) => sum + sprint.late, 0));
+
 //     const data = {
 //         labels: members.map((member) => member.name),
 //         datasets: [
 //             {
-//                 label: 'Completion Rate (%)',
-//                 data: members.map((member) => (member.completed / member.total) * 100),
-//                 backgroundColor: ['#FF6384', '#FFD700', '#4CAF50', '#36A2EB', '#9966FF'], // Màu sắc từ hình
-//                 borderRadius: 8,
-//                 borderSkipped: false,
-//                 barThickness: 30, // Tăng độ rộng của thanh
+//                 label: 'Hoàn thành',
+//                 data: members.map((member) => member.completed),
+//                 backgroundColor: '#4CAF50',
+//             },
+//             {
+//                 label: 'Đang làm',
+//                 data: members.map((member) => member.inProgress),
+//                 backgroundColor: '#FFD700',
+//             },
+//             {
+//                 label: 'Chưa làm',
+//                 data: members.map((member) => member.notStarted),
+//                 backgroundColor: '#D3D3D3',
+//             },
+//             {
+//                 label: 'Trễ hạn',
+//                 data: lateTasks,
+//                 backgroundColor: '#FF6384',
 //             },
 //         ],
 //     };
@@ -63,11 +77,12 @@
 //         maintainAspectRatio: false,
 //         plugins: {
 //             legend: {
-//                 display: false,
+//                 display: true,
+//                 position: 'top',
 //             },
 //             title: {
 //                 display: true,
-//                 text: 'Task Completion Rate per Member (Entire Project)',
+//                 text: 'Phân bổ và đóng góp công việc',
 //                 align: 'start',
 //                 font: {
 //                     size: 18,
@@ -91,19 +106,20 @@
 //                 callbacks: {
 //                     label: (context) => {
 //                         const member = members[context.dataIndex];
-//                         const percentage = context.raw.toFixed(1);
-//                         return `${member.name}: ${percentage}% (${member.completed}/${member.total} tasks)`;
+//                         const datasetLabel = context.dataset.label;
+//                         const value = context.raw;
+//                         if (datasetLabel === 'Hoàn thành') {
+//                             return `${member.name}: ${datasetLabel} ${value}/${member.total} (${((value / member.total) * 100).toFixed(1)}%)`;
+//                         }
+//                         return `${member.name}: ${datasetLabel} ${value}`;
 //                     },
 //                 },
 //             },
 //         },
 //         scales: {
 //             x: {
-//                 min: 0,
-//                 max: 100,
+//                 stacked: true,
 //                 ticks: {
-//                     stepSize: 20,
-//                     callback: (value) => `${value}%`,
 //                     font: {
 //                         family: 'Inter, sans-serif',
 //                     },
@@ -113,6 +129,7 @@
 //                 },
 //             },
 //             y: {
+//                 stacked: true,
 //                 grid: {
 //                     display: false,
 //                 },
@@ -144,69 +161,70 @@
 
 // export default MemberCompletionChart;
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, BarElement, LinearScale, Title, Tooltip, CategoryScale } from 'chart.js';
+import axios from 'axios';
 import MemberInfo from './MemberInfo';
 import '../css/membercompletionchart.css';
 
 ChartJS.register(BarElement, LinearScale, Title, Tooltip, CategoryScale);
 
-const MemberCompletionChart = () => {
-    const members = [
-        { name: 'Alice', completed: 45, total: 50, inProgress: 3, notStarted: 2, role: 'PM', avatar: 'https://i.pravatar.cc/150?img=1', joinDate: '2025-01-01', workDays: 90 },
-        { name: 'Blice', completed: 38, total: 50, inProgress: 5, notStarted: 7, role: 'Member', avatar: 'https://i.pravatar.cc/150?img=2', joinDate: '2025-01-15', workDays: 75 },
-        { name: 'Clice', completed: 30, total: 40, inProgress: 4, notStarted: 6, role: 'Member', avatar: 'https://i.pravatar.cc/150?img=3', joinDate: '2025-02-01', workDays: 60 },
-        { name: 'Dlice', completed: 25, total: 30, inProgress: 2, notStarted: 3, role: 'Member', avatar: 'https://i.pravatar.cc/150?img=4', joinDate: '2025-02-15', workDays: 45 },
-        { name: 'Elice', completed: 15, total: 20, inProgress: 1, notStarted: 4, role: 'Member', avatar: 'https://i.pravatar.cc/150?img=5', joinDate: '2025-03-01', workDays: 30 },
-    ];
+const MemberCompletionChart = ({ groupId = 1 }) => {
+    const [members, setMembers] = useState([]);
+    const [sprintData, setSprintData] = useState({});
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    const sprintData = {
-        Alice: [
-            { sprint: 1, completed: 10, total: 12, late: 2 },
-            { sprint: 2, completed: 15, total: 18, late: 1 },
-            { sprint: 3, completed: 20, total: 20, late: 0 },
-        ],
-        Blice: [
-            { sprint: 1, completed: 8, total: 10, late: 1 },
-            { sprint: 2, completed: 12, total: 15, late: 2 },
-            { sprint: 3, completed: 18, total: 25, late: 3 },
-        ],
-        Clice: [
-            { sprint: 1, completed: 5, total: 8, late: 1 },
-            { sprint: 2, completed: 10, total: 12, late: 0 },
-            { sprint: 3, completed: 15, total: 20, late: 2 },
-        ],
-        Dlice: [
-            { sprint: 1, completed: 5, total: 6, late: 0 },
-            { sprint: 2, completed: 8, total: 10, late: 1 },
-            { sprint: 3, completed: 12, total: 14, late: 1 },
-        ],
-        Elice: [
-            { sprint: 1, completed: 3, total: 5, late: 1 },
-            { sprint: 2, completed: 5, total: 7, late: 0 },
-            { sprint: 3, completed: 7, total: 8, late: 0 },
-        ],
-    };
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get(`http://localhost:3000/api/groups/${groupId}`);
+                // Format joinDate to YYYY-MM-DD
+                const formattedMembers = response.data.members.map(member => ({
+                    ...member,
+                    joinDate: new Date(member.joinDate).toISOString().split('T')[0],
+                }));
+                setMembers(formattedMembers);
+                setSprintData(response.data.sprintData);
+                setLoading(false);
+            } catch (err) {
+                console.error('Error fetching member data:', err);
+                setError(err.response?.data?.error || 'Failed to load data');
+                setLoading(false);
+            }
+        };
+        fetchData();
+    }, [groupId]);
 
-    const lateTasks = members.map(member => sprintData[member.name].reduce((sum, sprint) => sum + sprint.late, 0));
+    if (loading) {
+        return <div className="completion-chart-container">Loading...</div>;
+    }
+
+    if (error) {
+        return <div className="completion-chart-container">Error: {error}</div>;
+    }
+
+    const lateTasks = members.map(member =>
+        sprintData[member.name]?.reduce((sum, sprint) => sum + sprint.late, 0) || 0
+    );
 
     const data = {
-        labels: members.map((member) => member.name),
+        labels: members.map(member => member.name),
         datasets: [
             {
                 label: 'Hoàn thành',
-                data: members.map((member) => member.completed),
+                data: members.map(member => member.completed),
                 backgroundColor: '#4CAF50',
             },
             {
                 label: 'Đang làm',
-                data: members.map((member) => member.inProgress),
+                data: members.map(member => member.inProgress),
                 backgroundColor: '#FFD700',
             },
             {
                 label: 'Chưa làm',
-                data: members.map((member) => member.notStarted),
+                data: members.map(member => member.notStarted),
                 backgroundColor: '#D3D3D3',
             },
             {
