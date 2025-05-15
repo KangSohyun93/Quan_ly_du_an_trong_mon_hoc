@@ -1,5 +1,5 @@
 import express from 'express';
-import { getGroups, getMembersByGroupId } from '../services/memberService.js';
+import { getGroups, getMembersByGroupId, getPeerAssessments } from '../services/memberService.js';
 
 const router = express.Router();
 
