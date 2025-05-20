@@ -1,17 +1,11 @@
 import React, { useState } from "react";
-import {
-  Row,
-  Col,
-  Container,
-  Form,
-  Button,
-  Image,
-  InputGroup,
-} from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import { Row, Col, Container, Form, Button, Image } from "react-bootstrap";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import illustationPhoto from "../../assets/LoginImage/loginphoto1.png";
-import "./RegisterForm.css";
-import { registerUser } from "../../services/auth-service";
+import illustationPhoto from "../../../assets/LoginImage/loginphoto1.png";
+import worktraceLogo from "../../../assets/images/worktrace-logo.svg";
+import styles from "./RegisterForm.module.css";
+import { registerUser } from "../../../services/auth-service";
 
 export const RegisterForm = () => {
   const [email, setEmail] = useState("");
@@ -23,31 +17,31 @@ export const RegisterForm = () => {
 
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setMessage("");
 
-    if (password !== confirmPassword) {
-      setError("The password does not match.");
+    if (!email || !username || !password || !confirmPassword || !role) {
+      setError("Hãy điền đầy đủ thông tin");
       return;
     }
 
-    if (!role) {
-      setError("Please choose a role.");
+    if (password !== confirmPassword) {
+      setError("Mật khẩu không khớp.");
       return;
     }
 
     try {
-      const result = await registerUser({
+      const newUser = await registerUser({
         email,
         username,
         password,
         role,
       });
-
-      setMessage("Registration successful!");
+      if (newUser) navigate("/login");
       // Clear form
       setEmail("");
       setUsername("");
@@ -60,13 +54,17 @@ export const RegisterForm = () => {
   };
 
   return (
-    <div className="register_page">
+    <div className={styles.register_page}>
       <Container>
         <Row>
           <Col sm={6} className="d-flex flex-column">
-            <h2 className="logo">WorkTrace</h2>
-            <Form className="register-form" onSubmit={handleSubmit}>
-              <h1 className="mb-4">Sign Up</h1>
+            <img
+              src={worktraceLogo}
+              alt="WorkTrace Logo"
+              className={styles.logo}
+            />
+            <Form className={styles["register-form"]} onSubmit={handleSubmit}>
+              <h1 className="mb-4">Register</h1>
 
               {error && <p className="text-danger">{error}</p>}
               {message && <p className="text-success">{message}</p>}
@@ -104,15 +102,15 @@ export const RegisterForm = () => {
                   required
                 >
                   <option value="">Permissions</option>
-                  <option value="user">User</option>
-                  <option value="teacher">Teacher</option>
+                  <option value="Student">Student</option>
+                  <option value="Instructor">Instructor</option>
                 </Form.Select>
               </Form.Group>
 
               {/* Password */}
               <Form.Group className="mb-3" controlId="Password">
                 <Form.Label>Password</Form.Label>
-                <InputGroup>
+                <div className={styles["showpass"]}>
                   <Form.Control
                     type={showPassword ? "text" : "password"}
                     placeholder="Enter your password"
@@ -121,18 +119,18 @@ export const RegisterForm = () => {
                     required
                   />
                   <span
-                    className="toggle-password"
+                    className={styles["toggle-password"]}
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? <FaEye /> : <FaEyeSlash />}
                   </span>
-                </InputGroup>
+                </div>
               </Form.Group>
 
               {/* Confirm Password */}
               <Form.Group className="mb-3" controlId="ConfirmPassword">
                 <Form.Label>Confirm Password</Form.Label>
-                <InputGroup>
+                <div className={styles["showpass"]}>
                   <Form.Control
                     type={showPassword ? "text" : "password"}
                     placeholder="Confirm your password"
@@ -141,12 +139,12 @@ export const RegisterForm = () => {
                     required
                   />
                   <span
-                    className="toggle-password"
+                    className={styles["toggle-password"]}
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? <FaEye /> : <FaEyeSlash />}
                   </span>
-                </InputGroup>
+                </div>
               </Form.Group>
 
               {/* Submit */}
@@ -156,7 +154,7 @@ export const RegisterForm = () => {
                 </Button>
                 <p className="text-center mt-3">
                   Already have an account?{" "}
-                  <a href="/signup">
+                  <a href="/login">
                     <b className="text-primary">Login</b>
                   </a>
                 </p>

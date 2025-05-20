@@ -12,7 +12,7 @@ function SV_HomeLayout() {
       <Sidebar />
       <div className="flex-grow-1">
         {/* <Navbar_SV /> */}
-        <JoinClassBar />
+        {/* <JoinClassBar /> */}
         <ImportHeader />
         <div className="page-content p-4">
           <Outlet />

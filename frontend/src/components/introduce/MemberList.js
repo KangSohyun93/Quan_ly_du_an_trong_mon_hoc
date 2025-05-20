@@ -8,7 +8,12 @@ function MembersList({ members }) {
       <h2>Thành viên ({members.length})</h2>
       <ul>
         {members.map((member, index) => (
-          <MemberItem key={index} name={member.name} role={member.role} />
+          <MemberItem
+            key={index}
+            name={member.name}
+            role={member.role}
+            image={member.avatarUrl}
+          />
         ))}
       </ul>
     </div>

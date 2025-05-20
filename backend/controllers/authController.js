@@ -11,19 +11,23 @@ const createToken = (user) => {
 
 exports.register = async (req, res) => {
   try {
-    const { email, password, name } = req.body;
+    const { email, username, password, role } = req.body;
     const existingUser = await User.findOne({ where: { email } });
 
     if (existingUser) {
       return res.status(400).json({ message: "Email đã tồn tại" });
     }
 
-    const newUser = await User.create({ email, password, name });
-    const token = createToken(newUser);
+    const newUser = await User.create({
+      username: username,
+      email: email,
+      password: password,
+      role: role,
+    });
 
     res.status(201).json({
-      token,
-      user: { id: newUser.id, email: newUser.email, name: newUser.name },
+      user: { email: newUser.email, name: newUser.username },
+      message: "Đăng ký tài khoản thành công!",
     });
   } catch (error) {
     console.error(error);
