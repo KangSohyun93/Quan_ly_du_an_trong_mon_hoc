@@ -49,10 +49,26 @@
     
 }
 
+.admin-avatar-loading{ /* Thêm cho loading */
+    margin-right: 12px;
+    font-style: italic;
+}
+
+.admin-profile div { /* Để tên và role trên 2 dòng */
+    display: flex;
+    flex-direction: column;
+}
+
 .admin-name {
     font-weight: 600;
     font-size: 0.95em;
     color: #2c3e50; /* Màu chữ đậm cho tên admin */
+}
+
+.admin-role-display { /* THÊM STYLE CHO ROLE */
+    font-size: 0.8em;
+    color: #7f8c8d; /* Màu xám nhạt hơn */
+    text-transform: capitalize; /* Viết hoa chữ cái đầu */
 }
 
 
@@ -110,7 +126,6 @@
 }
 
 .sidebar-footer {
-    margin-top: auto;
     margin-top: auto;
     padding: 20px 25px;
     padding-bottom: 5px;

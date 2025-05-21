@@ -1,8 +1,14 @@
 // frontend/src/components/user_manager/UserTable.js
 import React from 'react';
-
+import '../../assets/styles/UserTable.css'; // Tăng cấp thư mục lên 2 lần
 const UserTable = ({ users, onEditUser, onDeleteUser, formatDate, loading }) => {
     if (loading && users.length === 0) {
+        if (loading === 'error') {
+        return <p className="error-text table-feedback">Có lỗi xảy ra khi tải danh sách người dùng.</p>;
+        }
+        if (users.length === 0) {
+            return <p className="loading-text table-feedback">Khong tim thay danh sach</p>;
+        }
         return <p className="loading-text table-feedback">Đang tải danh sách người dùng...</p>;
     }
     if (!loading && users.length === 0) {

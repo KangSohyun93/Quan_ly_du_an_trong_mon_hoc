@@ -1,0 +1,174 @@
+/* frontend/src/pages/EditUserPage.css */
+.edit-user-page-container {
+    padding: 20px;
+    background-color: #f8f9fa; /* Nền chung của trang admin */
+    max-width: 900px;
+    margin: 20px auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-container { /* Shared style for forms */
+    /* background-color: #fff; */ /* Đã có ở edit-user-page-container */
+    /* padding: 25px; */
+    /* border-radius: 8px; */
+    /* box-shadow: 0 2px 8px rgba(0,0,0,0.1); */
+}
+
+.form-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.form-header h2 {
+    margin: 0;
+    font-size: 1.8em;
+    color: #333;
+}
+
+.button-back {
+    background: none;
+    border: none;
+    color: #007bff;
+    cursor: pointer;
+    font-size: 0.9em;
+    padding: 8px 0; /* Thêm padding để dễ click */
+}
+.button-back:hover {
+    text-decoration: underline;
+}
+
+.user-form .form-layout {
+    display: flex;
+    gap: 30px; /* Khoảng cách giữa 2 cột */
+}
+
+.profile-section {
+    flex: 1; /* Chiếm 1 phần */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: #fff; /* Nền trắng cho phần profile card */
+    border-radius: 8px;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.08);
+    text-align: center;
+}
+
+.user-avatar-large {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 15px;
+    border: 3px solid #007bff; /* Viền avatar */
+}
+
+.profile-section h3 {
+    font-size: 1.5em;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.profile-section p {
+    font-size: 0.95em;
+    color: #555;
+    margin-bottom: 8px;
+    word-break: break-all; /* Cho email dài */
+}
+.profile-section p:last-child {
+    margin-bottom: 0;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.8em;
+    font-weight: 600;
+    /* margin-bottom: 10px; */
+    text-transform: uppercase;
+}
+
+.status-active {
+    background-color: #d4edda; /* Xanh lá cây nhạt */
+    color: #155724; /* Xanh lá cây đậm */
+}
+
+.status-blocked {
+    background-color: #f8d7da; /* Đỏ nhạt */
+    color: #721c24; /* Đỏ đậm */
+}
+
+
+.details-section {
+    flex: 2; /* Chiếm 2 phần */
+    padding: 20px;
+    background-color: #fff; /* Nền trắng cho phần details card */
+    border-radius: 8px;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.08);
+}
+
+.details-section h4 {
+    font-size: 1.3em;
+    color: #333;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #495057;
+    font-size: 0.9em;
+}
+
+.form-control,
+.form-control-readonly { /* Style chung cho input, select */
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 0.95em;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    box-sizing: border-box;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.form-control:focus {
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.form-control-readonly {
+    background-color: #e9ecef; /* Màu nền cho trường chỉ đọc */
+    cursor: not-allowed;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end; /* Căn các nút về bên phải */
+    gap: 10px; /* Khoảng cách giữa các nút */
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0;
+}
+
+/* Các style button đã có trong global.css, hoặc bạn có thể định nghĩa lại ở đây nếu cần */
+/* .button-primary, .button-secondary, .button-danger, .button-success */
+
+.loading-container, .error-container {
+    text-align: center;
+    padding: 50px;
+    font-size: 1.2em;
+}

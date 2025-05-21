@@ -1,5 +1,6 @@
 // frontend/src/components/shared/ConfirmDeleteModal.js
 import React from 'react';
+import '../../assets/styles/ConfirmDeleteModal.css'; // Tăng cấp thư mục lên 2 lần
 
 const ConfirmDeleteModal = ({
     isOpen,

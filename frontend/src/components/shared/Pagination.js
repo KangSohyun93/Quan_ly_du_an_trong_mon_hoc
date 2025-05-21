@@ -1,6 +1,7 @@
 // frontend/src/components/shared/Pagination.js
 import React from 'react';
-
+import "../../assets/styles/Pagination.css";
+ // Đường dẫn đến file CSS của bạn
 const Pagination = ({
     currentPage,
     totalPages,

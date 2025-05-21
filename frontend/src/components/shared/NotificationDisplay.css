@@ -1,0 +1,61 @@
+/* frontend/src/components/shared/NotificationDisplay.css */
+.notification-display {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-width: 250px;
+    max-width: 400px;
+    animation: fadeInRight 0.3s ease-out;
+}
+
+.notification-success {
+    background-color: #d4edda; /* Màu xanh lá cây nhạt */
+    color: #155724; /* Màu chữ xanh đậm */
+    border: 1px solid #c3e6cb;
+}
+
+.notification-error {
+    background-color: #f8d7da; /* Màu đỏ nhạt */
+    color: #721c24; /* Màu chữ đỏ đậm */
+    border: 1px solid #f5c6cb;
+}
+
+.notification-info {
+    background-color: #d1ecf1; /* Màu xanh dương nhạt */
+    color: #0c5460; /* Màu chữ xanh dương đậm */
+    border: 1px solid #bee5eb;
+}
+
+.notification-display p {
+    margin: 0;
+    margin-right: 15px;
+    font-size: 0.95em;
+}
+
+.notification-close-btn {
+    background: none;
+    border: none;
+    color: inherit;
+    font-size: 1.5em;
+    cursor: pointer;
+    padding: 0 5px;
+    line-height: 1;
+}
+
+@keyframes fadeInRight {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}

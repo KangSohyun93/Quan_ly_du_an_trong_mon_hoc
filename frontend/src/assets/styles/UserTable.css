@@ -1,0 +1,91 @@
+/* frontend/src/components/user_manager/UserTable.css */
+.user-table-container {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+    overflow-x: auto; /* Cho phép cuộn ngang nếu bảng quá rộng */
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse; /* Gộp đường viền */
+}
+
+th:first-child,
+td:first-child {
+    text-align: center;
+}
+
+th:last-child,
+td:last-child {
+    text-align: center;
+}
+
+th,
+td {
+    padding: 14px 18px; /* Tăng padding cho dễ nhìn */
+    text-align: left;
+    border-bottom: 1px solid #f0f0f0; /* Đường kẻ ngang mỏng hơn */
+    font-size: 14px;
+}
+
+th {
+    background-color: #fafafa; /* Màu nền xám rất nhạt cho header */
+    font-weight: 600; /* Chữ đậm hơn cho header */
+    color: #595959;
+}
+
+tr:last-child td {
+    border-bottom: none; /* Bỏ đường kẻ ở hàng cuối */
+}
+
+tr:hover {
+    background-color: #f9f9f9; /* Màu nền khi hover hàng */
+}
+
+.status-badge {
+    padding: 5px 12px; /* Tăng padding cho badge */
+    border-radius: 16px; /* Bo tròn mạnh hơn cho badge */
+    font-size: 12px;
+    font-weight: 500;
+    display: inline-block; /* Để padding có tác dụng đúng */
+    text-transform: capitalize;
+}
+
+.status-active {
+    background-color: #e6f7ff; /* Xanh lá cây nhạt (giống Ant Design Active) */
+    color: #1890ff; /* Xanh lá cây đậm */
+}
+
+.status-banned {
+    background-color: #fff1f0; /* Đỏ nhạt (giống Ant Design Banned) */
+    color: #f5222d; /* Đỏ đậm */
+}
+
+.action-icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px; /* Kích thước icon */
+    margin: 0 5px;
+    padding: 5px;
+    color: #555;
+    transition: color 0.2s;
+}
+
+.action-icon:hover {
+    color: #4A90E2; /* Màu xanh khi hover icon */
+}
+
+.delete-icon:hover {
+    color: #f5222d; /* Màu đỏ khi hover icon xóa */
+}
+
+.loading-text.table-feedback,
+.no-data-text.table-feedback,
+.error-text.table-feedback {
+    text-align: center;
+    padding: 20px;
+    font-style: italic;
+    color: #555;
+}
