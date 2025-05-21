@@ -151,7 +151,7 @@ const ProjectRate = () => {
 
   return (
     <div className="projectrate-project-rate">
-      <Sidebar />
+      <Sidebar userId={userId} />
       <div className="projectrate-content-container">
         <TeamHeader
           className={projectData.class_name || 'Tên lớp'}

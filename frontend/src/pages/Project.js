@@ -98,7 +98,7 @@ const Project = () => {
 
   return (
     <div className="project-project-page">
-      <Sidebar />
+      <Sidebar userId={userId} />
       <div className="project-content-container">
         <TeamHeader
           className={projectData.class_name || 'Tên lớp'}

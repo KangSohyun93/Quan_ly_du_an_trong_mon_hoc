@@ -20,6 +20,7 @@ app.use('/api/instructor-groups', instructorGroupRoutes);
 app.use('/api/classes', classRoutes);
 app.use('/api/configurations', configurationsRouter);
 
+
 // Middleware xử lý lỗi toàn cục
 app.use((err, req, res, next) => {
   console.error(err.stack);

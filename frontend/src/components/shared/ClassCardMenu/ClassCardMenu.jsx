@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import LinkIcon from '@mui/icons-material/Link';
-import DeleteIcon from '@mui/icons-material/Delete';
 
-const ClassCardMenu = ({ classId, onGetLink, onDelete }) => {
+const ClassCardMenu = ({ classId, onGetLink }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleToggle = () => {
@@ -14,13 +13,12 @@ const ClassCardMenu = ({ classId, onGetLink, onDelete }) => {
     setIsOpen(false);
   };
 
-  const handleDelete = () => {
-    if (onDelete) onDelete(classId);
-    setIsOpen(false);
-  };
-
   return (
-    <div className="classcard-menu" style={{ position: 'relative' }}>
+    <div
+      className="classcard-menu"
+      style={{ position: 'relative' }}
+      onClick={(event) => event.stopPropagation()} // Ngăn sự kiện lan truyền
+    >
       <button
         onClick={handleToggle}
         className="classcard-menu-button"
@@ -78,29 +76,6 @@ const ClassCardMenu = ({ classId, onGetLink, onDelete }) => {
           >
             <LinkIcon style={{ marginRight: '10px', fontSize: '18px', color: '#4a90e2' }} />
             Get link
-          </button>
-          <button
-            onClick={handleDelete}
-            className="classcard-menu-item"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              width: '100%',
-              padding: '8px 16px',
-              textAlign: 'left',
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              fontSize: '14px',
-              color: '#ff4444',
-              transition: 'background-color 0.2s',
-              ':hover': {
-                backgroundColor: '#fff1f1',
-              },
-            }}
-          >
-            <DeleteIcon style={{ marginRight: '10px', fontSize: '18px', color: '#ff4444' }} />
-            Delete Class
           </button>
         </div>
       )}

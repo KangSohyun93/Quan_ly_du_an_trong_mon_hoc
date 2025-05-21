@@ -17,7 +17,7 @@ const TeamHeader = ({ className, classCode, teamName, projectName, members, acti
             members.slice(0, 3).map((member, index) => (
               <div key={index} className="team-member">
                 <img
-                  src={member.avatar || placeholderMember} // Sử dụng đường dẫn trực tiếp
+                  src={member.avatar || placeholderMember}
                   alt={`Member ${index + 1}`}
                   className="member-avatar"
                   onError={(e) => {
@@ -42,14 +42,18 @@ const TeamHeader = ({ className, classCode, teamName, projectName, members, acti
               <select
                 value={selectedSprintId || ''}
                 onChange={(e) => {
-                  const selectedSprint = sprints.find((sprint) => sprint.sprint_id === e.target.value);
-                  if (selectedSprint) onSprintChange(selectedSprint);
+                  const sprintId = parseInt(e.target.value, 10); // Đảm bảo giá trị là số
+                  const selectedSprint = sprints.find((sprint) => sprint.sprint_id === sprintId);
+                  if (selectedSprint) {
+                    console.log("Selected sprint in TeamHeader:", selectedSprint);
+                    onSprintChange(selectedSprint);
+                  }
                 }}
               >
                 <option value="" disabled>Chọn Sprint</option>
                 {sprints.map((sprint, index) => (
-                  <option key={index} value={sprint.sprint_id}>
-                    Sprint {index + 1}
+                  <option key={sprint.sprint_id} value={sprint.sprint_id}>
+                    {sprint.sprint_name || `Sprint ${sprint.sprint_number}`}
                   </option>
                 ))}
               </select>

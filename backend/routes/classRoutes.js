@@ -42,6 +42,55 @@ router.post('/create', async (req, res) => {
   }
 });
 
+// API endpoint để chỉnh sửa thông tin lớp học
+router.put('/:classId', async (req, res) => {
+  const { classId } = req.params;
+  const { class_name, semester, secret_code } = req.body;
+  const instructorId = req.user?.user_id; // Giả định lấy từ middleware xác thực (JWT hoặc session)
+
+  // Kiểm tra dữ liệu đầu vào
+  if (!class_name && !semester && !secret_code) {
+    return res.status(400).json({ error: 'At least one field (class_name, semester, secret_code) is required' });
+  }
+
+  // Xây dựng query động dựa trên các trường được cung cấp
+  const updates = [];
+  const values = [];
+  if (class_name) {
+    updates.push('class_name = ?');
+    values.push(class_name);
+  }
+  if (semester) {
+    updates.push('semester = ?');
+    values.push(semester);
+  }
+  if (secret_code) {
+    updates.push('secret_code = ?');
+    values.push(secret_code);
+  }
+  values.push(classId, instructorId);
+
+  const query = `
+    UPDATE Classes 
+    SET ${updates.join(', ')}
+    WHERE class_id = ? AND instructor_id = ?
+  `;
+
+  try {
+    const [result] = await pool.query(query, values);
+    if (result.affectedRows === 0) {
+      return res.status(403).json({ error: 'Unauthorized or class not found' });
+    }
+    res.status(200).json({ message: 'Class updated successfully' });
+  } catch (err) {
+    console.error('Error updating class:', err);
+    if (err.code === 'ER_DUP_ENTRY' && err.sqlMessage.includes('secret_code')) {
+      return res.status(400).json({ error: 'Secret code already exists' });
+    }
+    res.status(500).json({ error: 'Failed to update class' });
+  }
+});
+
 // API endpoint để lấy danh sách lớp học
 router.get('/list', async (req, res) => {
   const query = 'SELECT * FROM Classes';

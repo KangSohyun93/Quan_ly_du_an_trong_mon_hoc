@@ -1,14 +1,19 @@
 import React from 'react';
 import placeholderMember from '../../../assets/images/placeholders/placeholder-member.jpg';
 import './ClassCard.css';
+import ClassCardMenu from '../ClassCardMenu/ClassCardMenu'; // Import component menu
 
-const ClassCard = ({ classId, className, groupName, projectName, projectId, memberCount, avatar, avatarNumber, avatarColor, members, onClick }) => {
+const ClassCard = ({userId, classId, className, groupName, projectName, projectId, memberCount, avatar, avatarNumber, avatarColor, members, onClick, classCardMenuBy }) => {
   // Log để kiểm tra dữ liệu truyền vào
   console.log('ClassCard props:', { classId, className, memberCount, members });
 
   // Sử dụng members.length nếu members tồn tại, nếu không thì dùng memberCount hoặc 0
   const displayMemberCount = members && members.length > 0 ? members.length : (memberCount || 0);
-
+  const handleGetLink = () => {
+    const link = `http://localhost:3000/userID/${userId}/classes/${classId}/projects/${projectId}/introduce`;
+    navigator.clipboard.writeText(link);
+    alert(`Đã sao chép link: ${link}`);
+  };
   return (
     <div className="classcard-container" onClick={onClick}>
       <div className="classcard-avatar" style={{ backgroundColor: avatarColor }}>
@@ -43,7 +48,12 @@ const ClassCard = ({ classId, className, groupName, projectName, projectId, memb
           <div className="classcard-members-count">{displayMemberCount} members</div>
         </div>
       </div>
-      <div className="classcard-more-icon">…</div>
+      <div style={{ position: 'absolute', top: '10px', right: '10px' }}>
+        <ClassCardMenu
+          classId={classId}
+          onGetLink={handleGetLink}
+        />
+      </div>
     </div>
   );
 };

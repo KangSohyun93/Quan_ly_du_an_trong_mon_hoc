@@ -1,8 +1,10 @@
+// instructorGroupRoutes.js
 const express = require('express');
 const router = express.Router();
-const instructorGroupController = require('../controllers/instructorGroupController');
+const { getInstructorGroups, getGroupsInClass, getMembersInClass } = require('../controllers/instructorGroupController');
 
-// Route để lấy danh sách nhóm theo instructorId
-router.get('/', instructorGroupController.getInstructorGroups);
+router.get('/', getInstructorGroups);
+router.get('/classes/:classId/groups', getGroupsInClass);
+router.get('/classes/:classId/members', getMembersInClass);
 
 module.exports = router;

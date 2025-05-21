@@ -6,6 +6,8 @@ import ProjectRate from './pages/ProjectRate';
 import './assets/styles/global.css';
 import Profile from './pages/Profile';
 import InstructorGroupPage from './pages/InstructorGroupPage';
+import ClassGroupsPage from './pages/ClassGroupPage';
+import ClassMembersPage from './pages/ClassMembersPage';
 function App() {
   return (
     <Router>
@@ -16,6 +18,8 @@ function App() {
         <Route path="/userID/:userId/classes/:classId/projects/:projectId/sprints/:sprintId" element={<Project />} />
         <Route path="/userID/:userId/classes/:classId/projects/:projectId/rate" element={<ProjectRate />} />
         <Route path="/userID/:userId/profile" element={<Profile />} />
+        <Route path="/userID/:userId/instructor/classes/:classId" element={<ClassGroupsPage />} />
+        <Route path="/userID/:userId/instructor/classes/:classId/members" element={<ClassMembersPage />} />
         <Route path="*" element={<div>404 - Page Not Found</div>} />
       </Routes>
     </Router>
