@@ -18,6 +18,7 @@ router.patch("/checklists/:checklistId", taskController.updateChecklistItem);
 // Routes for projects and sprints
 router.get("/projects", taskController.getProjects);
 router.get("/sprints", taskController.getSprints);
+router.post("/sprints", taskController.createSprint);
 
 // Route for group members
 router.get("/group-members-by-project", taskController.getGroupMembersByProject);

@@ -229,12 +229,39 @@ exports.getSprints = async (req, res) => {
   }
 };
 
+// Create a new sprint
+exports.createSprint = async (req, res) => {
+  const { project_id, sprint_name, start_date, end_date } = req.body;
+
+  try {
+    // Validate project_id
+    const [project] = await pool.query(
+      "SELECT project_id FROM Projects WHERE project_id = ?",
+      [project_id]
+    );
+
+    if (!project || project.length === 0) {
+      return res.status(404).json({ message: "Project not found" });
+    }
+
+    // Insert new sprint
+    const [result] = await pool.query(
+      "INSERT INTO Sprints (project_id, sprint_name, start_date, end_date) VALUES (?, ?, ?, ?)",
+      [project_id, sprint_name || null, start_date || null, end_date || null]
+    );
+
+    res.status(201).json({ message: "Sprint created successfully", sprintId: result.insertId });
+  } catch (error) {
+    console.error("Error creating sprint:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 // Create a new task with subtasks
 exports.createTask = async (req, res) => {
   const { title, description, sprint_id, due_date, status, subtasks, assigned_to } = req.body;
 
   try {
-    // Bỏ kiểm tra quyền leader_id để tránh lỗi liên quan đến bảng Groups
     // Kiểm tra sprint_id có tồn tại không
     const [sprint] = await pool.query(
       "SELECT sprint_id FROM Sprints WHERE sprint_id = ?",
@@ -280,7 +307,7 @@ exports.getGroupMembersByProject = async (req, res) => {
        WHERE p.project_id = ?`,
       [projectId]
     );
-    console.log("Group members fetched:", rows); // Log để kiểm tra
+    console.log("Group members fetched:", rows);
     if (rows.length === 0) {
       return res.status(404).json({ message: "No group members found for this project" });
     }

@@ -1,4 +1,3 @@
-// frontend/src/components/task/KanbanView.js
 import React, { useState, useEffect, useCallback } from "react";
 import "./KanbanView.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -12,11 +11,11 @@ import { fetchTasks, updateChecklistItem, fetchProjects, fetchSprints } from "..
 import CreateTask from "./CreateTask";
 import TaskCommentPage from "./TaskCommentPage";
 import TeamHeader from "../TeamHeader/TeamHeader";
-import { filterTasksByUser } from "./UserFilter"; // Import hàm lọc
+import { filterTasksByUser } from "./UserFilter";
 
 export const KanbanView = () => {
   const [tasks, setTasks] = useState([]);
-  const [filteredTasks, setFilteredTasks] = useState([]); // Task sau khi lọc
+  const [filteredTasks, setFilteredTasks] = useState([]);
   const [reportData, setReportData] = useState([]);
   const [openTaskId, setOpenTaskId] = useState(null);
   const [showCreateTask, setShowCreateTask] = useState(false);
@@ -25,7 +24,7 @@ export const KanbanView = () => {
   const [sprints, setSprints] = useState([]);
   const [selectedSprintId, setSelectedSprintId] = useState(null);
   const [activeTab, setActiveTab] = useState("Team task");
-  const [selectedUserId, setSelectedUserId] = useState(null); // State để lưu user_id được chọn
+  const [selectedUserId, setSelectedUserId] = useState(null);
 
   const className = "Class A";
   const classCode = "ABC123";
@@ -75,6 +74,7 @@ export const KanbanView = () => {
 
       const mappedTasks = data
         .filter(task => {
+          console.log("Filtering task with sprint_id:", task.sprint_id, "against selectedSprintId:", selectedSprintId);
           if (!selectedSprintId) return true;
           return task.sprint_id === selectedSprintId;
         })
@@ -129,7 +129,7 @@ export const KanbanView = () => {
 
       console.log("Mapped and sorted tasks:", mappedTasks);
       setTasks(mappedTasks);
-      const filtered = filterTasksByUser(mappedTasks, selectedUserId); // Lọc task theo user
+      const filtered = filterTasksByUser(mappedTasks, selectedUserId);
       setFilteredTasks(filtered);
       updateReportData(filtered);
     } catch (error) {
@@ -213,9 +213,10 @@ export const KanbanView = () => {
     loadTasks();
   };
 
-  const handleSprintChange = (sprint) => {
-    console.log("Selected sprint:", sprint);
-    setSelectedSprintId(sprint.sprint_id);
+  const handleSprintChange = async (sprintId) => {
+    console.log("Selected sprint ID in KanbanView:", sprintId);
+    setSelectedSprintId(sprintId); // Update selectedSprintId with the sprint_id
+    await loadTasks(); // Reload tasks immediately after changing sprint
   };
 
   const handleTabChange = (tab) => {
@@ -223,7 +224,7 @@ export const KanbanView = () => {
   };
 
   const handleUserChange = (userId) => {
-    setSelectedUserId(userId); // Cập nhật user_id được chọn
+    setSelectedUserId(userId);
   };
 
   return (
@@ -239,7 +240,7 @@ export const KanbanView = () => {
         selectedSprintId={selectedSprintId}
         onSprintChange={handleSprintChange}
         onTabChange={handleTabChange}
-        onUserChange={handleUserChange} // Truyền hàm xử lý chọn user
+        onUserChange={handleUserChange}
       />
       <div className="report-grid">
         {sprints.length === 0 && (
@@ -258,7 +259,7 @@ export const KanbanView = () => {
                 className={`status-circle ${getCircleClass(group.status)}`}
               ></span>
             </div>
-            {filteredTasks // Sử dụng filteredTasks thay vì tasks
+            {filteredTasks
               .filter((task) => task.status === group.status)
               .map((task) => (
                 <div

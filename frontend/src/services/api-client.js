@@ -85,6 +85,17 @@ export const createTask = async (taskData) => {
   return response.json();
 };
 
+// Create a new sprint
+export const createSprint = async (sprintData) => {
+  const response = await fetch(`${API_BASE_URL}/api/sprints`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(sprintData),
+  });
+  if (!response.ok) throw new Error(`Failed to create sprint: ${response.status}`);
+  return response.json();
+};
+
 // Fetch group members by project
 export const fetchGroupMembersByProject = async () => {
   const response = await fetch(`${API_BASE_URL}/api/group-members-by-project`, {

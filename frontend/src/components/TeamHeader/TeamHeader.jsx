@@ -1,13 +1,27 @@
-import React from 'react';
+import React, { useState } from 'react';
 import placeholderMember from '../../assets/images/placeholders/placeholder-member.jpg';
+import AddSprintModal from './AddSprintModal';
 import './TeamHeader.css';
 
 const TeamHeader = ({ className, classCode, teamName, projectName, members, activeTab, sprints, selectedSprintId, onSprintChange, onTabChange, onUserChange }) => {
   const tabs = ['Introduce', 'Dashboard', 'Team task', 'My task', 'Roadmap', 'Rate'];
+  const [showAddSprint, setShowAddSprint] = useState(false);
 
   const handleUserChange = (e) => {
     const userId = parseInt(e.target.value);
     onUserChange(userId === 0 ? null : userId); // Nếu chọn "All Users", truyền null
+  };
+
+  const handleSprintChange = (e) => {
+    const sprintId = parseInt(e.target.value, 10);
+    if (sprintId === -1) {
+      // Trigger Add Sprint modal if "Add Sprint" option is selected
+      setShowAddSprint(true);
+    } else {
+      // Handle regular sprint selection
+      console.log("Selected sprint ID in TeamHeader:", sprintId);
+      onSprintChange(sprintId); // Pass only the sprint_id
+    }
   };
 
   return (
@@ -46,14 +60,7 @@ const TeamHeader = ({ className, classCode, teamName, projectName, members, acti
             <div className="sprint-select">
               <select
                 value={selectedSprintId || ''}
-                onChange={(e) => {
-                  const sprintId = parseInt(e.target.value, 10);
-                  const selectedSprint = sprints.find((sprint) => sprint.sprint_id === sprintId);
-                  if (selectedSprint) {
-                    console.log("Selected sprint in TeamHeader:", selectedSprint);
-                    onSprintChange(selectedSprint);
-                  }
-                }}
+                onChange={handleSprintChange}
               >
                 <option value="" disabled>Chọn Sprint</option>
                 {sprints.map((sprint, index) => (
@@ -61,6 +68,7 @@ const TeamHeader = ({ className, classCode, teamName, projectName, members, acti
                     {sprint.sprint_name || `Sprint ${sprint.sprint_number}`}
                   </option>
                 ))}
+                <option value="-1">Add Sprint</option> {/* Add Sprint option at the bottom */}
               </select>
             </div>
           )}
@@ -78,7 +86,6 @@ const TeamHeader = ({ className, classCode, teamName, projectName, members, acti
           </div>
         </div>
         <div className="teamheader-actions">
-          {/* Thay thế nút Filter bằng dropdown lọc user */}
           <select onChange={handleUserChange} className="filter-btn">
             <option value="0">All Users</option>
             {members.map((member) => (
@@ -89,6 +96,14 @@ const TeamHeader = ({ className, classCode, teamName, projectName, members, acti
           </select>
         </div>
       </div>
+
+      {showAddSprint && (
+        <AddSprintModal
+          projectId={1} // Hard-coded project_id, consistent with your backend
+          onClose={() => setShowAddSprint(false)}
+          onSprintCreated={onSprintChange}
+        />
+      )}
     </div>
   );
 };
