@@ -23,4 +23,7 @@ router.post("/sprints", taskController.createSprint);
 // Route for group members
 router.get("/group-members-by-project", taskController.getGroupMembersByProject);
 
+// Route for team details
+router.get("/team-details", taskController.getTeamDetails);
+
 module.exports = router;

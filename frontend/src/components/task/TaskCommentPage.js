@@ -21,7 +21,7 @@ const TaskCommentPage = ({ taskId, onClose }) => {
     setError(null);
     try {
       const data = await fetchTaskDetails(taskId);
-      console.log("Fetched data:", data);
+      console.log("Fetched task data:", data);
       setTask({
         id: data.task_id,
         title: data.title,
@@ -34,13 +34,17 @@ const TaskCommentPage = ({ taskId, onClose }) => {
         assigned_to: {
           user_id: data.assigned_to,
           username: data.assigned_username,
-          avatar: `https://i.pravatar.cc/24?img=${data.assigned_to}`,
+          avatar: data.assigned_username 
+            ? `../../assets/images/avatars/${data.assigned_username.toLowerCase()}.jpg`
+            : "../../assets/images/placeholders/placeholder-member.jpg",
         },
         comments: data.comments.map((comment) => ({
           comment_id: comment.comment_id,
           user_id: comment.user_id,
           username: comment.username,
-          avatar: `https://i.pravatar.cc/24?img=${comment.user_id}`,
+          avatar: comment.username 
+            ? `../../assets/images/avatars/${comment.username.toLowerCase()}.jpg`
+            : "../../assets/images/placeholders/placeholder-member.jpg",
           comment_text: comment.comment_text,
           created_at: new Date(comment.created_at).toLocaleString(),
         })),
@@ -68,7 +72,7 @@ const TaskCommentPage = ({ taskId, onClose }) => {
     try {
       await addComment(taskId, currentUserId, newComment);
       setNewComment("");
-      loadTaskDetails(); // Refresh comments
+      await loadTaskDetails(); // Refresh comments
     } catch (error) {
       console.error("Error saving comment:", error);
     }
@@ -157,6 +161,7 @@ const TaskCommentPage = ({ taskId, onClose }) => {
             src={task.assigned_to.avatar}
             alt="avatar"
             className="task-avatar"
+            onError={() => console.log(`Failed to load avatar for assigned user ${task.assigned_to.username}: ${task.assigned_to.avatar}`)}
           />
           <span className="assigned-username">
             {task.assigned_to.username || "Unassigned"}
@@ -175,6 +180,7 @@ const TaskCommentPage = ({ taskId, onClose }) => {
                     src={comment.avatar}
                     alt="avatar"
                     className="comment-avatar"
+                    onError={() => console.log(`Failed to load avatar for comment by ${comment.username}: ${comment.avatar}`)}
                   />
                   <span className="comment-username">{comment.username}</span>
                 </div>

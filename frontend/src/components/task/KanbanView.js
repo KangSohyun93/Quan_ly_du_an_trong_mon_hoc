@@ -7,7 +7,7 @@ import { faClipboard } from "@fortawesome/free-solid-svg-icons";
 import { faComment } from "@fortawesome/free-solid-svg-icons";
 import { faClock } from "@fortawesome/free-solid-svg-icons";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { fetchTasks, updateChecklistItem, fetchProjects, fetchSprints } from "../../services/api-client";
+import { fetchTasks, updateChecklistItem, fetchProjects, fetchSprints, fetchTeamDetails } from "../../services/api-client";
 import CreateTask from "./CreateTask";
 import TaskCommentPage from "./TaskCommentPage";
 import TeamHeader from "../TeamHeader/TeamHeader";
@@ -25,20 +25,50 @@ export const KanbanView = () => {
   const [selectedSprintId, setSelectedSprintId] = useState(null);
   const [activeTab, setActiveTab] = useState("Team task");
   const [selectedUserId, setSelectedUserId] = useState(null);
-
-  const className = "Class A";
-  const classCode = "ABC123";
-  const teamName = "Group 1";
-  const projectName = projects.length > 0 ? projects[0].project_name : "Project 1";
-  const members = [
-    { user_id: 1, username: "user1", avatar: "https://i.pravatar.cc/24?img=1" },
-    { user_id: 2, username: "user2", avatar: "https://i.pravatar.cc/24?img=2" },
-    { user_id: 3, username: "user3", avatar: "https://i.pravatar.cc/24?img=3" },
-    { user_id: 4, username: "user4", avatar: "https://i.pravatar.cc/24?img=4" },
-  ];
+  const [teamDetails, setTeamDetails] = useState({
+    className: "",
+    classCode: "",
+    teamName: "",
+    projectName: "",
+    members: [],
+    isTeamLead: false,
+  });
 
   const currentUserId = 1;
-  const isTeamLead = true;
+  const projectId = 1;
+
+  const loadTeamDetails = useCallback(async () => {
+    try {
+      const data = await fetchTeamDetails(projectId, currentUserId);
+      console.log("Fetched team details:", data);
+
+      // Map members to include avatar paths
+      const membersWithAvatars = data.members.map(member => ({
+        user_id: member.user_id,
+        username: member.username,
+        avatar: `../../assets/images/avatars/${member.username.toLowerCase()}.jpg`,
+      }));
+
+      setTeamDetails({
+        className: data.className || "Unknown Class",
+        classCode: data.classCode || "Unknown Code",
+        teamName: data.teamName || "Unknown Team",
+        projectName: data.projectName || "Unknown Project",
+        members: membersWithAvatars,
+        isTeamLead: data.isTeamLead || false,
+      });
+    } catch (error) {
+      console.error("Error fetching team details:", error);
+      setTeamDetails({
+        className: "Error Loading Class",
+        classCode: "ERROR",
+        teamName: "Error Loading Team",
+        projectName: "Error Loading Project",
+        members: [],
+        isTeamLead: false,
+      });
+    }
+  }, [projectId, currentUserId]);
 
   const loadProjectsAndSprints = useCallback(async () => {
     try {
@@ -49,9 +79,8 @@ export const KanbanView = () => {
       const sprintData = await fetchSprints();
       console.log("Fetched sprints:", sprintData);
 
-      const currentProjectId = projectData.length > 0 ? projectData[0].project_id : 1;
-      const filteredSprints = sprintData.filter(sprint => sprint.project_id === currentProjectId);
-      console.log("Filtered sprints for project_id =", currentProjectId, ":", filteredSprints);
+      const filteredSprints = sprintData.filter(sprint => sprint.project_id === projectId);
+      console.log("Filtered sprints for project_id =", projectId, ":", filteredSprints);
 
       setSprints(filteredSprints);
       if (filteredSprints.length > 0) {
@@ -62,7 +91,7 @@ export const KanbanView = () => {
     } catch (error) {
       console.error("Error fetching projects and sprints:", error);
     }
-  }, []);
+  }, [projectId]);
 
   const loadTasks = useCallback(async () => {
     try {
@@ -70,7 +99,7 @@ export const KanbanView = () => {
       const data = await fetchTasks(mode);
       console.log(`Fetched tasks (mode=${mode}):`, data);
 
-      const currentDate = new Date('2025-05-12');
+      const currentDate = new Date('2025-05-21');
 
       const mappedTasks = data
         .filter(task => {
@@ -89,7 +118,7 @@ export const KanbanView = () => {
               })
             : "",
           tags: ["SQL", "Backend"],
-          avatar: `https://i.pravatar.cc/24?img=${task.assigned_to || task.task_id}`,
+          avatar: `../../assets/images/avatars/${teamDetails.members.find(member => member.user_id === task.assigned_to)?.username.toLowerCase() || "placeholder-member"}.jpg`,
           comments: task.comment_count || 0,
           subTasks: task.checklists && task.checklists.length > 0
             ? task.checklists.map((checklist) => ({
@@ -135,15 +164,21 @@ export const KanbanView = () => {
     } catch (error) {
       console.error("Error fetching tasks:", error);
     }
-  }, [activeTab, selectedSprintId, selectedUserId]);
+  }, [activeTab, selectedSprintId, selectedUserId, teamDetails.members]);
+
+  useEffect(() => {
+    loadTeamDetails();
+  }, [loadTeamDetails]);
 
   useEffect(() => {
     loadProjectsAndSprints();
   }, [loadProjectsAndSprints]);
 
   useEffect(() => {
-    loadTasks();
-  }, [loadTasks, activeTab, selectedSprintId, selectedUserId]);
+    if (teamDetails.members.length > 0) {
+      loadTasks();
+    }
+  }, [loadTasks, teamDetails.members]);
 
   const updateReportData = (updatedTasks) => {
     const counts = { "to-do": 0, "in-progress": 0, "done": 0 };
@@ -215,8 +250,8 @@ export const KanbanView = () => {
 
   const handleSprintChange = async (sprintId) => {
     console.log("Selected sprint ID in KanbanView:", sprintId);
-    setSelectedSprintId(sprintId); // Update selectedSprintId with the sprint_id
-    await loadTasks(); // Reload tasks immediately after changing sprint
+    setSelectedSprintId(sprintId);
+    await loadTasks();
   };
 
   const handleTabChange = (tab) => {
@@ -230,11 +265,11 @@ export const KanbanView = () => {
   return (
     <div className="kanban-container">
       <TeamHeader
-        className={className}
-        classCode={classCode}
-        teamName={teamName}
-        projectName={projectName}
-        members={members}
+        className={teamDetails.className}
+        classCode={teamDetails.classCode}
+        teamName={teamDetails.teamName}
+        projectName={teamDetails.projectName}
+        members={teamDetails.members}
         activeTab={activeTab}
         sprints={sprints}
         selectedSprintId={selectedSprintId}
@@ -346,13 +381,13 @@ export const KanbanView = () => {
                                   }`}
                                   onClick={(e) => {
                                     e.stopPropagation();
-                                    if (task.assigned_to === currentUserId) {
+                                    if (task.assigned_to === currentUserId && teamDetails.isTeamLead) {
                                       toggleSubTask(task.id, subTask.id);
                                     }
                                   }}
                                   style={{
-                                    cursor: task.assigned_to === currentUserId ? "pointer" : "not-allowed",
-                                    opacity: task.assigned_to === currentUserId ? 1 : 0.5,
+                                    cursor: task.assigned_to === currentUserId && teamDetails.isTeamLead ? "pointer" : "not-allowed",
+                                    opacity: task.assigned_to === currentUserId && teamDetails.isTeamLead ? 1 : 0.5,
                                   }}
                                 >
                                   <FontAwesomeIcon
@@ -373,7 +408,7 @@ export const KanbanView = () => {
                   )}
                 </div>
               ))}
-            {group.status === "to-do" && isTeamLead && (
+            {group.status === "to-do" && teamDetails.isTeamLead && (
               <div className="add-task-btn-container">
                 <button
                   onClick={() => setShowCreateTask(!showCreateTask)}

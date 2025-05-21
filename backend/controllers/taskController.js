@@ -217,7 +217,7 @@ exports.getProjects = async (req, res) => {
 // Fetch all sprints
 exports.getSprints = async (req, res) => {
   try {
-    const projectId = 1; // Fix cứng project_id
+    const projectId = getCurrentProjectId(); // Keep hardcoded projectId
     const [rows] = await pool.query(
       "SELECT sprint_id, sprint_name, sprint_number, project_id FROM Sprints WHERE project_id = ?",
       [projectId]
@@ -298,7 +298,7 @@ exports.createTask = async (req, res) => {
 // Fetch group members by project
 exports.getGroupMembersByProject = async (req, res) => {
   try {
-    const projectId = 1; // Fix cứng project_id = 1
+    const projectId = getCurrentProjectId(); // Keep hardcoded projectId
     const [rows] = await pool.query(
       `SELECT u.user_id, u.username
        FROM Users u
@@ -314,6 +314,70 @@ exports.getGroupMembersByProject = async (req, res) => {
     res.status(200).json(rows);
   } catch (error) {
     console.error("Error fetching group members by project:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// Fetch team details including class, group, project info, members, and isTeamLead status
+exports.getTeamDetails = async (req, res) => {
+  const projectId = getCurrentProjectId(); // Use hardcoded projectId
+  const userId = getCurrentUserId(); // Use hardcoded userId
+
+  try {
+    // Fetch class, group, and project details
+    const [teamDetails] = await pool.query(`
+      SELECT 
+        c.class_name AS className,
+        c.secret_code AS classCode,
+        g.group_name AS teamName,
+        p.project_name AS projectName
+      FROM Projects p
+      JOIN \`Groups\` g ON p.group_id = g.group_id
+      JOIN Classes c ON g.class_id = c.class_id
+      WHERE p.project_id = ?
+    `, [projectId]);
+
+    if (!teamDetails || teamDetails.length === 0) {
+      return res.status(404).json({ message: "Project not found" });
+    }
+
+    // Fetch members of the group associated with the project
+    const [members] = await pool.query(`
+      SELECT 
+        u.user_id,
+        u.username
+      FROM Users u
+      JOIN GroupMembers gm ON u.user_id = gm.user_id
+      JOIN Projects p ON gm.group_id = p.group_id
+      WHERE p.project_id = ?
+    `, [projectId]);
+
+    // Determine if the user is the team lead (leader of the group or an Admin)
+    const [leadership] = await pool.query(`
+      SELECT 
+        (g.leader_id = ? OR u.role = 'Admin') AS isTeamLead
+      FROM Projects p
+      JOIN \`Groups\` g ON p.group_id = g.group_id
+      JOIN GroupMembers gm ON g.group_id = gm.group_id
+      JOIN Users u ON gm.user_id = u.user_id
+      WHERE p.project_id = ? AND u.user_id = ?
+      LIMIT 1
+    `, [userId, projectId, userId]);
+
+    const isTeamLead = leadership.length > 0 ? leadership[0].isTeamLead : false;
+
+    const response = {
+      className: teamDetails[0].className,
+      classCode: teamDetails[0].classCode,
+      teamName: teamDetails[0].teamName,
+      projectName: teamDetails[0].projectName,
+      members: members,
+      isTeamLead: !!isTeamLead, // Convert to boolean
+    };
+
+    res.status(200).json(response);
+  } catch (error) {
+    console.error("Error fetching team details:", error);
     res.status(500).json({ message: "Server error" });
   }
 };

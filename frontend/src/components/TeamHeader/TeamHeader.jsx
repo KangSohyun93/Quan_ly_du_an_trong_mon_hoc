@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+// import React, { useState } from 'react';
 import placeholderMember from '../../assets/images/placeholders/placeholder-member.jpg';
+import React, { useState } from 'react';
 import AddSprintModal from './AddSprintModal';
 import './TeamHeader.css';
 
@@ -36,7 +37,7 @@ const TeamHeader = ({ className, classCode, teamName, projectName, members, acti
             members.slice(0, 3).map((member, index) => (
               <div key={index} className="team-member">
                 <img
-                  src={member.avatar || placeholderMember}
+                  src={member.username ? `../../assets/images/avatars/${member.username.toLowerCase()}.jpg` : placeholderMember}
                   alt={`Member ${index + 1}`}
                   className="member-avatar"
                   onError={(e) => {
