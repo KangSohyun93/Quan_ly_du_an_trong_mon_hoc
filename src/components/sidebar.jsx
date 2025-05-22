@@ -50,7 +50,7 @@ const Sidebar = () => {
                             className={`sidebar-item flex items-center p-2 text-gray-700 rounded ${selectedItem === 'Teams' ? 'bg-blue-100' : ''}`}
                             onClick={() => handleItemClick('Teams')}
                         >
-                            <i class="icon mr-3 fa-solid fa-people-group"></i>
+                            <i className="icon mr-3 fa-solid fa-people-group"></i>
                             <p>Teams</p>
                         </a>
                         <a
@@ -58,7 +58,7 @@ const Sidebar = () => {
                             className={`sidebar-item flex items-center p-2 text-gray-700 rounded ${selectedItem === 'Thông báo' ? 'bg-blue-100' : ''}`}
                             onClick={() => handleItemClick('Thông báo')}
                         >
-                            <i class="icon mr-3 fa-solid fa-bell"></i>
+                            <i className="icon mr-3 fa-solid fa-bell"></i>
                             <p>Thông báo</p>
                         </a>
                     </div>
@@ -70,7 +70,7 @@ const Sidebar = () => {
                                 href="#"
                                 className="flex items-center p-2 text-gray-700 rounded"
                             >
-                                <i class="icon mr-3 fa-solid fa-right-from-bracket"></i>
+                                <i className="icon mr-3 fa-solid fa-right-from-bracket"></i>
                                 <p>Log out</p>
                             </a>
                         </div>
@@ -84,7 +84,7 @@ const Sidebar = () => {
                     onClick={toggleSidebar}
                     className="open_close_sidebar fixed top-4 left-4 z-10"
                 >
-                    <i class="fa-solid fa-chevron-right"></i>
+                    <i className="fa-solid fa-chevron-right"></i>
                 </button>
             )}
         </div>
