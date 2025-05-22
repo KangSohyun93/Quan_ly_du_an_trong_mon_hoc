@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckCircle as fasCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import { faCircle as farCircle } from "@fortawesome/free-regular-svg-icons";
 import { fetchTaskDetails, addComment } from "../../services/api-client";
-
+import placeholderMember from '../../assets/images/placeholders/placeholder-member.jpg';
 const TaskCommentPage = ({ taskId, onClose }) => {
   console.log("Rendering TaskCommentPage with taskId:", taskId);
   const [task, setTask] = useState(null);
@@ -35,16 +35,16 @@ const TaskCommentPage = ({ taskId, onClose }) => {
           user_id: data.assigned_to,
           username: data.assigned_username,
           avatar: data.assigned_username 
-            ? `../../assets/images/avatars/${data.assigned_username.toLowerCase()}.jpg`
-            : "../../assets/images/placeholders/placeholder-member.jpg",
+            ? `/avatars/${data.assigned_username.toLowerCase()}.jpg`
+            : placeholderMember,
         },
         comments: data.comments.map((comment) => ({
           comment_id: comment.comment_id,
           user_id: comment.user_id,
           username: comment.username,
           avatar: comment.username 
-            ? `../../assets/images/avatars/${comment.username.toLowerCase()}.jpg`
-            : "../../assets/images/placeholders/placeholder-member.jpg",
+            ? `/avatars/${comment.username.toLowerCase()}.jpg`
+            : placeholderMember,
           comment_text: comment.comment_text,
           created_at: new Date(comment.created_at).toLocaleString(),
         })),

@@ -37,7 +37,7 @@ const TeamHeader = ({ className, classCode, teamName, projectName, members, acti
             members.slice(0, 3).map((member, index) => (
               <div key={index} className="team-member">
                 <img
-                  src={member.username ? `../../assets/images/avatars/${member.username.toLowerCase()}.jpg` : placeholderMember}
+                  src={member.username ? `/avatars/${member.username.toLowerCase()}.jpg` : placeholderMember}
                   alt={`Member ${index + 1}`}
                   className="member-avatar"
                   onError={(e) => {

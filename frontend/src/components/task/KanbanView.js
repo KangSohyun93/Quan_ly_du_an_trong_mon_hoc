@@ -46,7 +46,7 @@ export const KanbanView = () => {
       const membersWithAvatars = data.members.map(member => ({
         user_id: member.user_id,
         username: member.username,
-        avatar: `../../assets/images/avatars/${member.username.toLowerCase()}.jpg`,
+        avatar: `/avatars/${member.username.toLowerCase()}.jpg`,
       }));
 
       setTeamDetails({
@@ -118,7 +118,7 @@ export const KanbanView = () => {
               })
             : "",
           tags: ["SQL", "Backend"],
-          avatar: `../../assets/images/avatars/${teamDetails.members.find(member => member.user_id === task.assigned_to)?.username.toLowerCase() || "placeholder-member"}.jpg`,
+          avatar: `/avatars/${teamDetails.members.find(member => member.user_id === task.assigned_to)?.username.toLowerCase()}.jpg`,
           comments: task.comment_count || 0,
           subTasks: task.checklists && task.checklists.length > 0
             ? task.checklists.map((checklist) => ({
