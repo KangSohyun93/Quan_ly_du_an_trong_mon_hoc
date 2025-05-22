@@ -3,9 +3,10 @@ import pool from '../db.js';
 async function getGroups() {
     try {
         const [groups] = await pool.query(`
-            SELECT group_id, group_name
-            FROM \`Groups\`
-            ORDER BY group_id
+            SELECT g.group_id, g.group_name, p.project_id
+            FROM \`Groups\` g
+            LEFT JOIN Projects p ON g.group_id = p.group_id
+            ORDER BY g.group_id
         `);
         return groups;
     } catch (error) {

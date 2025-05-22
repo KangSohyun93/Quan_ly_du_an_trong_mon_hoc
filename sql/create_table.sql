@@ -10,6 +10,8 @@ CREATE TABLE Users (
     email VARCHAR(100) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
     role ENUM('Student', 'Instructor', 'Admin') NOT NULL,
+    github_email VARCHAR(100) UNIQUE NULL,
+    github_username VARCHAR(100) UNIQUE NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     is_active BOOLEAN DEFAULT TRUE,
     avatar VARCHAR(255)
@@ -71,6 +73,9 @@ CREATE TABLE Projects (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (group_id) REFERENCES `Groups`(group_id) ON DELETE CASCADE
 );
+
+ALTER TABLE Projects
+ADD COLUMN end_date DATE NULL DEFAULT NULL COMMENT 'Expected or actual end date of the project';
 
 -- Bảng Sprints: Lưu thông tin sprint trong dự án
 CREATE TABLE Sprints (
@@ -136,6 +141,8 @@ CREATE TABLE GitContributions (
     FOREIGN KEY (project_id) REFERENCES Projects(project_id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
 );
+
+ALTER TABLE GitContributions ADD CONSTRAINT unique_project_commit UNIQUE (project_id, commit_hash);
 
 -- Bảng PeerAssessments: Lưu đánh giá ngang hàng giữa các thành viên trong nhóm
 CREATE TABLE PeerAssessments (
@@ -310,3 +317,5 @@ CREATE INDEX idx_git_contributions_project_id ON GitContributions(project_id);
 CREATE INDEX idx_git_contributions_user_id ON GitContributions(user_id);
 CREATE INDEX idx_peer_assessments_group_id ON PeerAssessments(group_id);
 CREATE INDEX idx_instructor_evaluations_group_id ON InstructorEvaluations(group_id);
+CREATE INDEX idx_users_github_email ON Users(github_email);
+CREATE INDEX idx_users_github_username ON Users(github_username);

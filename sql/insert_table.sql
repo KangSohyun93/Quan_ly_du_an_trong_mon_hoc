@@ -1,47 +1,47 @@
 -- Chèn dữ liệu vào bảng Users
-INSERT INTO Users (username, email, password, role, is_active, avatar) VALUES
+INSERT INTO Users (username, email, password, role, github_email, github_username, is_active, avatar) VALUES
 -- 30 sinh viên
-('Student1', 'student1@example.com', 'hashed_password_1', 'Student', TRUE, '/uploads/student1.jpg'),
-('Student2', 'student2@example.com', 'hashed_password_2', 'Student', TRUE, '/uploads/student2.jpg'),
-('Student3', 'student3@example.com', 'hashed_password_3', 'Student', TRUE, '/uploads/student3.jpg'),
-('Student4', 'student4@example.com', 'hashed_password_4', 'Student', TRUE, '/uploads/student4.jpg'),
-('Student5', 'student5@example.com', 'hashed_password_5', 'Student', TRUE, '/uploads/student5.jpg'),
-('Student6', 'student6@example.com', 'hashed_password_6', 'Student', TRUE, '/uploads/student6.jpg'),
-('Student7', 'student7@example.com', 'hashed_password_7', 'Student', TRUE, '/uploads/student7.jpg'),
-('Student8', 'student8@example.com', 'hashed_password_8', 'Student', TRUE, '/uploads/student8.jpg'),
-('Student9', 'student9@example.com', 'hashed_password_9', 'Student', TRUE, '/uploads/student9.jpg'),
-('Student10', 'student10@example.com', 'hashed_password_10', 'Student', TRUE, '/uploads/student10.jpg'),
-('Student11', 'student11@example.com', 'hashed_password_11', 'Student', TRUE, '/uploads/student11.jpg'),
-('Student12', 'student12@example.com', 'hashed_password_12', 'Student', TRUE, '/uploads/student12.jpg'),
-('Student13', 'student13@example.com', 'hashed_password_13', 'Student', TRUE, '/uploads/student13.jpg'),
-('Student14', 'student14@example.com', 'hashed_password_14', 'Student', TRUE, '/uploads/student14.jpg'),
-('Student15', 'student15@example.com', 'hashed_password_15', 'Student', TRUE, '/uploads/student15.jpg'),
-('Student16', 'student16@example.com', 'hashed_password_16', 'Student', TRUE, '/uploads/student16.jpg'),
-('Student17', 'student17@example.com', 'hashed_password_17', 'Student', TRUE, '/uploads/student17.jpg'),
-('Student18', 'student18@example.com', 'hashed_password_18', 'Student', TRUE, '/uploads/student18.jpg'),
-('Student19', 'student19@example.com', 'hashed_password_19', 'Student', TRUE, '/uploads/student19.jpg'),
-('Student20', 'student20@example.com', 'hashed_password_20', 'Student', TRUE, '/uploads/student20.jpg'),
-('Student21', 'student21@example.com', 'hashed_password_21', 'Student', TRUE, '/uploads/student21.jpg'),
-('Student22', 'student22@example.com', 'hashed_password_22', 'Student', TRUE, '/uploads/student22.jpg'),
-('Student23', 'student23@example.com', 'hashed_password_23', 'Student', TRUE, '/uploads/student23.jpg'),
-('Student24', 'student24@example.com', 'hashed_password_24', 'Student', TRUE, '/uploads/student24.jpg'),
-('Student25', 'student25@example.com', 'hashed_password_25', 'Student', TRUE, '/uploads/student25.jpg'),
-('Student26', 'student26@example.com', 'hashed_password_26', 'Student', TRUE, '/uploads/student26.jpg'),
-('Student27', 'student27@example.com', 'hashed_password_27', 'Student', TRUE, '/uploads/student27.jpg'),
-('Student28', 'student28@example.com', 'hashed_password_28', 'Student', TRUE, '/uploads/student28.jpg'),
-('Student29', 'student29@example.com', 'hashed_password_29', 'Student', TRUE, '/uploads/student29.jpg'),
-('Student30', 'student30@example.com', 'hashed_password_30', 'Student', TRUE, '/uploads/student30.jpg'),
+('Nguyễn Ngọc Lan', 'student1@example.com', 'hashed_password_1', 'Student', 'ngoclan271204@gmail.com', 'NgLan', TRUE, '/uploads/student1.jpg'),
+('Hoàng Hương Giang', 'student2@example.com', 'hashed_password_2', 'Student', 'Riechanbaka@gmail.com', 'GiangClaude', TRUE, '/uploads/student2.jpg'),
+('Bùi Thu Trang', 'student3@example.com', 'hashed_password_3', 'Student', 'soratrang31294@gmail.com', 'btttrangcfm09', TRUE, '/uploads/student3.jpg'),
+('Nguyễn Thị Nhung', 'student4@example.com', 'hashed_password_4', 'Student', 'nguyenthinhung29022004@gmail.com', 'KangSohyun93', TRUE, '/uploads/student4.jpg'),
+('Thân Cát Ngọc Lan', 'student5@example.com', 'hashed_password_5', 'Student', 'chantran29102004@gmail.com', 'KattoRan', TRUE, '/uploads/student5.jpg'),
+('Trần Thị Vân Anh', 'student6@example.com', 'hashed_password_6', 'Student', 'khuctieuho@gmail.com', 'tranvananhanhanh', TRUE, '/uploads/student6.jpg'),
+('Bùi Thị Xuân', 'student7@example.com', 'hashed_password_7', 'Student', 'Xuan.BT225957@sis.hust.edu.vn', 'nospring2902', TRUE, '/uploads/student7.jpg'),
+('Nguyễn Thị Huyền Trang', 'student8@example.com', 'hashed_password_8', 'Student', 'nthtrang2004@gmail.com', 'HuyenTranggg', TRUE, '/uploads/student8.jpg'),
+('Student9', 'student9@example.com', 'hashed_password_9', 'Student', 'student9@gmail.com', 'student9', TRUE, '/uploads/student9.jpg'),
+('Student10', 'student10@example.com', 'hashed_password_10', 'Student', 'student10@gmail.com', 'student10', TRUE, '/uploads/student10.jpg'),
+('Student11', 'student11@example.com', 'hashed_password_11', 'Student', 'student11@gmail.com', 'student11', TRUE, '/uploads/student11.jpg'),
+('Student12', 'student12@example.com', 'hashed_password_12', 'Student', 'student12@gmail.com', 'student12', TRUE, '/uploads/student12.jpg'),
+('Student13', 'student13@example.com', 'hashed_password_13', 'Student', 'student13@gmail.com', 'student13', TRUE, '/uploads/student13.jpg'),
+('Student14', 'student14@example.com', 'hashed_password_14', 'Student', 'student14@gmail.com', 'student14', TRUE, '/uploads/student14.jpg'),
+('Student15', 'student15@example.com', 'hashed_password_15', 'Student', 'student15@gmail.com', 'student15', TRUE, '/uploads/student15.jpg'),
+('Student16', 'student16@example.com', 'hashed_password_16', 'Student', 'student16@gmail.com', 'student16', TRUE, '/uploads/student16.jpg'),
+('Student17', 'student17@example.com', 'hashed_password_17', 'Student', 'student17@gmail.com', 'student17', TRUE, '/uploads/student17.jpg'),
+('Student18', 'student18@example.com', 'hashed_password_18', 'Student', 'student18@gmail.com', 'student18', TRUE, '/uploads/student18.jpg'),
+('Student19', 'student19@example.com', 'hashed_password_19', 'Student', 'student19@gmail.com', 'student19', TRUE, '/uploads/student19.jpg'),
+('Student20', 'student20@example.com', 'hashed_password_20', 'Student', 'student20@gmail.com', 'student20', TRUE, '/uploads/student20.jpg'),
+('Student21', 'student21@example.com', 'hashed_password_21', 'Student', 'student21@gmail.com', 'student21', TRUE, '/uploads/student21.jpg'),
+('Student22', 'student22@example.com', 'hashed_password_22', 'Student', 'student22@gmail.com', 'student22', TRUE, '/uploads/student22.jpg'),
+('Student23', 'student23@example.com', 'hashed_password_23', 'Student', 'student23@gmail.com', 'student23', TRUE, '/uploads/student23.jpg'),
+('Student24', 'student24@example.com', 'hashed_password_24', 'Student', 'student24@gmail.com', 'student24', TRUE, '/uploads/student24.jpg'),
+('Student25', 'student25@example.com', 'hashed_password_25', 'Student', 'student25@gmail.com', 'student25', TRUE, '/uploads/student25.jpg'),
+('Student26', 'student26@example.com', 'hashed_password_26', 'Student', 'student26@gmail.com', 'student26', TRUE, '/uploads/student26.jpg'),
+('Student27', 'student27@example.com', 'hashed_password_27', 'Student', 'student27@gmail.com', 'student27', TRUE, '/uploads/student27.jpg'),
+('Student28', 'student28@example.com', 'hashed_password_28', 'Student', 'student28@gmail.com', 'student28', TRUE, '/uploads/student28.jpg'),
+('Student29', 'student29@example.com', 'hashed_password_29', 'Student', 'student29@gmail.com', 'student29', TRUE, '/uploads/student29.jpg'),
+('Student30', 'student30@example.com', 'hashed_password_30', 'Student', 'student30@gmail.com', 'student30', TRUE, '/uploads/student30.jpg'),
 -- 3 giảng viên
-('ProfSmith', 'smith@example.com', 'hashed_password_31', 'Instructor', TRUE, '/uploads/smith.jpg'),
-('ProfJones', 'jones@example.com', 'hashed_password_32', 'Instructor', TRUE, '/uploads/jones.jpg'),
-('ProfBrown', 'brown@example.com', 'hashed_password_33', 'Instructor', TRUE, '/uploads/brown.jpg'),
+('ProfSmith', 'smith@example.com', 'hashed_password_31', 'Instructor', 'smith@example.com', 'ProfSmith', TRUE, '/uploads/smith.jpg'),
+('ProfJones', 'jones@example.com', 'hashed_password_32', 'Instructor', 'jones@example.com', 'ProfJones', TRUE, '/uploads/jones.jpg'),
+('ProfBrown', 'brown@example.com', 'hashed_password_33', 'Instructor', 'brown@example.com', 'ProfBrown', TRUE, '/uploads/brown.jpg'),
 -- 1 quản trị viên
-('Admin1', 'admin1@example.com', 'hashed_password_34', 'Admin', TRUE, '/uploads/admin1.jpg');
+('Admin1', 'admin1@example.com', 'hashed_password_34', 'Admin', '', '', TRUE, '/uploads/admin1.jpg');
 
 -- Chèn dữ liệu vào bảng Classes
 INSERT INTO Classes (class_id, class_name, instructor_id, semester, secret_code) VALUES 
-(100001, 'Công nghệ phần mềm', 31, '2025.1', 'SE2025'), -- ProfSmith
-(100002, 'Lập trình web', 32, '2025.1', 'WEB2025'), -- ProfJones
+(100001, 'ITSS', 31, '2025.1', 'SE2025'), -- ProfSmith
+(100002, 'Kỹ thuật phần mềm', 32, '2025.1', 'WEB2025'), -- ProfJones
 (100003, 'Cấu trúc dữ liệu', 33, '2025.2', 'DS2025'), -- ProfBrown
 (100004, 'Hệ điều hành', 31, '2025.2', 'OS2025'), -- ProfSmith
 (100005, 'Trí tuệ nhân tạo', 32, '2025.2', 'AI2025'); -- ProfJones
@@ -49,9 +49,9 @@ INSERT INTO Classes (class_id, class_name, instructor_id, semester, secret_code)
 -- Chèn dữ liệu vào bảng `Groups`
 -- Không chèn group_number vì trigger before_group_insert sẽ tự động gán
 INSERT INTO `Groups` (group_name, class_id, leader_id) VALUES
-('Nhóm 1', 100001, 1),  -- Student1, class Công nghệ phần mềm
-('Nhóm 2', 100001, 5),  -- Student5, class Công nghệ phần mềm
-('Nhóm 3', 100002, 7),  -- Student7, class Lập trình web
+('Nhóm 1', 100001, 4),  -- Student1, class ITSS
+('Nhóm 2', 100001, 6),  -- Student5, class ITSS
+('Nhóm 3', 100002, 6),  -- Student7, class Kỹ thuật phần mềm
 ('Nhóm 4', 100002, 11), -- Student11, class Lập trình web
 ('Nhóm 5', 100003, 13), -- Student13, class Cấu trúc dữ liệu
 ('Nhóm 6', 100003, 17), -- Student17, class Cấu trúc dữ liệu
@@ -63,10 +63,10 @@ INSERT INTO `Groups` (group_name, class_id, leader_id) VALUES
 -- Chèn dữ liệu vào bảng ClassMembers
 -- Gán tất cả sinh viên vào các lớp dựa trên nhóm hoặc lớp tương ứng
 INSERT INTO ClassMembers (class_id, user_id) VALUES
--- Lớp 100001 (Công nghệ phần mềm): Student1-8 (đã có nhóm), Student9-10 (chưa có nhóm)
+-- Lớp 100001 (ITSS): Student1-8 (đã có nhóm), Student9-10 (chưa có nhóm)
 (100001, 1), (100001, 2), (100001, 3), (100001, 4), (100001, 5), (100001, 6), (100001, 7), (100001, 8), (100001, 9), (100001, 10),
--- Lớp 100002 (Lập trình web): Student7-14 (đã có nhóm), Student15-16 (chưa có nhóm)
-(100002, 7), (100002, 8), (100002, 9), (100002, 10), (100002, 11), (100002, 12), (100002, 13), (100002, 14), (100002, 15), (100002, 16),
+-- Lớp 100002 (Kỹ thuật phần mềm): Student7-14 (đã có nhóm), Student15-16 (chưa có nhóm)
+(100002, 1), (100002, 2), (100002, 4), (100002, 6), (100002, 7), (100002, 8), (100002, 9), (100002, 10), (100002, 11), (100002, 12), (100002, 13), (100002, 14), (100002, 15), (100002, 16),
 -- Lớp 100003 (Cấu trúc dữ liệu): Student13-20 (đã có nhóm), Student21-22 (chưa có nhóm)
 (100003, 13), (100003, 14), (100003, 15), (100003, 16), (100003, 17), (100003, 18), (100003, 19), (100003, 20), (100003, 21), (100003, 22),
 -- Lớp 100004 (Hệ điều hành): Student19-26 (đã có nhóm), Student27-28 (chưa có nhóm)
@@ -78,13 +78,13 @@ INSERT INTO ClassMembers (class_id, user_id) VALUES
 -- Đảm bảo mỗi sinh viên chỉ tham gia 1 nhóm trong mỗi lớp
 INSERT INTO GroupMembers (group_id, user_id) VALUES
 -- Nhóm 1 (class 100001): Student1 (PM), Student2, Student3, Student4
-(1, 1), (1, 2), (1, 3), (1, 4),
+(1, 1), (1, 2), (1, 3), (1, 4), (1, 5),
 -- Nhóm 2 (class 100001): Student5 (PM), Student6, Student7, Student8
-(2, 5), (2, 6), (2, 7), (2, 8),
+(2, 6), (2, 7), (2, 8),
 -- Nhóm 3 (class 100002): Student7 (PM), Student8, Student9, Student10
-(3, 7), (3, 8), (3, 9), (3, 10),
+(3, 1), (3, 2), (3, 4), (3, 6), (3, 7), (3, 8), 
 -- Nhóm 4 (class 100002): Student11 (PM), Student12, Student13, Student14
-(4, 11), (4, 12), (4, 13), (4, 14),
+(4, 9), (4, 10), (4, 11), (4, 12), (4, 13), (4, 14),
 -- Nhóm 5 (class 100003): Student13 (PM), Student14, Student15, Student16
 (5, 13), (5, 14), (5, 15), (5, 16),
 -- Nhóm 6 (class 100003): Student17 (PM), Student18, Student19, Student20
@@ -100,9 +100,9 @@ INSERT INTO GroupMembers (group_id, user_id) VALUES
 
 -- Chèn dữ liệu vào bảng Projects
 INSERT INTO Projects (project_name, group_id, description, tools_used, status, github_repo_url) VALUES
-('Hệ thống quản lý thư viện', 1, 'Xây dựng hệ thống quản lý thư viện trực tuyến', 'React, Node.js, MySQL', 'Ongoing', 'https://github.com/group1/library-system'),
-('Ứng dụng đặt vé xem phim', 2, 'Ứng dụng đặt vé xem phim trên mobile', 'Flutter, Firebase', 'Completed', 'https://github.com/group2/movie-ticket'),
-('Website bán hàng', 3, 'Website thương mại điện tử bán hàng', 'Vue.js, Express, MongoDB', 'Ongoing', 'https://github.com/group3/ecommerce'),
+('WorkTrace', 1, 'Trang web quản lý dự án của sinh viên trong 1 môn học', 'ReactJS, HTML, CSS, JavaScript, NodeJS, MySQL', 'Ongoing', 'https://github.com/KangSohyun93/Quan_ly_du_an_trong_mon_hoc'),
+('Website bán hàng', 2, 'Website thương mại điện tử bán hàng', 'Vue.js, Express, MongoDB', 'Ongoing', 'https://github.com/group3/ecommerce'),
+('CookHub', 3, 'Trang web chia sẻ công thức nấu ăn', 'HTML, CSS, JavaScript, Node.js, PostgreSQL', 'Completed', 'https://github.com/tranvananhanhanh/CookHub_Web'),
 ('Ứng dụng ghi chú', 4, 'Ứng dụng ghi chú đơn giản', 'React Native, SQLite', 'Cancelled', 'https://github.com/group4/notes-app'),
 ('Phân tích dữ liệu sinh viên', 5, 'Phân tích dữ liệu sinh viên bằng Python', 'Python, Pandas, Matplotlib', 'Ongoing', 'https://github.com/group5/student-analysis'),
 ('Hệ thống quản lý kho', 6, 'Hệ thống quản lý kho hàng', 'Angular, Spring Boot, PostgreSQL', 'Ongoing', 'https://github.com/group6/inventory-system'),
@@ -234,12 +234,12 @@ INSERT INTO TaskComments (task_id, user_id, comment_text) VALUES
 (11, 8, 'Header đã hoàn thành, cần thêm slider.');
 
 -- Chèn dữ liệu vào bảng GitContributions
-INSERT INTO GitContributions (project_id, user_id, commit_hash, commit_message, lines_added, lines_removed, commit_date) VALUES
-(1, 1, 'a1b2c3d4e5f6g7h8i9j0', 'Thêm giao diện trang chủ', 150, 20, '2025-04-09 10:00:00'),
-(1, 2, 'b2c3d4e5f6g7h8i9j0k1', 'Thêm API đăng nhập', 100, 10, '2025-04-10 12:00:00'),
-(2, 5, 'c3d4e5f6g7h8i9j0k1l2', 'Thiết kế CSDL', 80, 5, '2025-03-21 10:00:00'),
-(3, 7, 'd4e5f6g7h8i9j0k1l2m3', 'Thêm giao diện trang chủ', 200, 30, '2025-04-10 15:00:00'),
-(5, 13, 'e5f6g7h8i9j0k1l2m3n4', 'Thu thập dữ liệu sinh viên', 120, 15, '2025-04-04 10:00:00');
+-- INSERT INTO GitContributions (project_id, user_id, commit_hash, commit_message, lines_added, lines_removed, commit_date) VALUES
+-- (1, 1, 'a1b2c3d4e5f6g7h8i9j0', 'Thêm giao diện trang chủ', 150, 20, '2025-04-09 10:00:00'),
+-- (1, 2, 'b2c3d4e5f6g7h8i9j0k1', 'Thêm API đăng nhập', 100, 10, '2025-04-10 12:00:00'),
+-- (2, 5, 'c3d4e5f6g7h8i9j0k1l2', 'Thiết kế CSDL', 80, 5, '2025-03-21 10:00:00'),
+-- (3, 7, 'd4e5f6g7h8i9j0k1l2m3', 'Thêm giao diện trang chủ', 200, 30, '2025-04-10 15:00:00'),
+-- (5, 13, 'e5f6g7h8i9j0k1l2m3n4', 'Thu thập dữ liệu sinh viên', 120, 15, '2025-04-04 10:00:00');
 
 -- Chèn dữ liệu vào bảng PeerAssessments
 INSERT INTO PeerAssessments (group_id, assessor_id, assessee_id, deadline_score, friendly_score, quality_score, team_support_score, responsibility_score, note) VALUES
@@ -248,11 +248,11 @@ INSERT INTO PeerAssessments (group_id, assessor_id, assessee_id, deadline_score,
 (1, 3, 1, 4, 5, 4, 5, 4, 'Cần cải thiện tốc độ hoàn thành nhiệm vụ.'),
 (1, 1, 2, 5, 4, 5, 4, 5, 'Chất lượng công việc tốt, cần thân thiện hơn.'),
 -- Nhóm 2
-(2, 6, 5, 5, 5, 5, 4, 5, 'Thành viên xuất sắc, hỗ trợ nhóm rất tốt.'),
-(2, 7, 5, 4, 5, 4, 5, 4, 'Cần chú ý hơn đến chất lượng công việc.'),
+(2, 6, 7, 5, 5, 5, 4, 5, 'Thành viên xuất sắc, hỗ trợ nhóm rất tốt.'),
+(2, 7, 6, 4, 5, 4, 5, 4, 'Cần chú ý hơn đến chất lượng công việc.'),
 -- Nhóm 3
 (3, 8, 7, 5, 4, 5, 4, 5, 'Đúng hạn và có trách nhiệm cao.'),
-(3, 9, 7, 4, 5, 4, 5, 4, 'Thân thiện nhưng cần cải thiện chất lượng.'),
+(3, 6, 7, 4, 5, 4, 5, 4, 'Thân thiện nhưng cần cải thiện chất lượng.'),
 -- Nhóm 4
 (4, 12, 11, 5, 5, 4, 4, 5, 'Hỗ trợ nhóm tốt, công việc chất lượng.'),
 (4, 13, 11, 4, 5, 5, 4, 4, 'Cần chú ý hơn đến việc đúng hạn.'),
