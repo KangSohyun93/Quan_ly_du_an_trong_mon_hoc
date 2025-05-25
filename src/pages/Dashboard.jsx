@@ -4,7 +4,7 @@ import StatCard from '../components/StatCard';
 import MemberCompletionChart from '../components/MemberCompletionChart';
 import LineChart from '../components/LineChart';
 import CommitActivityChart from '../components/CommitActivityChart';
-// import LOCGrowthChart from '../components/LOCGrowthChart'; // Bỏ comment nếu bạn dùng
+import LOCGrowthChart from '../components/LOCGrowthChart'; // Bỏ comment nếu bạn dùng
 import PeerReviewChart from '../components/PeerReviewChart';
 import TaskChart from '../components/TaskChart';
 // import PRSizeChart from '../components/PRSizeChart';
@@ -160,7 +160,7 @@ const Dashboard = () => {
                         <MemberCompletionChart groupId={currentGroupId} />
                         <LineChart />
                         <CommitActivityChart projectId={currentProjectId} />
-                        {/* <LOCGrowthChart projectId={currentProjectId} /> */}
+                        <LOCGrowthChart projectId={currentProjectId} />
                         <PeerReviewChart groupId={currentGroupId} />
                         <TaskChart groupId={currentGroupId} />
                         {/* <PRSizeChart /> */}
