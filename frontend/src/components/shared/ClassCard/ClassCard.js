@@ -1,27 +1,33 @@
 import React from "react";
-import placeholderMember from "../../assets/images/placeholders/placeholder-member.jpg";
+import placeholderMember from "../../../assets/images/placeholders/placeholder-member.jpg";
 import "./ClassCard.css";
+import ClassCardMenu from "../ClassCardMenu/ClassCardMenu"; // Import component menu
 
 const ClassCard = ({
+  userId,
   classId,
   className,
   groupName,
   projectName,
   projectId,
+  semester,
   memberCount,
-  avatar,
   avatarNumber,
   avatarColor,
   members,
   onClick,
 }) => {
   // Log để kiểm tra dữ liệu truyền vào
-  console.log("ClassCard props:", { classId, className, memberCount, members });
+  //console.log("ClassCard props:", { classId, className, memberCount, members });
 
   // Sử dụng members.length nếu members tồn tại, nếu không thì dùng memberCount hoặc 0
   const displayMemberCount =
     members && members.length > 0 ? members.length : memberCount || 0;
-
+  const handleGetLink = () => {
+    const link = `http://localhost:3000/userID/${userId}/classes/${classId}/projects/${projectId}/introduce`;
+    navigator.clipboard.writeText(link);
+    alert(`Đã sao chép link: ${link}`);
+  };
   return (
     <div className="classcard-container" onClick={onClick}>
       <div
@@ -33,9 +39,13 @@ const ClassCard = ({
       <div className="classcard-content">
         <div className="classcard-name-description">
           <div className="classcard-title">{className}</div>
-          <div className="classcard-description-text">
-            {groupName}: {projectName}
-          </div>
+          {projectId ? (
+            <div className="classcard-description-text">
+              {groupName}: {projectName}
+            </div>
+          ) : (
+            <div className="classcard-description-text">Học kỳ: {semester}</div>
+          )}
         </div>
         <div className="classcard-members">
           <div className="classcard-members-list">
@@ -53,24 +63,19 @@ const ClassCard = ({
                 </div>
               ))
             ) : (
-              <span className="no-members">No members</span>
+              <span className="no-members">No member</span>
             )}
           </div>
           <div className="classcard-members-count">
-            {displayMemberCount}{" "}
-            {displayMemberCount === 1 ? "member" : "members"}
+            {displayMemberCount} members
           </div>
         </div>
       </div>
-      <div className="classcard-more-icon">…</div>
+      <div style={{ position: "absolute", top: "10px", right: "10px" }}>
+        <ClassCardMenu classId={classId} onGetLink={handleGetLink} />
+      </div>
     </div>
   );
-};
-
-// Đặt defaultProps nếu cần thiết (có thể giúp tránh lỗi khi thiếu props)
-ClassCard.defaultProps = {
-  memberCount: 0,
-  members: [],
 };
 
 export default ClassCard;

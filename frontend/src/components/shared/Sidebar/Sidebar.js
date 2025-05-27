@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./sidebar.css";
-import worktraceLogo from "../../assets/images/worktrace-logo.svg";
-import avatarDefault from "../../assets/images/avatar-default.svg";
+import worktraceLogo from "../../../assets/images/worktrace-logo.svg";
+import avatarDefault from "../../../assets/images/avatar-default.svg";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(true);

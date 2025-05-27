@@ -11,5 +11,6 @@ router.post(
   classController.importClass
 );
 router.post("/join", verifyToken, classController.joinClass);
-router.get("/", classController.searchClass);
+router.get("/", verifyToken, classController.searchClass);
+router.get("/get-info-class", verifyToken, classController.getClass);
 module.exports = router;

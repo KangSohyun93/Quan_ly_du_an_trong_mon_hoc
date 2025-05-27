@@ -6,6 +6,7 @@ import LoginForm from "./components/auth/Login/LoginForm.js";
 import SV_HomeLayout from "./components/SV_HomeLayout/SV_HomeLayout.js";
 import ProjectInfo from "./components/introduce/ProjectInfo.js";
 import TeamHeader from "./components/TeamHeader/TeamHeader.js";
+import SV_TeamClass from "./pages/SV_Teamclass.js";
 
 function App() {
   return (
@@ -14,13 +15,13 @@ function App() {
         <Routes>
           <Route path="/register" element={<RegisterForm />} />
           <Route path="/login" element={<LoginForm />} />
-          <Route path="/home" element={<SV_HomeLayout />}>
+          {/* <Route path="/home" element={<SV_HomeLayout />}>
             <Route path="group/:id/introduce" element={<ProjectInfo />} />
-            {/* Thêm các route khác ở đây */}
             <Route path="class/join" />
             <Route path="class/:id" />
-          </Route>
-          {/* Các route khác */}
+          </Route> */}
+
+          <Route path="/home" element={<SV_TeamClass />}></Route>
           <Route path="/header" element={<TeamHeader />} />
         </Routes>
       </div>

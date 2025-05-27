@@ -182,6 +182,7 @@ exports.joinClass = async (req, res) => {
 };
 exports.searchClass = async (req, res) => {
   const { searchText = "" } = req.query;
+  const userId = req.userId;
 
   try {
     const classes = await Class.findAll({
@@ -197,11 +198,168 @@ exports.searchClass = async (req, res) => {
           },
         ],
       },
+      include: [
+        {
+          model: ClassMember,
+          include: [
+            {
+              model: User,
+              attributes: ["user_id", "username", "avatar"],
+            },
+          ],
+        },
+        {
+          model: Group,
+          include: [
+            {
+              model: Project,
+              attributes: ["project_id", "project_name"],
+            },
+            {
+              model: GroupMember,
+              as: "groupMembers",
+              where: { user_id: userId },
+              required: false,
+              include: [
+                {
+                  model: User,
+                  attributes: ["user_id", "username"],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+      attributes: ["class_id", "class_name", "semester"],
     });
 
-    res.json(classes);
+    const result = classes.map((c, index) => {
+      const members =
+        c.ClassMembers?.map((cm) => ({
+          id: cm.User.user_id,
+          username: cm.User.username,
+          avatar: cm.User.avatar,
+        })) || [];
+
+      // Kiểm tra xem user có trong class không
+      const hasJoined = c.ClassMembers.some((cm) => cm.user_id === +userId);
+
+      // Tìm group user đang ở (nếu có)
+      const userGroup = c.Groups?.find((g) =>
+        g.groupMembers?.some((gm) => gm.user_id === +userId)
+      );
+
+      return {
+        classId: c.class_id,
+        className: c.class_name,
+        semester: c.semester,
+        memberCount: members.length,
+        members,
+        avatarNumber: index,
+        avatarColor: getRandomAvatarColor(),
+        ...(hasJoined && userGroup
+          ? {
+              groupName: userGroup.group_name,
+              projectName: userGroup.Project?.project_name || null,
+              projectId: userGroup.Project?.project_id || null,
+            }
+          : {}),
+      };
+    });
+
+    return res.json(result);
   } catch (error) {
     console.error("Lỗi khi tìm kiếm lớp:", error);
-    res.status(500).json({ error: "Lỗi server" });
+    return res.status(500).json({ error: "Lỗi server" });
   }
 };
+exports.getClass = async (req, res) => {
+  const userId = req.userId;
+  try {
+    const classes = await Class.findAll({
+      include: [
+        // Lọc các lớp mà user này đang tham gia
+        {
+          model: User,
+          through: { model: ClassMember },
+          where: { user_id: userId },
+          attributes: [], // Không cần lấy dữ liệu ở đây
+          required: true, // bắt buộc user phải thuộc lớp
+        },
+        // Lấy toàn bộ member của lớp (ClassMembers)
+        {
+          model: ClassMember,
+          include: [
+            {
+              model: User,
+              attributes: ["user_id", "username", "avatar"],
+            },
+          ],
+        },
+        {
+          model: Group,
+          include: [
+            {
+              model: Project,
+              attributes: ["project_name", "project_id"],
+            },
+            {
+              model: GroupMember,
+              as: "groupMembers",
+              include: [
+                {
+                  model: User,
+                  attributes: ["user_id", "username", "avatar"],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+      attributes: ["class_id", "class_name"],
+    });
+
+    const result = classes.map((c, index) => {
+      const group = c.Groups[0];
+
+      // Lấy member từ ClassMember
+      const members =
+        c.ClassMembers?.map((cm) => ({
+          id: cm.User.user_id,
+          username: cm.User.username,
+          avatar: cm.User.avatar,
+        })) || [];
+
+      return {
+        classId: c.class_id,
+        className: c.class_name,
+        groupName: group?.group_name || null,
+        projectName: group?.Project?.project_name || null,
+        projectId: group?.Project?.project_id || null,
+        memberCount: members.length,
+        members,
+        avatarNumber: index,
+        avatarColor: getRandomAvatarColor(),
+      };
+    });
+
+    return res.json(result);
+  } catch (err) {
+    console.error("Error fetching user class info:", err);
+    return res.status(500).json({ error: "Lỗi server" });
+  }
+};
+
+function getRandomAvatarColor() {
+  const colors = [
+    "#F44336",
+    "#E91E63",
+    "#9C27B0",
+    "#3F51B5",
+    "#03A9F4",
+    "#009688",
+    "#4CAF50",
+    "#FF5722",
+  ];
+  return colors[Math.floor(Math.random() * colors.length)];
+}

@@ -1,6 +1,6 @@
 // components/layout/HomeLayout.js
 import React from "react";
-import Sidebar from "../slidebar/Sidebar.js";
+import Sidebar from "../shared/Sidebar/Sidebar.js";
 import Navbar_SV from "../Navbar_SV/Navbar_SV.js";
 import { Outlet } from "react-router-dom";
 import JoinClassBar from "../classHeader/classHeader.js";
@@ -12,8 +12,8 @@ function SV_HomeLayout() {
       <Sidebar />
       <div className="flex-grow-1">
         {/* <Navbar_SV /> */}
-        {/* <JoinClassBar /> */}
-        <ImportHeader />
+        <JoinClassBar />
+        {/* <ImportHeader /> */}
         <div className="page-content p-4">
           <Outlet />
         </div>
