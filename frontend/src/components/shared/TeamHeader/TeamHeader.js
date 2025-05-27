@@ -1,24 +1,46 @@
-import React from 'react';
-import placeholderMember from '../../../assets/images/placeholders/placeholder-member.jpg';
-import './TeamHeader.css';
+import React from "react";
+import placeholderMember from "../../../assets/images/placeholders/placeholder-member.jpg";
+import "./TeamHeader.css";
 
-const TeamHeader = ({ className, classCode, teamName, projectName, members, activeTab, sprints, selectedSprintId, onSprintChange, onTabChange }) => {
-  const tabs = ['Introduce', 'Dashboard', 'Team task', 'My task', 'Roadmap', 'Rate'];
+const TeamHeader = ({
+  className,
+  classCode,
+  teamName,
+  projectName,
+  members = [], // Đặt giá trị mặc định là mảng rỗng để tránh lỗi undefined
+  activeTab,
+  sprints,
+  selectedSprintId,
+  onSprintChange,
+  onTabChange,
+}) => {
+  const tabs = [
+    "Introduce",
+    "Dashboard",
+    "Team task",
+    "My task",
+    "Roadmap",
+    "Rate",
+  ];
 
   return (
     <div className="team-header">
       <div className="team-header-top">
         <div className="team-info">
-          <p>{teamName} : {projectName}</p>
-          <p>{className} || {classCode}</p>
+          <p>
+            {teamName} : {projectName}
+          </p>
+          <p>
+            {className} || {classCode}
+          </p>
         </div>
         <div className="team-members">
-          {members && members.length > 0 ? (
+          {members.length > 0 ? (
             members.slice(0, 3).map((member, index) => (
               <div key={index} className="team-member">
                 <img
-                  src={member.avatar || placeholderMember}
-                  alt={`Member ${index + 1}`}
+                  src={member.avatarUrl || placeholderMember}
+                  alt={`Thành viên ${index + 1}`}
                   className="member-avatar"
                   onError={(e) => {
                     e.target.src = placeholderMember;
@@ -27,7 +49,7 @@ const TeamHeader = ({ className, classCode, teamName, projectName, members, acti
               </div>
             ))
           ) : (
-            <p>No members</p>
+            <p>Không có thành viên</p>
           )}
           {members.length > 3 && (
             <div className="more-members">+{members.length - 3}</div>
@@ -40,18 +62,25 @@ const TeamHeader = ({ className, classCode, teamName, projectName, members, acti
           {sprints && sprints.length > 0 && (
             <div className="sprint-select">
               <select
-                value={selectedSprintId || ''}
+                value={selectedSprintId || ""}
                 onChange={(e) => {
                   const sprintId = parseInt(e.target.value, 10); // Đảm bảo giá trị là số
-                  const selectedSprint = sprints.find((sprint) => sprint.sprint_id === sprintId);
+                  const selectedSprint = sprints.find(
+                    (sprint) => sprint.sprint_id === sprintId
+                  );
                   if (selectedSprint) {
-                    console.log("Selected sprint in TeamHeader:", selectedSprint);
+                    console.log(
+                      "Sprint được chọn trong TeamHeader:",
+                      selectedSprint
+                    );
                     onSprintChange(selectedSprint);
                   }
                 }}
               >
-                <option value="" disabled>Chọn Sprint</option>
-                {sprints.map((sprint, index) => (
+                <option value="" disabled>
+                  Chọn Sprint
+                </option>
+                {sprints.map((sprint) => (
                   <option key={sprint.sprint_id} value={sprint.sprint_id}>
                     {sprint.sprint_name || `Sprint ${sprint.sprint_number}`}
                   </option>
@@ -63,17 +92,19 @@ const TeamHeader = ({ className, classCode, teamName, projectName, members, acti
             {tabs.map((tab, index) => (
               <button
                 key={index}
-                className={`tab ${activeTab === tab ? 'active' : ''}`}
+                className={`tab ${activeTab === tab ? "active" : ""}`}
                 onClick={() => onTabChange(tab)}
               >
-                <span className={`icon ${tab.toLowerCase().replace(' ', '-')}-icon`}></span>
+                <span
+                  className={`icon ${tab.toLowerCase().replace(" ", "-")}-icon`}
+                ></span>
                 {tab}
               </button>
             ))}
           </div>
         </div>
         <div className="teamheader-actions">
-          <button className="filter-btn">Filter</button>
+          <button className="filter-btn">Lọc</button>
         </div>
       </div>
     </div>

@@ -260,6 +260,7 @@ exports.searchClass = async (req, res) => {
         ...(hasJoined && userGroup
           ? {
               groupName: userGroup.group_name,
+              groupId: userGroup.group_id,
               projectName: userGroup.Project?.project_name || null,
               projectId: userGroup.Project?.project_id || null,
             }
@@ -334,6 +335,7 @@ exports.getClass = async (req, res) => {
         classId: c.class_id,
         className: c.class_name,
         groupName: group?.group_name || null,
+        groupId: group?.group_id || null,
         projectName: group?.Project?.project_name || null,
         projectId: group?.Project?.project_id || null,
         memberCount: members.length,

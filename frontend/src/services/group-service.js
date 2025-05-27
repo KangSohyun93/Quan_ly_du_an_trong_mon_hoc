@@ -1,9 +1,9 @@
 // src/services/group-service.js
 
-export async function fetchGroupData(groupId) {
+export async function fetchGroupData({ classId, groupId }) {
   try {
     const response = await fetch(
-      `http://localhost:5000/api/group/${groupId}/introduce`,
+      `http://localhost:5000/api/group/${groupId}/introduce?classId=${classId}`,
       {
         method: "GET",
         headers: {

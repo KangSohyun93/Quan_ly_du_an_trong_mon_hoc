@@ -8,12 +8,12 @@ import { fetchGroupData } from "../../services/group-service"; // Đường dẫ
 function ProjectInfo() {
   const [data, setData] = useState(null);
   const [error, setError] = useState("");
-  const { id } = useParams();
+  const { classId, groupId } = useParams();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await fetchGroupData(id); // Gọi nhóm có ID = 5
+        const result = await fetchGroupData({ classId, groupId }); // Gọi nhóm có ID = 5
         setData(result);
       } catch (err) {
         setError(err.message);

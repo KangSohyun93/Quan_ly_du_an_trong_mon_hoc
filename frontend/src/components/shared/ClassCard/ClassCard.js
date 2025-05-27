@@ -2,12 +2,14 @@ import React from "react";
 import placeholderMember from "../../../assets/images/placeholders/placeholder-member.jpg";
 import "./ClassCard.css";
 import ClassCardMenu from "../ClassCardMenu/ClassCardMenu"; // Import component menu
+import { useNavigate } from "react-router-dom";
 
 const ClassCard = ({
   userId,
   classId,
   className,
   groupName,
+  groupId,
   projectName,
   projectId,
   semester,
@@ -15,21 +17,29 @@ const ClassCard = ({
   avatarNumber,
   avatarColor,
   members,
-  onClick,
 }) => {
   // Log để kiểm tra dữ liệu truyền vào
   //console.log("ClassCard props:", { classId, className, memberCount, members });
 
   // Sử dụng members.length nếu members tồn tại, nếu không thì dùng memberCount hoặc 0
+  const navigate = useNavigate();
   const displayMemberCount =
     members && members.length > 0 ? members.length : memberCount || 0;
+
+  const handleCardClick = () => {
+    if (projectId) {
+      navigate(`/home/classes/${classId}/group/${groupId}/introduce`);
+    } else {
+      alert("Bạn chưa tham gia nhóm nào trong lớp này.");
+    }
+  };
   const handleGetLink = () => {
     const link = `http://localhost:3000/userID/${userId}/classes/${classId}/projects/${projectId}/introduce`;
     navigator.clipboard.writeText(link);
     alert(`Đã sao chép link: ${link}`);
   };
   return (
-    <div className="classcard-container" onClick={onClick}>
+    <div className="classcard-container" onClick={handleCardClick}>
       <div
         className="classcard-avatar"
         style={{ backgroundColor: avatarColor }}
