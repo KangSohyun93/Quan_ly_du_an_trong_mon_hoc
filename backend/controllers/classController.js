@@ -257,12 +257,13 @@ exports.searchClass = async (req, res) => {
         members,
         avatarNumber: index,
         avatarColor: getRandomAvatarColor(),
-        ...(hasJoined && userGroup
+        ...(hasJoined
           ? {
               groupName: userGroup.group_name,
               groupId: userGroup.group_id,
               projectName: userGroup.Project?.project_name || null,
               projectId: userGroup.Project?.project_id || null,
+              hasJoin: true,
             }
           : {}),
       };
@@ -317,11 +318,14 @@ exports.getClass = async (req, res) => {
           ],
         },
       ],
-      attributes: ["class_id", "class_name"],
+      attributes: ["semester", "class_id", "class_name"],
     });
 
     const result = classes.map((c, index) => {
-      const group = c.Groups[0];
+      // Tìm group mà user đang tham gia
+      const userGroup = c.Groups.find((group) =>
+        group.groupMembers?.some((gm) => gm.user_id === userId)
+      );
 
       // Lấy member từ ClassMember
       const members =
@@ -332,12 +336,14 @@ exports.getClass = async (req, res) => {
         })) || [];
 
       return {
+        hasJoin: true,
         classId: c.class_id,
         className: c.class_name,
-        groupName: group?.group_name || null,
-        groupId: group?.group_id || null,
-        projectName: group?.Project?.project_name || null,
-        projectId: group?.Project?.project_id || null,
+        semester: c.semester,
+        groupName: userGroup?.group_name || null,
+        groupId: userGroup?.group_id || null,
+        projectName: userGroup?.Project?.project_name || null,
+        projectId: userGroup?.Project?.project_id || null,
         memberCount: members.length,
         members,
         avatarNumber: index,

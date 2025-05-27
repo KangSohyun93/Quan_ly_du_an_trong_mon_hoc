@@ -5,6 +5,7 @@ import ClassCardMenu from "../ClassCardMenu/ClassCardMenu"; // Import component 
 import { useNavigate } from "react-router-dom";
 
 const ClassCard = ({
+  hasJoin,
   userId,
   classId,
   className,
@@ -27,10 +28,14 @@ const ClassCard = ({
     members && members.length > 0 ? members.length : memberCount || 0;
 
   const handleCardClick = () => {
-    if (projectId) {
-      navigate(`/home/classes/${classId}/group/${groupId}/introduce`);
+    if (hasJoin) {
+      if (groupId)
+        navigate(`/home/classes/${classId}/group/${groupId}/introduce`);
+      else {
+        alert("Bạn chưa có nhóm trong lớp này.");
+      }
     } else {
-      alert("Bạn chưa tham gia nhóm nào trong lớp này.");
+      alert("Bạn chưa tham gia lớp này.");
     }
   };
   const handleGetLink = () => {

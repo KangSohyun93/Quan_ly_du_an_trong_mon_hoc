@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./classHeader.css";
 import { JoinClass } from "../../services/class-service";
-const JoinClassBar = ({ onSearchChange }) => {
+const JoinClassBar = ({ onSearchChange, onJoinSuccess }) => {
   const [joinCode, setJoinCode] = useState("");
   const [searchText, setSearchText] = useState("");
   const [showPopup, setShowPopup] = useState(false);
@@ -22,6 +22,10 @@ const JoinClassBar = ({ onSearchChange }) => {
       const joinResponse = await JoinClass({ joinCode });
       console.log(joinResponse);
       setShowPopup(false);
+      // Gọi callback báo hiệu join thành công
+      if (onJoinSuccess) {
+        onJoinSuccess();
+      }
     } catch (error) {
       console.error("Có lỗi khi tham gia:", error);
     }

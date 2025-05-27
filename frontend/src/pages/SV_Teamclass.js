@@ -9,25 +9,27 @@ function SV_TeamClass() {
   const [classCards, setClassCards] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        if (searchText.trim() !== "") {
-          const searchResult = await SearchClass({ searchText });
-          setClassCards(Array.isArray(searchResult) ? searchResult : []);
-        } else {
-          const allClasses = await getInfoClass();
-          setClassCards(Array.isArray(allClasses) ? allClasses : []);
-        }
-      } catch (err) {
-        console.error("Error fetching class data:", err);
-      } finally {
-        setLoading(false);
+  const fetchClasses = async () => {
+    setLoading(true);
+    try {
+      if (searchText.trim() !== "") {
+        const searchResult = await SearchClass({ searchText });
+        setClassCards(Array.isArray(searchResult) ? searchResult : []);
+      } else {
+        const allClasses = await getInfoClass();
+        setClassCards(Array.isArray(allClasses) ? allClasses : []);
       }
-    };
+    } catch (err) {
+      console.error("Error fetching class data:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    const delayDebounce = setTimeout(fetchData, 300);
+  useEffect(() => {
+    const delayDebounce = setTimeout(() => {
+      fetchClasses();
+    }, 300);
     return () => clearTimeout(delayDebounce);
   }, [searchText]);
 
@@ -35,7 +37,10 @@ function SV_TeamClass() {
     <div className="app-content d-flex">
       <Sidebar />
       <div className="flex-grow-1">
-        <JoinClassBar onSearchChange={setSearchText} />
+        <JoinClassBar
+          onSearchChange={setSearchText}
+          onJoinSuccess={fetchClasses} // reload khi join thành công
+        />
         <div className="page-content p-4">
           <ClassCardList data={classCards} loading={loading} />
         </div>
