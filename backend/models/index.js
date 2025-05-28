@@ -8,7 +8,7 @@ const Group = require("./GroupModel");
 const Project = require("./ProjectModel");
 const ClassMember = require("./MemberClassModel");
 const GroupMember = require("./MemberGroupModel");
-
+const { Task, TaskChecklist, Sprint, TaskComment } = require("./TaskModel");
 // Thiết lập mối quan hệ
 User.belongsToMany(Class, {
   through: ClassMember,
@@ -58,6 +58,22 @@ ClassMember.belongsTo(Class, { foreignKey: "class_id" });
 User.hasMany(ClassMember, { foreignKey: "user_id" });
 ClassMember.belongsTo(User, { foreignKey: "user_id" });
 
+// Relationships with aliases for controller compatibility
+Project.hasMany(Sprint, { foreignKey: "project_id", as: "sprints" });
+Sprint.belongsTo(Project, { foreignKey: "project_id", as: "project" });
+
+Sprint.hasMany(Task, { foreignKey: "sprint_id", as: "tasks" });
+Task.belongsTo(Sprint, { foreignKey: "sprint_id", as: "sprint" });
+
+Task.hasMany(TaskChecklist, { foreignKey: "task_id", as: "checklists" });
+TaskChecklist.belongsTo(Task, { foreignKey: "task_id", as: "task" });
+
+Task.hasMany(TaskComment, { foreignKey: "task_id", as: "comments" });
+TaskComment.belongsTo(Task, { foreignKey: "task_id", as: "task" });
+
+Task.belongsTo(User, { foreignKey: "assigned_to", as: "assignedUser" });
+
+TaskComment.belongsTo(User, { foreignKey: "user_id", as: "author" });
 // Export models & sequelize
 module.exports = {
   sequelize,
@@ -68,4 +84,8 @@ module.exports = {
   Project,
   ClassMember,
   GroupMember,
+  Task,
+  TaskChecklist,
+  Sprint,
+  TaskComment,
 };

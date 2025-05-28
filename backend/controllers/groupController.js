@@ -46,6 +46,7 @@ exports.group_introduce = async (req, res) => {
     // Trả về kết quả
     res.json({
       project: {
+        id: project?.project_id || null,
         name: project?.project_name || null,
         code: project?.project_id || null,
         description: project?.description || null,
@@ -60,6 +61,7 @@ exports.group_introduce = async (req, res) => {
         classId: group.Class.class_id,
       },
       members: members.map((m) => ({
+        id: m.User.user_id,
         name: m.User.username,
         role: m.User.user_id === group.leader.user_id ? "Leader" : "Member",
         avatarUrl: m.User.avatar || null,

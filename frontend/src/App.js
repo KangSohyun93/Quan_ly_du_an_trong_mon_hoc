@@ -6,7 +6,8 @@ import LoginForm from "./components/auth/Login/LoginForm.js";
 import SV_TeamClass from "./pages/SV_Teamclass.js";
 import SV_TeamDetail from "./pages/SV_TeamDetail.js";
 import ProjectInfo from "./components/introduce/ProjectInfo.js";
-
+import KanbanView from "./components/shared/task/KanbanView.js";
+import RequireAuth from "./components/auth/RequireAuth.js";
 function App() {
   return (
     <Router>
@@ -14,12 +15,21 @@ function App() {
         <Routes>
           <Route path="/register" element={<RegisterForm />} />
           <Route path="/login" element={<LoginForm />} />
-          <Route path="/home" element={<SV_TeamClass />} />
+          <Route
+            path="/home"
+            element={
+              <RequireAuth>
+                <SV_TeamClass />
+              </RequireAuth>
+            }
+          />
           <Route
             path="/home/classes/:classId/group/:groupId"
             element={<SV_TeamDetail />}
           >
             <Route path="introduce" element={<ProjectInfo />} />
+            <Route path="team-task" element={<KanbanView />} />
+            <Route path="my-task" element={<KanbanView />} />
             {/* <Route path="class/join" />
             <Route path="class/:id" />  */}
           </Route>

@@ -21,6 +21,7 @@ const verifyToken = (req, res, next) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET || "secret-key");
     // console.log("🧪 decoded token:", decoded); // xem id có đúng không
     req.userId = decoded.id; // Gán userId vào req
+    req.user = decoded;
     next(); // Cho phép tiếp tục vào controller
   } catch (error) {
     return res

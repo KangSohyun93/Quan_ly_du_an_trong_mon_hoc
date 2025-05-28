@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import placeholderMember from "../../../assets/images/placeholders/placeholder-member.jpg";
+import AddSprintModal from "./AddSprintModal";
 import "./TeamHeader.css";
 
 const TeamHeader = ({
@@ -7,13 +8,17 @@ const TeamHeader = ({
   classCode,
   teamName,
   projectName,
-  members = [], // Đặt giá trị mặc định là mảng rỗng để tránh lỗi undefined
+  projectId,
+  members,
   activeTab,
   sprints,
   selectedSprintId,
   onSprintChange,
   onTabChange,
+  onUserChange,
 }) => {
+  const [showAddSprint, setShowAddSprint] = useState(false);
+
   const tabs = [
     "Introduce",
     "Dashboard",
@@ -23,8 +28,28 @@ const TeamHeader = ({
     "Rate",
   ];
 
+  const tabsWithSprint = ["dashboard", "team-task", "my-task", "roadmap"];
+  const tabsWithUserFilter = ["team-task", "rate"];
+
+  const activeTabSlug = activeTab.toLowerCase(); // normalize
+
+  const handleSprintChange = (e) => {
+    const sprintId = parseInt(e.target.value, 10);
+    if (sprintId === -1) {
+      setShowAddSprint(true);
+    } else {
+      onSprintChange(sprintId);
+    }
+  };
+
+  const handleUserChange = (e) => {
+    const userId = parseInt(e.target.value, 10);
+    onUserChange(userId === 0 ? null : userId);
+  };
+  //console.log("Members:", members);
   return (
     <div className="team-header">
+      {/* Top Info */}
       <div className="team-header-top">
         <div className="team-info">
           <p>
@@ -34,13 +59,14 @@ const TeamHeader = ({
             {className} || {classCode}
           </p>
         </div>
+
         <div className="team-members">
-          {members.length > 0 ? (
+          {members && members.length > 0 ? (
             members.slice(0, 3).map((member, index) => (
               <div key={index} className="team-member">
                 <img
                   src={member.avatarUrl || placeholderMember}
-                  alt={`Thành viên ${index + 1}`}
+                  alt={`Member ${index + 1}`}
                   className="member-avatar"
                   onError={(e) => {
                     e.target.src = placeholderMember;
@@ -49,33 +75,24 @@ const TeamHeader = ({
               </div>
             ))
           ) : (
-            <p>Không có thành viên</p>
+            <p>No members</p>
           )}
+
           {members.length > 3 && (
             <div className="more-members">+{members.length - 3}</div>
           )}
         </div>
       </div>
 
+      {/* Tab Bar */}
       <div className="team-header-tabs">
         <div className="tabs-container">
-          {sprints && sprints.length > 0 && (
+          {/* Sprint Selector */}
+          {tabsWithSprint.includes(activeTabSlug) && sprints?.length > 0 && (
             <div className="sprint-select">
               <select
-                value={selectedSprintId || ""}
-                onChange={(e) => {
-                  const sprintId = parseInt(e.target.value, 10); // Đảm bảo giá trị là số
-                  const selectedSprint = sprints.find(
-                    (sprint) => sprint.sprint_id === sprintId
-                  );
-                  if (selectedSprint) {
-                    console.log(
-                      "Sprint được chọn trong TeamHeader:",
-                      selectedSprint
-                    );
-                    onSprintChange(selectedSprint);
-                  }
-                }}
+                value={selectedSprintId ?? ""}
+                onChange={handleSprintChange}
               >
                 <option value="" disabled>
                   Chọn Sprint
@@ -85,28 +102,59 @@ const TeamHeader = ({
                     {sprint.sprint_name || `Sprint ${sprint.sprint_number}`}
                   </option>
                 ))}
+                <option value="-1">+ Thêm Sprint</option>
               </select>
             </div>
           )}
+
+          {/* Tab Buttons */}
           <div className="tabs">
-            {tabs.map((tab, index) => (
-              <button
-                key={index}
-                className={`tab ${activeTab === tab ? "active" : ""}`}
-                onClick={() => onTabChange(tab)}
-              >
-                <span
-                  className={`icon ${tab.toLowerCase().replace(" ", "-")}-icon`}
-                ></span>
-                {tab}
-              </button>
-            ))}
+            {tabs.map((tab, index) => {
+              const slug = tab.toLowerCase().replace(/\s+/g, "-");
+              return (
+                <button
+                  key={index}
+                  className={`tab ${activeTabSlug === slug ? "active" : ""}`}
+                  onClick={() => onTabChange(tab)}
+                >
+                  <span className={`icon ${slug}-icon`} />
+                  {tab}
+                </button>
+              );
+            })}
           </div>
         </div>
-        <div className="teamheader-actions">
-          <button className="filter-btn">Lọc</button>
-        </div>
+
+        {/* User Filter */}
+        {tabsWithUserFilter.includes(activeTabSlug) && (
+          <div className="teamheader-actions">
+            <select
+              onChange={handleUserChange}
+              className="filter-btn"
+              defaultValue="0"
+            >
+              <option value="0">All Users</option>
+              {members.map((member) => (
+                <option key={member.id} value={member.id}>
+                  {member.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
       </div>
+
+      {/* Add Sprint Modal */}
+      {showAddSprint && (
+        <AddSprintModal
+          projectId={projectId}
+          onClose={() => setShowAddSprint(false)}
+          onSprintCreated={(newSprintId) => {
+            setShowAddSprint(false);
+            onSprintChange(newSprintId);
+          }}
+        />
+      )}
     </div>
   );
 };

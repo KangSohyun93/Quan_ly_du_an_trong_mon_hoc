@@ -1,20 +1,23 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import Sidebar from "../components/shared/Sidebar/Sidebar.js";
 import TeamHeader from "../components/shared/TeamHeader/TeamHeader.js";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams, Outlet } from "react-router-dom";
 import { fetchGroupData } from "../services/group-service.js";
-import { Outlet } from "react-router-dom";
+import { fetchSprints } from "../services/api-client"; // giả sử có hàm này
 
-function SV_TeamDetail() {
+function SV_TeamDetail({ currentUserId }) {
   const navigate = useNavigate();
   const location = useLocation();
   const { classId, groupId } = useParams();
 
-  // Đọc tab hiện tại từ URL
   const activeTab = location.pathname.split("/").pop();
-  // Ép state nếu không có (tránh lỗi khi truy cập trực tiếp không qua ClassCard)
   const [groupData, setGroupData] = useState(null);
 
+  const [sprints, setSprints] = useState([]);
+  const [selectedSprintId, setSelectedSprintId] = useState(null);
+  const [selectedUserId, setSelectedUserId] = useState(null);
+
+  // Load group data
   useEffect(() => {
     async function fetchData() {
       try {
@@ -26,15 +29,50 @@ function SV_TeamDetail() {
     }
     if (classId && groupId) fetchData();
   }, [classId, groupId]);
+
+  // Load sprints khi đã có projectId
+  const loadSprints = useCallback(async () => {
+    if (!groupData?.project?.id) return;
+    try {
+      const sprintData = await fetchSprints(groupData.project.id);
+      const filtered = sprintData.filter(
+        (s) => s.project_id === groupData.project.id
+      );
+      setSprints(filtered);
+
+      if (filtered.length > 0) {
+        setSelectedSprintId((prev) =>
+          prev && filtered.some((s) => s.sprint_id === prev)
+            ? prev
+            : filtered[0].sprint_id
+        );
+      } else {
+        setSelectedSprintId(null);
+      }
+    } catch (err) {
+      console.error("Error loading sprints:", err);
+    }
+  }, [groupData]);
+
+  useEffect(() => {
+    loadSprints();
+  }, [loadSprints]);
+
   if (!groupData) {
-    return <div>Đang tải dữ liệu...</div>; // hoặc spinner, loading component
+    return <div>Đang tải dữ liệu...</div>;
   }
 
   const { project, group, members } = groupData;
+
+  const isTeamLead = members.some(
+    (m) => m.user_id === currentUserId && m.role === "team-lead"
+  );
+
   const handleTabChange = (tab) => {
-    const path = tab.toLowerCase().replace(/\s+/g, "-"); // team task -> team-task
+    const path = tab.toLowerCase().replace(/\s+/g, "-");
     navigate(`/home/classes/${classId}/group/${groupId}/${path}`);
   };
+
   return (
     <div className="app-content d-flex">
       <Sidebar />
@@ -44,15 +82,28 @@ function SV_TeamDetail() {
           classCode={group.classId}
           teamName={group.name}
           projectName={project.name}
+          projectId={project.id}
           members={members}
-          activeTab={activeTab} // Hoặc state.activeTab nếu có
-          sprints={[]} // Gán mảng rỗng hoặc dữ liệu từ API nếu có
-          selectedSprintId={null}
-          onSprintChange={() => {}}
+          activeTab={activeTab}
+          sprints={sprints}
+          selectedSprintId={selectedSprintId}
+          selectedUserId={selectedUserId}
+          onSprintChange={setSelectedSprintId}
           onTabChange={handleTabChange}
+          onUserChange={setSelectedUserId} // thêm nếu cần user filter
         />
         <div className="page-content p-4">
-          <Outlet />
+          <Outlet
+            context={{
+              activeTab: activeTab,
+              members,
+              isTeamLead,
+              currentUserId,
+              projectId: project.id,
+              selectedSprintId,
+              selectedUserId,
+            }}
+          />
         </div>
       </div>
     </div>

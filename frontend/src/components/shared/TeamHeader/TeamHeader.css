@@ -104,6 +104,9 @@
 
 .sprint-select {
   margin-right: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Thêm khoảng cách giữa dropdown và nút Add Sprint */
 }
 
 .sprint-select select {
