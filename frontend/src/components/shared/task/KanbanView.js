@@ -25,10 +25,11 @@ const KanbanView = (sprints) => {
     selectedUserId,
     selectedSprintId,
   } = useOutletContext();
-  console.log("selectedUserId:", selectedUserId);
-  console.log("selectedSprintId", selectedSprintId);
-  console.log("activeTab", activeTab);
-
+  // console.log("selectedUserId:", selectedUserId);
+  // console.log("selectedSprintId", selectedSprintId);
+  // console.log("activeTab", activeTab);
+  const user = JSON.parse(localStorage.getItem("user"));
+  const userId = user.id;
   const [tasks, setTasks] = useState([]);
   const [filteredTasks, setFilteredTasks] = useState([]);
   const [reportData, setReportData] = useState([]);
@@ -47,14 +48,19 @@ const KanbanView = (sprints) => {
     if (!projectId || selectedSprintId === null) return;
 
     try {
-      const mode =
-        activeTab === "team-task" ? (!selectedUserId ? "all" : "user") : "user";
-
+      const isTeamTask = activeTab === "team-task";
+      // tạo biến có thể thay đổi:
+      let selectedUserIdToUse = isTeamTask ? selectedUserId || null : userId;
+      const mode = isTeamTask
+        ? !selectedUserIdToUse
+          ? "all"
+          : "user"
+        : "user";
       const data = await fetchTasks(
         mode,
         projectId,
         selectedSprintId,
-        selectedUserId
+        selectedUserIdToUse
       );
       const currentDate = new Date();
 
@@ -130,28 +136,18 @@ const KanbanView = (sprints) => {
     ]);
   };
 
-  // Reset dữ liệu khi chuyển tab hoặc context đổi
-  useEffect(() => {
-    setTasks([]);
-    setFilteredTasks([]);
-    setReportData([]);
-    setOpenTaskId(null);
-    setShowCreateTask(false);
-    setShowCommentPage(null);
-  }, [activeTab, selectedUserId, selectedSprintId]);
-
-  // Load lại dữ liệu khi context đã sẵn sàng
   useEffect(() => {
     if (
       Array.isArray(members) &&
       members.length > 0 &&
       selectedSprintId !== null &&
       selectedSprintId !== undefined &&
-      projectId
+      projectId &&
+      activeTab !== undefined // thêm điều kiện để đảm bảo tab đã sẵn sàng
     ) {
       loadTasks();
     }
-  }, [selectedSprintId, selectedUserId, members, activeTab, projectId]);
+  }, [activeTab, selectedSprintId, selectedUserId, members, projectId]);
 
   const toggleSubTask = async (taskId, subTaskId) => {
     try {

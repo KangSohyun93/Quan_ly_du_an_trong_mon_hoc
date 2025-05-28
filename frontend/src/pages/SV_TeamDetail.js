@@ -30,6 +30,15 @@ function SV_TeamDetail({ currentUserId }) {
     if (classId && groupId) fetchData();
   }, [classId, groupId]);
 
+  useEffect(() => {
+    if (activeTab === "team-task") {
+      setSelectedUserId(null); // Reset khi chuyển sang team-task
+    } else {
+      if (activeTab === "my-task" && selectedUserId !== null) {
+        setSelectedUserId(null);
+      }
+    }
+  }, [activeTab]);
   // Load sprints khi đã có projectId
   const loadSprints = useCallback(async () => {
     if (!groupData?.project?.id) return;

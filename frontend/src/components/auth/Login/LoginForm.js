@@ -25,10 +25,7 @@ function LoginForm() {
     try {
       const userData = await loginUser({ email, password });
       console.log("Đăng nhập thành công:", userData);
-
-      if (rememberMe) {
-        localStorage.setItem("token", userData.token);
-      }
+      localStorage.setItem("user", JSON.stringify(userData.user));
       sessionStorage.setItem("token", userData.token);
       // Chuyển hướng sau khi đăng nhập
       navigate("/home");

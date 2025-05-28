@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./sidebar.css";
 import worktraceLogo from "../../../assets/images/worktrace-logo.svg";
 import avatarDefault from "../../../assets/images/avatar-default.svg";
@@ -6,20 +7,22 @@ import avatarDefault from "../../../assets/images/avatar-default.svg";
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(true);
   const [selectedItem, setSelectedItem] = useState(false); // Mặc định "Thông báo" được chọn
-
+  const navigate = useNavigate();
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };
 
   const handleItemClick = (item) => {
     setSelectedItem(item);
+    navigate("/home");
   };
   const handleLogout = () => {
     // Xóa token khỏi localStorage hoặc sessionStorage
     sessionStorage.removeItem("token"); // hoặc sessionStorage.removeItem("token");
-
+    localStorage.removeItem("user");
+    navigate("/login");
     // Chuyển hướng sang trang đăng nhập
-    window.location.href = "/login"; // Điều chỉnh đường dẫn nếu khác
+    //window.location.href = "/login"; // Điều chỉnh đường dẫn nếu khác
   };
 
   return (
