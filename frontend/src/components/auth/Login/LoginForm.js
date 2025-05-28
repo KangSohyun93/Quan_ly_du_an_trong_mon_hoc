@@ -28,10 +28,8 @@ function LoginForm() {
 
       if (rememberMe) {
         localStorage.setItem("token", userData.token);
-      } else {
-        sessionStorage.setItem("token", userData.token);
       }
-
+      sessionStorage.setItem("token", userData.token);
       // Chuyển hướng sau khi đăng nhập
       navigate("/home");
     } catch (err) {

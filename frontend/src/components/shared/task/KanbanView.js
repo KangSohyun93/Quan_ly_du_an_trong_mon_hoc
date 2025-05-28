@@ -43,8 +43,7 @@ const KanbanView = (sprints) => {
     done: "done",
     completed: "done",
   };
-
-  const loadTasks = useCallback(async () => {
+  const loadTasks = async () => {
     if (!projectId || selectedSprintId === null) return;
 
     try {
@@ -110,7 +109,7 @@ const KanbanView = (sprints) => {
     } catch (err) {
       console.error("Error loading tasks:", err);
     }
-  }, [activeTab, selectedSprintId, selectedUserId, members, projectId]);
+  };
 
   const updateReportData = (tasks) => {
     const counts = { "to-do": 0, "in-progress": 0, done: 0 };
@@ -131,15 +130,28 @@ const KanbanView = (sprints) => {
     ]);
   };
 
+  // Reset dữ liệu khi chuyển tab hoặc context đổi
+  useEffect(() => {
+    setTasks([]);
+    setFilteredTasks([]);
+    setReportData([]);
+    setOpenTaskId(null);
+    setShowCreateTask(false);
+    setShowCommentPage(null);
+  }, [activeTab, selectedUserId, selectedSprintId]);
+
+  // Load lại dữ liệu khi context đã sẵn sàng
   useEffect(() => {
     if (
       Array.isArray(members) &&
       members.length > 0 &&
-      selectedSprintId !== null
+      selectedSprintId !== null &&
+      selectedSprintId !== undefined &&
+      projectId
     ) {
       loadTasks();
     }
-  }, [loadTasks, members, selectedSprintId, selectedUserId]);
+  }, [selectedSprintId, selectedUserId, members, activeTab, projectId]);
 
   const toggleSubTask = async (taskId, subTaskId) => {
     try {

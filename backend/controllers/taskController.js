@@ -19,7 +19,7 @@ exports.getTasks = async (req, res) => {
     const mode = req.query.mode; // "user" | "team"
     const selectedUserId = req.query.selectedUserId
       ? Number(req.query.selectedUserId)
-      : null;
+      : req.userId;
 
     const where = {};
 

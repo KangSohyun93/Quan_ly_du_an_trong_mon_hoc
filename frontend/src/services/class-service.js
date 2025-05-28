@@ -1,7 +1,6 @@
 // Gọi API class_search_join
 export async function getInfoClass() {
-  const token =
-    localStorage.getItem("token") || sessionStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
   if (!token) {
     throw new Error("Không có token, yêu cầu đăng nhập");
   }
@@ -28,8 +27,7 @@ export async function getInfoClass() {
   }
 }
 export async function SearchClass({ searchText }) {
-  const token =
-    localStorage.getItem("token") || sessionStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
   if (!token) {
     throw new Error("Không có token, yêu cầu đăng nhập");
   }
@@ -56,8 +54,7 @@ export async function SearchClass({ searchText }) {
   }
 }
 export async function JoinClass({ joinCode }) {
-  const token =
-    localStorage.getItem("token") || sessionStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
   if (!token) {
     throw new Error("Không có token, yêu cầu đăng nhập");
   }

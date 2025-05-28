@@ -8,8 +8,7 @@ export const fetchTasks = async (
   sprintId,
   selectedUserId = null
 ) => {
-  const token =
-    localStorage.getItem("token") || sessionStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
 
   const url = new URL(`${API_BASE_URL}/api/tasks`);
   const params = new URLSearchParams();
@@ -38,8 +37,7 @@ export const fetchTasks = async (
 
 // Fetch task details with comments and subtasks
 export const fetchTaskDetails = async (taskId) => {
-  const token =
-    localStorage.getItem("token") || sessionStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
   const response = await fetch(`${API_BASE_URL}/api/tasks/${taskId}`, {
     method: "GET",
     headers: {
@@ -54,8 +52,7 @@ export const fetchTaskDetails = async (taskId) => {
 
 // Add a comment to a task
 export const addComment = async (taskId, userId, commentText) => {
-  const token =
-    localStorage.getItem("token") || sessionStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
   const response = await fetch(`${API_BASE_URL}/api/tasks/comments`, {
     method: "POST",
     headers: {
@@ -75,8 +72,7 @@ export const addComment = async (taskId, userId, commentText) => {
 
 // Update a checklist item
 export const updateChecklistItem = async (checklistId, isCompleted) => {
-  const token =
-    localStorage.getItem("token") || sessionStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
   const response = await fetch(
     `${API_BASE_URL}/api/tasks/checklists/${checklistId}`,
     {
@@ -95,8 +91,7 @@ export const updateChecklistItem = async (checklistId, isCompleted) => {
 
 // Update task status
 export const updateTaskStatus = async (taskId, status) => {
-  const token =
-    localStorage.getItem("token") || sessionStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
   const response = await fetch(`${API_BASE_URL}/api/tasks/${taskId}/status`, {
     method: "PATCH",
     headers: {
@@ -123,8 +118,7 @@ export const updateTaskStatus = async (taskId, status) => {
 
 // Fetch all sprints
 export const fetchSprints = async (projectId) => {
-  const token =
-    localStorage.getItem("token") || sessionStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
   const response = await fetch(
     `${API_BASE_URL}/api/tasks/sprints?projectId=${projectId}`,
     {
@@ -142,8 +136,7 @@ export const fetchSprints = async (projectId) => {
 
 // Create a new task with subtasks
 export const createTask = async (taskData) => {
-  const token =
-    localStorage.getItem("token") || sessionStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
   const response = await fetch(`${API_BASE_URL}/api/tasks`, {
     method: "POST",
     headers: {
@@ -159,8 +152,7 @@ export const createTask = async (taskData) => {
 
 // Create a new sprint
 export const createSprint = async (sprintData) => {
-  const token =
-    localStorage.getItem("token") || sessionStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
   const response = await fetch(`${API_BASE_URL}/api/tasks/sprints`, {
     method: "POST",
     headers: {
@@ -176,8 +168,7 @@ export const createSprint = async (sprintData) => {
 
 // Fetch group members by project
 export const fetchGroupMembersByProject = async () => {
-  const token =
-    localStorage.getItem("token") || sessionStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
   const response = await fetch(
     `${API_BASE_URL}/api/tasks/group-members-by-project`,
     {
