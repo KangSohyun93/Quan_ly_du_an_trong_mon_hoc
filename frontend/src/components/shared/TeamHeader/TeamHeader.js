@@ -19,16 +19,9 @@ const TeamHeader = ({
 }) => {
   const [showAddSprint, setShowAddSprint] = useState(false);
 
-  const tabs = [
-    "Introduce",
-    "Dashboard",
-    "Team task",
-    "My task",
-    "Roadmap",
-    "Rate",
-  ];
+  const tabs = ["Introduce", "Dashboard", "Team task", "My task", "Rate"];
 
-  const tabsWithSprint = ["dashboard", "team-task", "my-task", "roadmap"];
+  const tabsWithSprint = ["dashboard", "team-task", "my-task"];
   const tabsWithUserFilter = ["team-task", "rate"];
 
   const activeTabSlug = activeTab.toLowerCase(); // normalize

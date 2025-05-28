@@ -14,6 +14,13 @@ const Sidebar = () => {
   const handleItemClick = (item) => {
     setSelectedItem(item);
   };
+  const handleLogout = () => {
+    // Xóa token khỏi localStorage hoặc sessionStorage
+    sessionStorage.removeItem("token"); // hoặc sessionStorage.removeItem("token");
+
+    // Chuyển hướng sang trang đăng nhập
+    window.location.href = "/login"; // Điều chỉnh đường dẫn nếu khác
+  };
 
   return (
     <div className="sidebar flex">
@@ -74,7 +81,10 @@ const Sidebar = () => {
 
           {/* Logout */}
           {isOpen && (
-            <div className="logout absolute bottom-4 left-4">
+            <div
+              className="logout absolute bottom-4 left-4"
+              onClick={handleLogout}
+            >
               <a
                 href="#"
                 className="flex items-center p-2 text-gray-700 rounded"
