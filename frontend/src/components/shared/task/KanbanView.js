@@ -277,6 +277,7 @@ const KanbanView = (sprints) => {
 
         {showCommentPage && (
           <TaskCommentPage
+            currentUserId={userId}
             taskId={showCommentPage}
             onClose={() => {
               setShowCommentPage(null);

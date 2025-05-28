@@ -6,14 +6,12 @@ import { faCheckCircle as fasCheckCircle } from "@fortawesome/free-solid-svg-ico
 import { faCircle as farCircle } from "@fortawesome/free-regular-svg-icons";
 import { fetchTaskDetails, addComment } from "../../../services/api-client";
 import placeholderMember from "../../../assets/images/placeholders/placeholder-member.jpg";
-const TaskCommentPage = ({ taskId, onClose }) => {
-  console.log("Rendering TaskCommentPage with taskId:", taskId);
+const TaskCommentPage = ({ currentUserId, taskId, onClose }) => {
+  console.log("Rendering TaskCommentPage with currentUserId:", currentUserId);
   const [task, setTask] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [newComment, setNewComment] = useState("");
-  const currentUserId = 1; // Hard-coded user_id for testing
-
   // Fetch task details, subtasks, and comments
   const loadTaskDetails = useCallback(async () => {
     console.log("Fetching task details for taskId:", taskId);

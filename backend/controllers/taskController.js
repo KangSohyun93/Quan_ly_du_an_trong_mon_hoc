@@ -113,9 +113,7 @@ exports.getTaskDetails = async (req, res) => {
 
 // Add comment
 exports.addComment = async (req, res) => {
-  const { task_id, comment_text } = req.body;
-  const user_id = req.user?.user_id;
-
+  const { task_id, comment_text, user_id } = req.body;
   try {
     await TaskComment.create({ task_id, user_id, comment_text });
     res.status(201).json({ message: "Comment added successfully" });
