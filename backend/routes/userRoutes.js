@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const { getUserProfile, updateUserProfile, changePassword } = require('../controllers/userController');
+const userController = require('../controllers/userController');
+const verifyToken = require('../middleware/verify-token');
 
-router.get('/users/:userId', getUserProfile);
-router.put('/users/:userId', updateUserProfile);
-router.post('/users/:userId/password', changePassword);
+router.get('/:userId', verifyToken, userController.getUserProfile);
+router.put('/:userId', verifyToken, userController.updateUserProfile);
+router.post('/:userId/change-password', verifyToken, userController.changePassword);
 
 module.exports = router;

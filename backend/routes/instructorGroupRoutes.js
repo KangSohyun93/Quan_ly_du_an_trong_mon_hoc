@@ -1,10 +1,10 @@
-// instructorGroupRoutes.js
 const express = require('express');
 const router = express.Router();
-const { getInstructorGroups, getGroupsInClass, getMembersInClass } = require('../controllers/instructorGroupController');
+const instructorGroupController = require('../controllers/instructorGroupController');
+const verifyToken = require('../middleware/verify-token');
 
-router.get('/', getInstructorGroups);
-router.get('/classes/:classId/groups', getGroupsInClass);
-router.get('/classes/:classId/members', getMembersInClass);
+router.get('/', verifyToken, instructorGroupController.getGroupsByInstructorId);
+router.get('/classes/:classId', verifyToken, instructorGroupController.getGroupsByClassId);
+router.get('/classes/:classId/members', verifyToken, instructorGroupController.getMembersByClassId);
 
 module.exports = router;

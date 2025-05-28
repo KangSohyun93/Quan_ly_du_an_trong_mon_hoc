@@ -1,13 +1,21 @@
+const jwt = require('jsonwebtoken');
+
 const authenticate = (req, res, next) => {
-  const token = req.headers['authorization'];
-  if (!token) return res.status(401).json({ error: 'No token provided' });
-  // Giả định giải mã token (sử dụng thư viện như jsonwebtoken)
-  const decoded = jwt.verify(token, 'your_jwt_secret');
-  req.user = { user_id: decoded.user_id, role: decoded.role };
-  if (req.user.role !== 'Instructor') {
-    return res.status(403).json({ error: 'Unauthorized' });
+  const authHeader = req.headers['authorization'];
+  if (!authHeader) return res.status(401).json({ error: 'No token provided' });
+
+  // Lấy token từ header dạng "Bearer <token>"
+  const token = authHeader.replace('Bearer ', '');
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your_jwt_secret');
+    req.user = { user_id: decoded.user_id || decoded.userId, role: decoded.role };
+    if (req.user.role !== 'Instructor') {
+      return res.status(403).json({ error: 'Unauthorized' });
+    }
+    next();
+  } catch (err) {
+    return res.status(401).json({ error: 'Invalid token' });
   }
-  next();
 };
 
 module.exports = authenticate;
