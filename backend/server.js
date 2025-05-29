@@ -13,12 +13,6 @@ import pool from './db.js';
 dotenv.config({ path: './.env' });
 dotenv.config({ path: './.github.env' });
 
-// dotenv.config();
-
-// Lấy __dirname trong ES modules
-// const __filename = fileURLToPath(import.meta.url);
-// const __dirname = path.dirname(__filename);
-
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -30,15 +24,6 @@ app.use(express.json());
 app.use('/api/groups', groupRoutes);
 app.use('/api/projects', commitRoutes);
 
-// Xử lý tất cả các route khác bằng cách phục vụ ứng dụng React
-// app.get('*', (req, res) => {
-//     res.sendFile(path.join(__dirname, '../../dist', 'index.html'));
-// });
-
-// Fetch commit cho tất cả dự án khi khởi động
-// server.js
-// ...
-// Fetch commit cho tất cả dự án khi khởi động
 const initializeCommits = async () => {
     console.log('[Server] Initializing commits for all projects...'); // LOG S1
     try {
@@ -71,16 +56,9 @@ const initializeCommits = async () => {
     }
 };
 
-initializeCommits(); // <<<<<<<<<<<< BỎ COMMENT DÒNG NÀY
-// ...
+// initializeCommits(); 
 
 const PORT = process.env.PORT;
 app.listen(PORT, async () => {
     console.log(`Server chạy trên port ${PORT}`);
-    //     try {
-    //         await open(`http://localhost:${PORT}`);
-    //         console.log(`Đã mở trình duyệt tại http://localhost:${PORT}`);
-    //     } catch (error) {
-    //         console.error('Không thể mở trình duyệt:', error);
-    //     }
 });

@@ -4,14 +4,13 @@ import StatCard from '../components/StatCard';
 import MemberCompletionChart from '../components/MemberCompletionChart';
 import LineChart from '../components/LineChart';
 import CommitActivityChart from '../components/CommitActivityChart';
-import LOCGrowthChart from '../components/LOCGrowthChart'; // Bỏ comment nếu bạn dùng
+import LOCGrowthChart from '../components/LOCGrowthChart'; 
 import PeerReviewChart from '../components/PeerReviewChart';
 import TaskChart from '../components/TaskChart';
-// import PRSizeChart from '../components/PRSizeChart';
 import BarChart from '../components/BarChart';
-// import ContributorContributionChart from '../components/ContributorContributionChart';
 import SprintPerformanceChart from '../components/SprintPerformanceChart';
 import '../css/dashboard.css';
+// import { FaInfoCircle } from 'react-icons/fa';
 
 const avatars = [
     '/assets/images/classes/class1/group1/avatars/member1.svg',
@@ -23,31 +22,69 @@ const Dashboard = () => {
     const [selectedGroup, setSelectedGroup] = useState(null);
     const [groups, setGroups] = useState([]);
     const [loadingGroups, setLoadingGroups] = useState(true);
+    const [currentUserRole, setCurrentUserRole] = useState(null); 
+    const [fixedUserAndClassContext] = useState({ userId: 1, classId: 100001 });
 
+    const [isMasterRefreshing, setIsMasterRefreshing] = useState(false);
+    // State để trigger re-fetch cho các chart sau khi master refresh hoàn tất
+    const [refreshNonce, setRefreshNonce] = useState(0);
 
     useEffect(() => {
         const fetchGroups = async () => {
             setLoadingGroups(true);
+            setCurrentUserRole(null); 
             try {
-                const response = await axios.get('http://localhost:3000/api/groups');
-                setGroups(response.data);
-                if (response.data.length > 0) {
-                    setSelectedGroup(response.data[0]);
+                const response = await axios.get(`http://localhost:3000/api/groups?userId=${fixedUserAndClassContext.userId}&classId=${fixedUserAndClassContext.classId}`);
+                
+                const fetchedGroups = response.data.groups;
+                setCurrentUserRole(response.data.role);
+                setGroups(fetchedGroups);
+
+                if (fetchedGroups.length > 0) {
+                    // Try to find and select group with group_id = 1 by default
+                    const defaultGroup = fetchedGroups.find(g => g.group_id === 1);
+                    if (defaultGroup) {
+                        setSelectedGroup(defaultGroup);
+                    } else {
+                        // If group 1 is not in the list, select the first available group
+                        setSelectedGroup(fetchedGroups[0]);
+                    }
                 } else {
-                    setSelectedGroup(null); // Không có group nào, set selectedGroup là null
+                    setSelectedGroup(null); // No groups available
                 }
             } catch (error) {
                 console.error('Error fetching groups:', error);
-                setSelectedGroup(null); // Lỗi thì cũng set là null
+                setGroups([]); 
+                setSelectedGroup(null); 
+                setCurrentUserRole(null); 
             }
             setLoadingGroups(false);
         };
         fetchGroups();
-    }, []);
+    }, [fixedUserAndClassContext]); 
 
-    // Lấy projectId và groupId một cách an toàn
     const currentProjectId = selectedGroup?.project_id;
     const currentGroupId = selectedGroup?.group_id;
+
+    const handleMasterRefresh = async () => {
+        if (!currentProjectId) { // Chỉ refresh nếu có project được chọn
+            console.warn("[Dashboard] No project selected, cannot refresh.");
+            return;
+        }
+        try {
+            console.log(`[Dashboard] Triggering master refresh for projectId: ${currentProjectId}`);
+            // Gọi API backend để trigger fetchAndStoreCommits
+            // Endpoint này sẽ cập nhật dữ liệu commit (bao gồm LOC) trong database
+            await axios.post(`http://localhost:3000/api/projects/${currentProjectId}/commits/refresh`);
+            console.log(`[Dashboard] Master refresh API call completed for projectId: ${currentProjectId}`);
+            // Sau khi API này hoàn tất, các chart sẽ tự gọi fetchData(true) của riêng chúng
+            // thông qua hàm handleRefresh nội bộ của chúng (vì prop onRefreshCommits đã được gọi).
+        } catch (error) {
+            console.error(`[Dashboard] Failed to trigger master refresh for projectId ${currentProjectId}:`, error);
+            // Bạn có thể hiển thị thông báo lỗi cho người dùng ở đây nếu muốn
+            alert("Error refreshing data from source. Please check the console for more details.");
+        }
+    };
 
     if (loadingGroups) {
         return (
@@ -67,13 +104,13 @@ const Dashboard = () => {
                         <h1 className="project-name">{selectedGroup?.group_name || 'Chưa chọn nhóm'}</h1>
                         <select
                             className="project-select"
-                            value={currentGroupId || ''} // Sử dụng currentGroupId
+                            value={currentGroupId || ''} 
                             onChange={(e) => {
                                 const groupId = Number(e.target.value);
                                 const group = groups.find(g => g.group_id === groupId);
                                 setSelectedGroup(group);
                             }}
-                            disabled={groups.length === 0}
+                            disabled={groups.length === 0 || (currentUserRole === 'Student' && groups.length <= 1)}
                         >
                             {groups.length === 0 ? (
                                 <option value="">Không có nhóm nào</option>
@@ -153,19 +190,13 @@ const Dashboard = () => {
                         <StatCard title="PR Đã Merge" value="45" background="bg-violet" />
                     </div>
                     <div className="dashboard-charts">
-                        {/* Truyền currentGroupId và currentProjectId,
-                            chúng sẽ là undefined nếu selectedGroup là null,
-                            và các component con đã được sửa để xử lý điều này.
-                        */}
                         <MemberCompletionChart groupId={currentGroupId} />
                         <LineChart />
-                        <CommitActivityChart projectId={currentProjectId} />
-                        <LOCGrowthChart projectId={currentProjectId} />
+                        <CommitActivityChart projectId={currentProjectId} onRefreshCommits={handleMasterRefresh} />
+                        <LOCGrowthChart projectId={currentProjectId} onRefreshCommits={handleMasterRefresh} />
                         <PeerReviewChart groupId={currentGroupId} />
                         <TaskChart groupId={currentGroupId} />
-                        {/* <PRSizeChart /> */}
                         <BarChart groupId={currentGroupId} />
-                        {/* <ContributorContributionChart /> */}
                         <SprintPerformanceChart groupId={currentGroupId} />
                     </div>
                 </div>

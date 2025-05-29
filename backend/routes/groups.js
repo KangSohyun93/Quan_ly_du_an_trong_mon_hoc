@@ -1,15 +1,40 @@
 import express from 'express';
 import { getGroups, getMembersByGroupId, getPeerAssessments } from '../services/memberService.js';
+import pool from '../db.js'; // Import database pool
 
 const router = express.Router();
 
-// API endpoint để lấy danh sách nhóm
+// API endpoint để lấy danh sách nhóm (modified)
 router.get('/', async (req, res) => {
+    const { userId, classId } = req.query;
+
+    // Validate and parse query parameters
+    const numUserId = userId ? parseInt(userId, 10) : null;
+    const numClassId = classId ? parseInt(classId, 10) : null;
+
+    if (!numUserId || !numClassId) {
+        return res.status(400).json({ error: 'userId and classId query parameters are required.' });
+    }
+
     try {
-        const groups = await getGroups();
-        res.json(groups);
+        // Fetch user role
+        const [users] = await pool.query('SELECT role FROM Users WHERE user_id = ?', [numUserId]);
+        if (users.length === 0) {
+            return res.status(404).json({ error: `User with ID ${numUserId} not found.` });
+        }
+        const userRole = users[0].role;
+
+        // Get groups based on user, class, and role
+        const groupsData = await getGroups(numUserId, numClassId, userRole);
+
+        // Return role and groups
+        res.json({ role: userRole, groups: groupsData });
+
     } catch (error) {
-        res.status(500).json({ error: error.message || 'Internal server error' });
+        // Log the detailed error on the server
+        console.error(`Error in GET /api/groups (userId: ${numUserId}, classId: ${numClassId}):`, error);
+        // Send a generic error message to the client
+        res.status(500).json({ error: error.message || 'Internal server error while fetching groups.' });
     }
 });
 

@@ -1,7 +1,7 @@
 import express from 'express';
-import { getCommits } from '../models/contributionModel.js';
+import { getCommits, getProjectLOCData } from '../models/contributionModel.js';
 import { fetchAndStoreCommits } from '../services/contributionService.js';
-import pool from '../db.js'; // Import pool để query Projects
+import { getProjectById } from '../models/projectModel.js';
 
 const router = express.Router();
 
@@ -10,19 +10,16 @@ router.get('/:projectId/commits', async (req, res) => {
     console.log(`[Route] GET /api/projects/${projectId}/commits request received`);
     try {
         const commits = await getCommits(projectId); // Lấy tất cả commits
-
-        // Lấy thông tin ngày bắt đầu và kết thúc dự án
-        const [projectDetails] = await pool.query(
-            'SELECT created_at AS project_start_date, end_date AS project_end_date FROM Projects WHERE project_id = ?',
-            [projectId]
-        );
+        const project = await getProjectById(projectId);
 
         let projectStartDate = null;
         let projectEndDate = null;
 
-        if (projectDetails.length > 0) {
-            projectStartDate = projectDetails[0].project_start_date;
-            projectEndDate = projectDetails[0].project_end_date;
+        if (project) {
+            projectStartDate = project.created_at;
+            projectEndDate = project.end_date;
+        } else {
+            console.warn(`[Route] Project details not found for projectId ${projectId} when fetching commits.`);
         }
 
         console.log(`[Route] Commits for projectId ${projectId}: ${commits.length}, Start: ${projectStartDate}, End: ${projectEndDate}`);
@@ -41,18 +38,19 @@ router.get('/:projectId/loc_summary', async (req, res) => {
     const projectId = req.params.projectId;
     console.log(`[Route] GET /api/projects/${projectId}/loc_summary request received`);
     try {
-        const locData = await getProjectLOCData(projectId);
+        const locData = await getProjectLOCData(projectId); // Hàm này đã có trong contributionModel.js
 
-        // Tương tự, lấy ngày bắt đầu/kết thúc dự án để frontend có thể sử dụng
-        const [projectDetails] = await pool.query(
-            'SELECT created_at AS project_start_date, end_date AS project_end_date FROM Projects WHERE project_id = ?',
-            [projectId]
-        );
+        // Sử dụng hàm getProjectById từ projectModel.js
+        const project = await getProjectById(projectId);
+
         let projectStartDate = null;
         let projectEndDate = null;
-        if (projectDetails.length > 0) {
-            projectStartDate = projectDetails[0].project_start_date;
-            projectEndDate = projectDetails[0].project_end_date;
+
+        if (project) {
+            projectStartDate = project.created_at; // Hoặc trường ngày bắt đầu bạn dùng
+            projectEndDate = project.end_date;
+        } else {
+            console.warn(`[Route] Project details not found for projectId ${projectId} when fetching LOC summary.`);
         }
 
         console.log(`[Route] LOC data for projectId ${projectId}: ${locData.length} entries, Project Start: ${projectStartDate}, End: ${projectEndDate}`);
