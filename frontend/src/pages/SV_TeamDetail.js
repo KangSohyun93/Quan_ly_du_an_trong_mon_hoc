@@ -6,6 +6,8 @@ import { fetchGroupData } from "../services/group-service.js";
 import { fetchSprints } from "../services/api-client"; // giả sử có hàm này
 
 function SV_TeamDetail({ currentUserId }) {
+  currentUserId =
+    currentUserId || JSON.parse(localStorage.getItem("currentUser"))?.id;
   const navigate = useNavigate();
   const location = useLocation();
   const { classId, groupId } = useParams();
@@ -107,10 +109,12 @@ function SV_TeamDetail({ currentUserId }) {
               activeTab: activeTab,
               members,
               isTeamLead,
-              currentUserId,
+              currentUserId, // 👈 cái này thay cho userId
               projectId: project.id,
+              groupId: group.id,
               selectedSprintId,
               selectedUserId,
+              projectData: project,
             }}
           />
         </div>

@@ -8,6 +8,8 @@ const RequireRole = ({ role, children }) => {
   useEffect(() => {
     if (!user || user.role !== role) {
       setTimeout(() => {
+        sessionStorage.removeItem("token");
+        localStorage.removeItem("user");
         navigate("/login");
       }, 3000); // chuyển sau 3 giây
     }

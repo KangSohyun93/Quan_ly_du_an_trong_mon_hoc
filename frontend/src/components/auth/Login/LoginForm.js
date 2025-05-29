@@ -28,7 +28,11 @@ function LoginForm() {
       localStorage.setItem("user", JSON.stringify(userData.user));
       sessionStorage.setItem("token", userData.token);
       // Chuyển hướng sau khi đăng nhập
-      navigate("/home");
+      if (userData.user.role === "Admin") {
+        navigate("/admin");
+      } else {
+        navigate("/home");
+      }
     } catch (err) {
       setError(err.message || "Login failed");
     } finally {

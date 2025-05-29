@@ -1,5 +1,4 @@
 // src/services/group-service.js
-
 export async function fetchGroupData({ classId, groupId }) {
   try {
     const response = await fetch(

@@ -16,6 +16,8 @@ const taskRoutes = require("./routes/task-routes");
 app.use("/api/tasks", taskRoutes);
 const userRoutes = require("./routes/user-routes");
 app.use("/api/user", userRoutes);
+const assessmentRoutes = require("./routes/assessment-routes");
+app.use("/api/assessment", assessmentRoutes);
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () =>
   console.log(`Sever is running on http://localhost:${PORT}`)

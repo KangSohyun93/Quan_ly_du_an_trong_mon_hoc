@@ -78,7 +78,9 @@ const Sidebar = () => {
             className={`sidebar-item flex items-center p-2 text-gray-700 rounded ${
               selectedItem === "User Manager" ? "bg-blue-100" : ""
             }`}
-            onClick={() => handleItemClick("User Manager", "/user-manager")}
+            onClick={() =>
+              handleItemClick("User Manager", "/admin/user-manager")
+            }
           >
             <i className="icon mr-3 fa-solid fa-user-gear"></i>
             <p>User Manager</p>
@@ -88,7 +90,9 @@ const Sidebar = () => {
             className={`sidebar-item flex items-center p-2 text-gray-700 rounded ${
               selectedItem === "Class Manager" ? "bg-blue-100" : ""
             }`}
-            onClick={() => handleItemClick("Class Manager", "/class-manager")}
+            onClick={() =>
+              handleItemClick("Class Manager", "/admin/class-manager")
+            }
           >
             <i className="icon mr-3 fa-solid fa-chalkboard-user"></i>
             <p>Class Manager</p>
