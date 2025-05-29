@@ -66,7 +66,8 @@ const KanbanView = (sprints) => {
 
       // Không cần lọc lại sprint nữa vì backend đã lọc rồi
       const mapped = data.map((task) => {
-        const user = members?.find((m) => m.user_id === task.assigned_to) || {};
+        const user = members?.find((m) => m.id === task.assigned_to) || {};
+        //console.log("User:", user);
         const normalizedStatus = (task.status || "").toLowerCase();
         const finalStatus = statusMap[normalizedStatus] || "to-do";
 
@@ -83,7 +84,7 @@ const KanbanView = (sprints) => {
               })
             : "",
           tags: ["SQL", "Backend"], // bạn có thể chỉnh thành dynamic nếu có
-          avatar: `/avatars/${user.username?.toLowerCase() || "default"}.jpg`,
+          avatar: user.avatarUrl,
           comments: task.comment_count || 0,
           subTasks: (task.checklists || []).map((c) => ({
             id: c.checklist_id,
@@ -188,15 +189,19 @@ const KanbanView = (sprints) => {
               .map((task) => (
                 <div key={task.id} className="report-card">
                   <div className="report-card-header">
-                    <h4>{task.title}</h4>
-                    <div>
-                      {task.date}{" "}
-                      {task.time && (
-                        <span>
-                          <FontAwesomeIcon icon={faClock} /> {task.time}
+                    <div className="header-left">
+                      <h4 className="body_1">{task.title}</h4>
+                      <div className="task-meta">
+                        {task.date}{" "}
+                        {task.time && (
+                          <span className="time-with-clock">
+                            <FontAwesomeIcon icon={faClock} /> {task.time}
+                          </span>
+                        )}
+                        <span className="progress-text">
+                          - Progress: {task.progress_percentage}%
                         </span>
-                      )}
-                      <span> - Progress: {task.progress_percentage}%</span>
+                      </div>
                     </div>
                   </div>
 

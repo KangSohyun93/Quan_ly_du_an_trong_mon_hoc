@@ -66,6 +66,10 @@
   border: 1px solid #ddd;
   transition: box-shadow 0.2s;
   position: relative;
+  min-width: 0; /* Ngăn overflow khi trong grid/flex */
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .report-card:hover {
@@ -124,6 +128,9 @@
   display: flex;
   gap: 6px;
   margin-top: 8px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  min-width: 0;
 }
 
 .tag {
@@ -152,6 +159,8 @@
   margin-top: 8px;
   margin-bottom: 8px;
   justify-content: space-between;
+  flex-wrap: nowrap; /* Không cho xuống dòng */
+  min-width: 0;
 }
 
 .task-subtasks {
