@@ -192,11 +192,9 @@ const Dashboard = () => {
                         <StatCard title="Trễ hạn" value="12" background="bg-blue" />
                         <StatCard title="Tổng Commit" value="1200" background="bg-violet" />
                         <StatCard title="Tổng LOC" value="150000" background="bg-blue" />
-                        {/* <StatCard title="PR Đã Merge" value="45" background="bg-violet" /> */}
                     </div>
                     <div className="dashboard-charts">
                         <MemberCompletionChart groupId={currentGroupId} />
-                        {/* <LineChart /> */}
                         <CommitActivityChart
                             projectId={currentProjectId}
                             onRefreshCommits={handleMasterRefresh}

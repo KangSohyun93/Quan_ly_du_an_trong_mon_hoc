@@ -1,6 +1,5 @@
 import pool from '../db.js';
 
-// Modified getGroups function
 async function getGroups(userId, classId, userRole) {
     // userId, classId, and userRole are expected to be validated and provided by the caller (e.g., route handler)
     if (!userId || !classId || !userRole) {
@@ -134,7 +133,6 @@ async function getMembersByGroupId(groupId) {
     }
 }
 
-
 async function getPeerAssessments(groupId) {
     try {
         const groupIdNum = parseInt(groupId, 10);
@@ -213,6 +211,5 @@ async function getPeerAssessments(groupId) {
         throw error;
     }
 }
-
 
 export { getGroups, getMembersByGroupId, getPeerAssessments };

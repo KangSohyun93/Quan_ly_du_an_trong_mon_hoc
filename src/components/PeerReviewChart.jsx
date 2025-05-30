@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import '../css/peerreviewchart.css'; // Make sure this CSS file is created/updated
+import '../css/peerreviewchart.css';
 
-// Reusable ScoreDisplay component
+// Reusable ScoreDisplay component (giữ nguyên)
 const ScoreDisplay = ({ score, maxScore = 5, label, barColorClass = '', showValueText = true }) => {
     const percentage = maxScore > 0 ? (score / maxScore) * 100 : 0;
     const displayScore = score === null || score === undefined ? 0 : score;
@@ -34,6 +34,7 @@ const PeerReviewChart = ({ groupId }) => {
         if (!groupId) {
             setPeerReviewData([]);
             setLoading(false);
+            setError("Group ID is required to fetch peer reviews."); // Thêm thông báo lỗi rõ ràng hơn
             return;
         }
         const fetchPeerAssessments = async () => {
@@ -61,12 +62,11 @@ const PeerReviewChart = ({ groupId }) => {
         );
     }
 
-
     return (
         <div className="peerreview-chart-container">
             <h3>Peer Review</h3>
             {error && <p className="error-message">{error}</p>}
-            {!error && peerReviewData.length === 0 && <p>No review data available for this group.</p>}
+            {!error && peerReviewData.length === 0 && !loading && <p>No review data available for this group.</p>}
             {peerReviewData.length > 0 && (
                 <table>
                     <thead>
@@ -93,14 +93,26 @@ const PeerReviewChart = ({ groupId }) => {
                         ×
                     </button>
                     <h4>Review Details for {selectedMember.name}</h4>
-                    <p><strong>Overall Average: <ScoreDisplay score={selectedMember.score} maxScore={5} showValueText={false} /> {selectedMember.score.toFixed(1)}/5.0</strong></p>
-                    <ul>
+                    <div className="overall-average-section">
+                        <strong>Overall Average: </strong>
+                        <ScoreDisplay score={selectedMember.score} maxScore={5} showValueText={true} /> {/* Giữ lại showValueText cho điểm số */}
+                    </div>
+                    {/* Thay đổi ul thành div với class mới để dùng CSS Grid */}
+                    <div className="reviews-grid">
                         {selectedMember.details.map((detail, index) => (
-                            <li key={index}>
+                            // Mỗi review là một item trong grid
+                            <div key={index} className="review-item">
                                 <div className="reviewer-info">Reviewed by: {detail.reviewer}</div>
                                 <ScoreDisplay label="Overall for this review" score={detail.overallReviewScore} barColorClass="overall" />
-                                {detail.comment && <p className="comment-text">Comment: "{detail.comment}"</p>}
-                                {!detail.comment && <p className="comment-text">No comment provided.</p>}
+
+                                <div className="comment-section">
+                                    <span className="comment-label">Comment:</span>
+                                    {detail.comment ? (
+                                        <p className="comment-text">{detail.comment}</p>
+                                    ) : (
+                                        <p className="comment-text no-comment">No comment provided.</p>
+                                    )}
+                                </div>
 
                                 <div className="criteria-scores">
                                     <ScoreDisplay label="Deadline Adherence" score={detail.scores.deadline} barColorClass="deadline" />
@@ -109,9 +121,9 @@ const PeerReviewChart = ({ groupId }) => {
                                     <ScoreDisplay label="Team Support" score={detail.scores.teamSupport} barColorClass="team-support" />
                                     <ScoreDisplay label="Responsibility" score={detail.scores.responsibility} barColorClass="responsibility" />
                                 </div>
-                            </li>
+                            </div>
                         ))}
-                    </ul>
+                    </div>
                 </div>
             )}
         </div>

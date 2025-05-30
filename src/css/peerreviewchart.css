@@ -3,13 +3,9 @@
     border-radius: 10px;
     padding: 20px;
     margin: 10px;
-    /* Retained from your original file */
     min-height: 300px;
-    /* Retained from your original file */
     font-family: 'Inter', sans-serif;
-    /* Moved to container for general font */
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
-    /* Added subtle shadow */
 }
 
 .peerreview-chart-container h3 {
@@ -17,25 +13,20 @@
     font-weight: 600;
     color: #1F2937;
     margin-top: 0;
-    /* Added to remove default top margin */
     margin-bottom: 20px;
     border-bottom: 1px solid #e5e7eb;
-    /* Added a subtle separator */
     padding-bottom: 10px;
-    /* Added padding for the separator */
 }
 
 .peerreview-chart-container table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 20px;
-    /* Added margin for spacing if details are shown */
 }
 
 .peerreview-chart-container th,
 .peerreview-chart-container td {
     padding: 12px 10px;
-    /* Slightly adjusted padding */
     text-align: left;
     border-bottom: 1px solid #e5e7eb;
 }
@@ -43,47 +34,39 @@
 .peerreview-chart-container th {
     font-weight: 600;
     color: #1F2937;
-    /* Kept from your file */
     background-color: #f9fafb;
-    /* Light background for header */
 }
 
 .peerreview-chart-container td {
     color: #4B5563;
-    /* Kept from your file */
 }
 
 .peerreview-chart-container .clickable-row {
-    /* Added class for specificity */
     cursor: pointer;
     transition: background-color 0.2s ease;
 }
 
 .peerreview-chart-container .clickable-row:hover {
     background-color: #f0f7ff;
-    /* Kept from your file */
 }
 
-/* ScoreDisplay component styles (from previous response, adapted) */
+/* ScoreDisplay component styles (giữ nguyên) */
 .score-display {
     display: flex;
     align-items: center;
-    margin-bottom: 5px;
+    /* margin-bottom: 5px; */
     font-size: 0.95em;
 }
 
 .score-label {
     min-width: 170px;
-    /* Adjusted for English labels */
     font-weight: 500;
     color: #374151;
-    /* Slightly darker label */
     padding-right: 8px;
 }
 
 .score-bar-wrapper {
     width: 120px;
-    /* Slightly wider bar */
     height: 16px;
     margin-right: 8px;
 }
@@ -99,7 +82,6 @@
 .score-bar-foreground {
     height: 100%;
     background-color: #28a745;
-    /* Default green */
     border-radius: 4px;
     transition: width 0.4s ease-in-out;
 }
@@ -112,7 +94,6 @@
     font-weight: 500;
 }
 
-/* Specific colors for criteria bars (from previous response) */
 .score-bar-foreground.overall {
     background-color: #17a2b8;
 }
@@ -138,17 +119,14 @@
 }
 
 
-/* Details section styling (updated from 'details' to 'peer-review-details' for clarity) */
+/* Details section styling */
 .peer-review-details {
     margin-top: 20px;
     padding: 20px;
     background-color: #ffffff;
-    /* Kept from your file */
     border: 1px solid #dee2e6;
-    /* Added border for definition */
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    /* Kept from your file */
     position: relative;
 }
 
@@ -156,41 +134,36 @@
     font-size: 16px;
     font-weight: 600;
     color: #1F2937;
-    /* Kept from your file */
     margin-top: 0;
-    /* Added to remove default top margin */
-    margin-bottom: 15px;
-    /* Increased margin */
-}
-
-.peer-review-details ul {
-    list-style-type: none;
-    /* Kept from your file (was list-style) */
-    padding: 0;
-    /* Kept from your file */
-}
-
-.peer-review-details li {
-    /* font-family: 'Inter', sans-serif; - Covered by container */
-    font-size: 14px;
-    color: #4B5563;
-    /* Kept from your file */
     margin-bottom: 10px;
-    /* Increased spacing */
-    padding: 15px;
-    /* Added padding inside li */
-    border-bottom: 1px solid #e9ecef;
-    /* Separator for reviews */
-    background-color: #f8f9fa;
-    /* Light bg for each review item */
-    border-radius: 6px;
-    /* Rounded corners for review items */
+    /* Giảm margin bottom một chút */
 }
 
-.peer-review-details li:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
+.overall-average-section {
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    color: #1F2937;
+    margin-bottom: 20px;
+    /* Tăng khoảng cách dưới Overall Average */
+    font-size: 1.05em;
+    /* Làm chữ to hơn chút */
 }
+
+.overall-average-section .score-display {
+    margin-left: 8px;
+    /* Khoảng cách giữa text và ScoreDisplay */
+    font-size: 1em;
+    /* Reset font-size cho score-display bên trong */
+}
+
+.overall-average-section .score-display .score-label {
+    min-width: auto;
+    /* Bỏ min-width của label trong trường hợp này */
+    display: none;
+    /* Ẩn label "Overall for this review" nếu không cần */
+}
+
 
 .close-details-btn {
     position: absolute;
@@ -199,68 +172,114 @@
     background: transparent;
     border: none;
     font-size: 26px;
-    /* Made slightly larger */
     font-weight: bold;
     line-height: 1;
     cursor: pointer;
     color: #6c757d;
     padding: 0 5px;
-    /* Adjusted padding */
     transition: color 0.2s ease;
-    /* Added transition */
 }
 
 .close-details-btn:hover {
     color: #343a40;
 }
 
+/* NEW STYLES FOR REVIEWS GRID */
+.reviews-grid {
+    display: grid;
+    gap: 20px;
+    /* Khoảng cách giữa các review item */
+    /* Mặc định là 1 cột cho màn hình nhỏ */
+    grid-template-columns: 1fr;
+}
+
+/* Trên màn hình đủ rộng (ví dụ: laptop), hiển thị 2 cột */
+@media (min-width: 1205px) {
+
+    /* Điều chỉnh breakpoint nếu cần, ví dụ 992px hoặc 1200px */
+    .reviews-grid {
+        grid-template-columns: repeat(2, 1fr);
+        /* 2 cột bằng nhau */
+    }
+}
+
+.review-item {
+    font-size: 14px;
+    color: #4B5563;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    /* Thêm border nhẹ cho mỗi item */
+    border-radius: 6px;
+}
+
 .reviewer-info {
     font-weight: bold;
     color: #343a40;
-    /* Darker for emphasis */
-    margin-bottom: 8px;
+    margin-bottom: 10px;
+    /* Tăng khoảng cách */
+}
+
+.comment-section {
+    margin-top: 10px;
+    margin-bottom: 12px;
+}
+
+.comment-label {
+    display: block;
+    /* Để label chiếm 1 dòng riêng */
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 4px;
 }
 
 .comment-text {
-    margin-top: 8px;
-    margin-bottom: 12px;
     font-style: italic;
     color: #4B5563;
-    /* Matched td color */
-    padding-left: 10px;
-    border-left: 3px solid #ced4da;
+    /* padding-left: 10px; */
+    /* Bỏ padding-left nếu muốn text bắt đầu ngay dưới label */
+    /* border-left: 3px solid #ced4da; */
+    /* Bỏ border-left nếu không thích */
+    text-align: justify;
+    /* Căn đều 2 bên cho comment */
+    line-height: 1.6;
+    /* Tăng line-height cho dễ đọc */
+    margin-top: 0;
+    /* Reset margin */
 }
 
+.comment-text.no-comment {
+    font-style: normal;
+    color: #6c757d;
+    text-align: left;
+    /* Không cần justify cho "No comment" */
+}
+
+
 .criteria-scores {
-    margin-top: 12px;
-    /* Increased top margin */
-    padding-left: 10px;
-    /* Slight indent */
+    margin-top: 15px;
+    /* Tăng khoảng cách */
+    padding-left: 0px;
+    /* Bỏ indent nếu các ScoreDisplay đã có label */
 }
 
 .criteria-scores .score-display {
     margin-bottom: 8px;
-    /* Space between criteria */
 }
 
-/* Error message styling */
+/* Error message styling (giữ nguyên) */
 .error-message {
     color: #721c24;
-    /* Darker red for text */
     padding: 10px 15px;
-    /* Adjusted padding */
     background-color: #f8d7da;
     border: 1px solid #f5c6cb;
     border-radius: 6px;
-    /* Rounded corners */
     margin-top: 15px;
-    /* Space from table or title */
     font-size: 14px;
 }
 
-/* Loading message styling */
+/* Loading message styling (giữ nguyên) */
 .peerreview-chart-container p {
-    /* General paragraph styling within container */
     font-size: 14px;
     color: #4B5563;
     text-align: center;

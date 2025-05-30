@@ -9,7 +9,7 @@ ChartJS.register(ArcElement, Tooltip, Legend, Title);
 const TaskChart = ({ groupId }) => {
     const [taskSummary, setTaskSummary] = useState(null);
     const [sprintOptions, setSprintOptions] = useState([]);
-    const [selectedSprint, setSelectedSprint] = useState('all'); // 'all' hoặc sprint_id
+    const [selectedSprint, setSelectedSprint] = useState('all');
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
     const [chartKey, setChartKey] = useState(0); // Để re-render chart khi cần
@@ -33,6 +33,8 @@ const TaskChart = ({ groupId }) => {
         if (!groupId) {
             setLoading(false);
             setError("No Group ID provided.");
+            setTaskSummary(null);
+            setSprintOptions([]);
             return;
         }
         setLoading(true);
@@ -42,11 +44,10 @@ const TaskChart = ({ groupId }) => {
             try {
                 const response = await axios.get(`http://localhost:3000/api/groups/${groupId}/task-summary?sprintId=${selectedSprint}`);
                 setTaskSummary(response.data.summary);
-                // Chỉ cập nhật sprintOptions một lần hoặc khi nó rỗng
-                if (sprintOptions.length === 0 || selectedSprint === 'all') {
-                     setSprintOptions(response.data.sprintOptions);
+                if (selectedSprint === 'all' || sprintOptions.length === 0) {
+                    setSprintOptions(response.data.sprintOptions);
                 }
-                setChartKey(prevKey => prevKey + 1); // Re-render chart
+                setChartKey(prevKey => prevKey + 1);
             } catch (err) {
                 console.error('Error fetching data for TaskChart:', err);
                 setError('Could not load task summary data.');
@@ -56,11 +57,7 @@ const TaskChart = ({ groupId }) => {
             }
         };
         fetchData();
-    }, [groupId, selectedSprint]); // Thêm sprintOptions vào dependencies nếu muốn nó cập nhật khi sprintOptions thay đổi từ API (thường không cần)
-
-    const handleSprintChange = (event) => {
-        setSelectedSprint(event.target.value);
-    };
+    }, [groupId, selectedSprint]);
 
     if (loading) {
         return <div className="taskchart-container loading">Loading task data...</div>;
@@ -75,28 +72,38 @@ const TaskChart = ({ groupId }) => {
     const { completed, inProgress, toDo, lateCompleted, overdueIncomplete } = taskSummary;
     const totalTasks = completed + inProgress + toDo + lateCompleted + overdueIncomplete;
 
-    const chartDataValues = [completed, inProgress, lateCompleted, toDo, overdueIncomplete];
-    const chartLabels = ['Completed', 'In Progress', 'Late Completion', 'To Do', 'Overdue & Incomplete'];
-    const backgroundColors = [
-        '#4CAF50', // Green - Completed
-        '#FFC107', // Amber - In Progress
-        '#FF9800', // Orange - Late Completion
-        '#D3D3D3', // Light Gray - To Do
-        '#F44336', // Red - Overdue & Incomplete
+    const chartDataValuesOriginal = [completed, inProgress, lateCompleted, toDo, overdueIncomplete];
+    const chartLabelsOriginal = ['Completed', 'In Progress', 'Late Completion', 'To Do', 'Overdue & Incomplete'];
+    const backgroundColorsOriginal = [
+        '#4CAF50',
+        '#FFC107',
+        '#FF9800',
+        '#D3D3D3',
+        '#F44336',
     ];
 
-    const data = {
-        labels: chartLabels,
-        datasets: [
-            {
-                label: 'Task Status',
-                data: chartDataValues,
-                backgroundColor: backgroundColors,
-                borderColor: backgroundColors.map(color => color.replace(')', ', 0.7)').replace('rgb', 'rgba')), // Slightly darker border
-                borderWidth: 1,
-                hoverOffset: 8,
-            },
-        ],
+    const activeData = [];
+    const activeLabels = [];
+    const activeBackgroundColors = [];
+
+    chartDataValuesOriginal.forEach((value, index) => {
+        if (value > 0) {
+            activeData.push(value);
+            activeLabels.push(chartLabelsOriginal[index]);
+            activeBackgroundColors.push(backgroundColorsOriginal[index]);
+        }
+    });
+
+    const dataForChart = { // Đổi tên biến để rõ ràng hơn
+        labels: activeLabels,
+        datasets: [{
+            label: 'Task Status', // Vẫn giữ label gốc cho dataset
+            data: activeData,
+            backgroundColor: activeBackgroundColors,
+            borderColor: activeBackgroundColors.map(color => color.replace(')', ', 0.7)').replace('rgb', 'rgba')),
+            borderWidth: 1,
+            hoverOffset: 8,
+        }]
     };
 
     const options = {
@@ -109,6 +116,16 @@ const TaskChart = ({ groupId }) => {
                     padding: 15,
                     font: { family: 'Inter, sans-serif', size: 12 },
                     color: '#4B5563',
+                    // Sửa hàm filter để an toàn hơn
+                    // filter: function (item, chart) {
+                    //     // chart.data ở đây sẽ là dataForChart đã được lọc
+                    //     // item.index sẽ là index trong activeLabels/activeData
+                    //     if (chart && chart.data && chart.data.datasets && chart.data.datasets.length > 0 &&
+                    //         chart.data.datasets[0].data && chart.data.datasets[0].data[item.index] !== undefined) {
+                    //         return chart.data.datasets[0].data[item.index] > 0;
+                    //     }
+                    //     return false; // Nếu không an toàn, mặc định là không hiển thị
+                    // }
                 },
             },
             title: {
@@ -121,7 +138,7 @@ const TaskChart = ({ groupId }) => {
             tooltip: {
                 enabled: true,
                 backgroundColor: '#1F2937',
-                titleFont: { family: 'Inter, sans-serif', size: 14 },
+                titleFont: { family: 'Inter, sans-serif', size: 14, weight: 'bold' },
                 bodyFont: { family: 'Inter, sans-serif', size: 13 },
                 titleColor: '#FFFFFF',
                 bodyColor: '#FFFFFF',
@@ -131,14 +148,16 @@ const TaskChart = ({ groupId }) => {
                         const label = context.label || '';
                         const value = context.raw;
                         const percentage = totalTasks > 0 ? ((value / totalTasks) * 100).toFixed(1) : 0;
-                        return `${label}: ${value} task(s) (${percentage}%)`;
+                        return `${label}: ${value} / ${totalTasks} tasks (${percentage}%)`;
                     },
                 },
             },
-            datalabels: { // Cấu hình cho chartjs-plugin-datalabels
-                display: totalTasks > 0 ? 'auto' : false, // Chỉ hiển thị nếu có data
+            datalabels: {
+                display: (context) => {
+                    // context.dataset.data ở đây là activeData
+                    return context.dataset.data[context.dataIndex] > 0 && totalTasks > 0;
+                },
                 formatter: (value, context) => {
-                    if (value === 0) return ''; // Không hiển thị % cho phần 0
                     const percentage = totalTasks > 0 ? ((value / totalTasks) * 100).toFixed(0) : 0;
                     return `${percentage}%`;
                 },
@@ -148,14 +167,16 @@ const TaskChart = ({ groupId }) => {
                     size: 12,
                     family: 'Inter, sans-serif'
                 },
-                anchor: 'center', // 'end', 'start', 'center'
-                align: 'center', // 'top', 'bottom', 'middle', 'start', 'end', 'center'
+                anchor: 'center',
+                align: 'center',
                 textStrokeColor: 'black',
                 textStrokeWidth: 0.5,
-                // offset: 8, // Khoảng cách từ tâm (nếu anchor là center)
             },
         },
-        cutout: '60%', // Làm cho nó thành doughnut chart
+        cutout: '60%',
+    };
+    const handleSprintChange = (event) => { // Di chuyển khai báo hàm lên trước khi sử dụng
+        setSelectedSprint(event.target.value);
     };
 
     return (
@@ -173,7 +194,7 @@ const TaskChart = ({ groupId }) => {
             </div>
             <div className="taskchart-content">
                 {totalTasks > 0 ? (
-                    <Doughnut key={chartKey} data={data} options={options} />
+                    <Doughnut key={chartKey} data={dataForChart} options={options} />
                 ) : (
                     <p className="no-data-message">No tasks found for this selection to display the chart.</p>
                 )}
