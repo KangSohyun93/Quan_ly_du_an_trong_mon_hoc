@@ -3,26 +3,39 @@
     border-radius: 10px;
     padding: 20px;
     margin: 10px;
+    /* Retained from your original file */
     min-height: 300px;
+    /* Retained from your original file */
+    font-family: 'Inter', sans-serif;
+    /* Moved to container for general font */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
+    /* Added subtle shadow */
 }
 
 .peerreview-chart-container h3 {
-    font-family: 'Inter', sans-serif;
     font-size: 18px;
     font-weight: 600;
     color: #1F2937;
+    margin-top: 0;
+    /* Added to remove default top margin */
     margin-bottom: 20px;
+    border-bottom: 1px solid #e5e7eb;
+    /* Added a subtle separator */
+    padding-bottom: 10px;
+    /* Added padding for the separator */
 }
 
 .peerreview-chart-container table {
     width: 100%;
     border-collapse: collapse;
-    font-family: 'Inter', sans-serif;
+    margin-bottom: 20px;
+    /* Added margin for spacing if details are shown */
 }
 
 .peerreview-chart-container th,
 .peerreview-chart-container td {
-    padding: 12px;
+    padding: 12px 10px;
+    /* Slightly adjusted padding */
     text-align: left;
     border-bottom: 1px solid #e5e7eb;
 }
@@ -30,48 +43,226 @@
 .peerreview-chart-container th {
     font-weight: 600;
     color: #1F2937;
+    /* Kept from your file */
+    background-color: #f9fafb;
+    /* Light background for header */
 }
 
 .peerreview-chart-container td {
     color: #4B5563;
+    /* Kept from your file */
 }
 
-.peerreview-chart-container tr:hover {
-    background-color: #f0f7ff;
+.peerreview-chart-container .clickable-row {
+    /* Added class for specificity */
     cursor: pointer;
+    transition: background-color 0.2s ease;
 }
 
-.mini-bar {
-    height: 10px;
-    border-radius: 5px;
-    margin-right: 10px;
-    display: inline-block;
+.peerreview-chart-container .clickable-row:hover {
+    background-color: #f0f7ff;
+    /* Kept from your file */
 }
 
-.details {
+/* ScoreDisplay component styles (from previous response, adapted) */
+.score-display {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+    font-size: 0.95em;
+}
+
+.score-label {
+    min-width: 170px;
+    /* Adjusted for English labels */
+    font-weight: 500;
+    color: #374151;
+    /* Slightly darker label */
+    padding-right: 8px;
+}
+
+.score-bar-wrapper {
+    width: 120px;
+    /* Slightly wider bar */
+    height: 16px;
+    margin-right: 8px;
+}
+
+.score-bar-background {
+    width: 100%;
+    height: 100%;
+    background-color: #e9ecef;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.score-bar-foreground {
+    height: 100%;
+    background-color: #28a745;
+    /* Default green */
+    border-radius: 4px;
+    transition: width 0.4s ease-in-out;
+}
+
+.score-value-text {
+    font-size: 0.9em;
+    min-width: 45px;
+    text-align: left;
+    color: #1F2937;
+    font-weight: 500;
+}
+
+/* Specific colors for criteria bars (from previous response) */
+.score-bar-foreground.overall {
+    background-color: #17a2b8;
+}
+
+.score-bar-foreground.deadline {
+    background-color: #007bff;
+}
+
+.score-bar-foreground.friendly {
+    background-color: #ffc107;
+}
+
+.score-bar-foreground.quality {
+    background-color: #6f42c1;
+}
+
+.score-bar-foreground.team-support {
+    background-color: #fd7e14;
+}
+
+.score-bar-foreground.responsibility {
+    background-color: #dc3545;
+}
+
+
+/* Details section styling (updated from 'details' to 'peer-review-details' for clarity) */
+.peer-review-details {
     margin-top: 20px;
-    padding: 15px;
+    padding: 20px;
     background-color: #ffffff;
+    /* Kept from your file */
+    border: 1px solid #dee2e6;
+    /* Added border for definition */
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    /* Kept from your file */
+    position: relative;
 }
 
-.details h4 {
-    font-family: 'Inter', sans-serif;
+.peer-review-details h4 {
     font-size: 16px;
     font-weight: 600;
     color: #1F2937;
-    margin-bottom: 10px;
+    /* Kept from your file */
+    margin-top: 0;
+    /* Added to remove default top margin */
+    margin-bottom: 15px;
+    /* Increased margin */
 }
 
-.details ul {
-    list-style: none;
+.peer-review-details ul {
+    list-style-type: none;
+    /* Kept from your file (was list-style) */
     padding: 0;
+    /* Kept from your file */
 }
 
-.details li {
-    font-family: 'Inter', sans-serif;
+.peer-review-details li {
+    /* font-family: 'Inter', sans-serif; - Covered by container */
     font-size: 14px;
     color: #4B5563;
+    /* Kept from your file */
+    margin-bottom: 10px;
+    /* Increased spacing */
+    padding: 15px;
+    /* Added padding inside li */
+    border-bottom: 1px solid #e9ecef;
+    /* Separator for reviews */
+    background-color: #f8f9fa;
+    /* Light bg for each review item */
+    border-radius: 6px;
+    /* Rounded corners for review items */
+}
+
+.peer-review-details li:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.close-details-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: transparent;
+    border: none;
+    font-size: 26px;
+    /* Made slightly larger */
+    font-weight: bold;
+    line-height: 1;
+    cursor: pointer;
+    color: #6c757d;
+    padding: 0 5px;
+    /* Adjusted padding */
+    transition: color 0.2s ease;
+    /* Added transition */
+}
+
+.close-details-btn:hover {
+    color: #343a40;
+}
+
+.reviewer-info {
+    font-weight: bold;
+    color: #343a40;
+    /* Darker for emphasis */
     margin-bottom: 8px;
+}
+
+.comment-text {
+    margin-top: 8px;
+    margin-bottom: 12px;
+    font-style: italic;
+    color: #4B5563;
+    /* Matched td color */
+    padding-left: 10px;
+    border-left: 3px solid #ced4da;
+}
+
+.criteria-scores {
+    margin-top: 12px;
+    /* Increased top margin */
+    padding-left: 10px;
+    /* Slight indent */
+}
+
+.criteria-scores .score-display {
+    margin-bottom: 8px;
+    /* Space between criteria */
+}
+
+/* Error message styling */
+.error-message {
+    color: #721c24;
+    /* Darker red for text */
+    padding: 10px 15px;
+    /* Adjusted padding */
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: 6px;
+    /* Rounded corners */
+    margin-top: 15px;
+    /* Space from table or title */
+    font-size: 14px;
+}
+
+/* Loading message styling */
+.peerreview-chart-container p {
+    /* General paragraph styling within container */
+    font-size: 14px;
+    color: #4B5563;
+    text-align: center;
+    padding: 20px 0;
 }

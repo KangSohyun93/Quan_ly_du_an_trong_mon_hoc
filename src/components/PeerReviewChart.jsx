@@ -1,99 +1,86 @@
-// import React, { useState } from 'react';
-// import '../css/peerreviewchart.css';
-
-// const PeerReviewChart = () => {
-//     const peerReviewData = [
-//         { name: 'Alice', score: 8.5, details: [{ reviewer: 'Blice', score: 8, comment: 'Tốt' }, { reviewer: 'Clice', score: 9, comment: 'Xuất sắc' }] },
-//         { name: 'Blice', score: 7.8, details: [{ reviewer: 'Alice', score: 7.5, comment: 'Cần cải thiện' }, { reviewer: 'Clice', score: 8, comment: 'Tốt' }] },
-//         { name: 'Clice', score: 8.0, details: [{ reviewer: 'Alice', score: 8, comment: 'Tốt' }, { reviewer: 'Blice', score: 8, comment: 'Tốt' }] },
-//         { name: 'Dlice', score: 7.5, details: [{ reviewer: 'Alice', score: 7, comment: 'Khá' }, { reviewer: 'Blice', score: 8, comment: 'Tốt' }] },
-//         { name: 'Elice', score: 7.0, details: [{ reviewer: 'Alice', score: 7, comment: 'Khá' }, { reviewer: 'Blice', score: 7, comment: 'Khá' }] },
-//     ];
-
-//     const [selectedMember, setSelectedMember] = useState(null);
-
-//     return (
-//         <div className="peerreview-chart-container">
-//             <h3>Đánh giá ngang hàng</h3>
-//             <table>
-//                 <thead>
-//                     <tr>
-//                         <th>Thành viên</th>
-//                         <th>Điểm trung bình</th>
-//                     </tr>
-//                 </thead>
-//                 <tbody>
-//                     {peerReviewData.map((member) => (
-//                         <tr key={member.name} onClick={() => setSelectedMember(member)}>
-//                             <td>{member.name}</td>
-//                             <td>
-//                                 <div className="mini-bar" style={{ width: `${member.score * 10}%`, background: '#4CAF50' }}></div>
-//                                 {member.score.toFixed(1)}
-//                             </td>
-//                         </tr>
-//                     ))}
-//                 </tbody>
-//             </table>
-//             {selectedMember && (
-//                 <div className="details">
-//                     <h4>Chi tiết đánh giá cho {selectedMember.name}</h4>
-//                     <ul>
-//                         {selectedMember.details.map((detail, index) => (
-//                             <li key={index}>{`${detail.reviewer}: ${detail.score} - ${detail.comment}`}</li>
-//                         ))}
-//                     </ul>
-//                 </div>
-//             )}
-//         </div>
-//     );
-// };
-
-// export default PeerReviewChart;
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import '../css/peerreviewchart.css';
+import '../css/peerreviewchart.css'; // Make sure this CSS file is created/updated
+
+// Reusable ScoreDisplay component
+const ScoreDisplay = ({ score, maxScore = 5, label, barColorClass = '', showValueText = true }) => {
+    const percentage = maxScore > 0 ? (score / maxScore) * 100 : 0;
+    const displayScore = score === null || score === undefined ? 0 : score;
+
+    return (
+        <div className="score-display">
+            {label && <span className="score-label">{label}: </span>}
+            <div className="score-bar-wrapper">
+                <div className="score-bar-background">
+                    <div
+                        className={`score-bar-foreground ${barColorClass}`}
+                        style={{ width: `${percentage}%` }}
+                    ></div>
+                </div>
+            </div>
+            {showValueText && <span className="score-value-text">{Number(displayScore).toFixed(1)}/{maxScore}</span>}
+        </div>
+    );
+};
+
 
 const PeerReviewChart = ({ groupId }) => {
     const [peerReviewData, setPeerReviewData] = useState([]);
     const [selectedMember, setSelectedMember] = useState(null);
     const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        if (!groupId) {
+            setPeerReviewData([]);
+            setLoading(false);
+            return;
+        }
         const fetchPeerAssessments = async () => {
+            setLoading(true);
             try {
                 const response = await axios.get(`http://localhost:3000/api/groups/${groupId}/peer-assessments`);
                 setPeerReviewData(response.data);
                 setError(null);
             } catch (err) {
                 console.error('Error fetching peer assessments:', err);
-                setError('Không thể tải dữ liệu đánh giá ngang hàng');
+                setError('Could not load peer review data.');
                 setPeerReviewData([]);
             }
+            setLoading(false);
         };
         fetchPeerAssessments();
     }, [groupId]);
 
+    if (loading) {
+        return (
+            <div className="peerreview-chart-container">
+                <h3>Peer Review</h3>
+                <p>Loading review data...</p>
+            </div>
+        );
+    }
+
+
     return (
         <div className="peerreview-chart-container">
-            <h3>Đánh giá ngang hàng</h3>
-            {error && <p className="error">{error}</p>}
-            {peerReviewData.length === 0 && !error && <p>Không có dữ liệu đánh giá</p>}
+            <h3>Peer Review</h3>
+            {error && <p className="error-message">{error}</p>}
+            {!error && peerReviewData.length === 0 && <p>No review data available for this group.</p>}
             {peerReviewData.length > 0 && (
                 <table>
                     <thead>
                         <tr>
-                            <th>Thành viên</th>
-                            <th>Điểm trung bình</th>
+                            <th>Member</th>
+                            <th>Average Score</th>
                         </tr>
                     </thead>
                     <tbody>
                         {peerReviewData.map((member) => (
-                            <tr key={member.name} onClick={() => setSelectedMember(member)}>
+                            <tr key={member.name} onClick={() => setSelectedMember(member)} className="clickable-row">
                                 <td>{member.name}</td>
-                                <td>
-                                    <div className="mini-bar" style={{ width: `${member.score * 10}%`, background: '#4CAF50' }}></div>
-                                    {member.score.toFixed(1)}
+                                <td className="score-cell">
+                                    <ScoreDisplay score={member.score} maxScore={5} />
                                 </td>
                             </tr>
                         ))}
@@ -101,11 +88,28 @@ const PeerReviewChart = ({ groupId }) => {
                 </table>
             )}
             {selectedMember && (
-                <div className="details">
-                    <h4>Chi tiết đánh giá cho {selectedMember.name}</h4>
+                <div className="peer-review-details">
+                    <button onClick={() => setSelectedMember(null)} className="close-details-btn" title="Close details">
+                        ×
+                    </button>
+                    <h4>Review Details for {selectedMember.name}</h4>
+                    <p><strong>Overall Average: <ScoreDisplay score={selectedMember.score} maxScore={5} showValueText={false} /> {selectedMember.score.toFixed(1)}/5.0</strong></p>
                     <ul>
                         {selectedMember.details.map((detail, index) => (
-                            <li key={index}>{`${detail.reviewer}: ${detail.score} - ${detail.comment}`}</li>
+                            <li key={index}>
+                                <div className="reviewer-info">Reviewed by: {detail.reviewer}</div>
+                                <ScoreDisplay label="Overall for this review" score={detail.overallReviewScore} barColorClass="overall" />
+                                {detail.comment && <p className="comment-text">Comment: "{detail.comment}"</p>}
+                                {!detail.comment && <p className="comment-text">No comment provided.</p>}
+
+                                <div className="criteria-scores">
+                                    <ScoreDisplay label="Deadline Adherence" score={detail.scores.deadline} barColorClass="deadline" />
+                                    <ScoreDisplay label="Friendliness & Respect" score={detail.scores.friendly} barColorClass="friendly" />
+                                    <ScoreDisplay label="Quality of Work" score={detail.scores.quality} barColorClass="quality" />
+                                    <ScoreDisplay label="Team Support" score={detail.scores.teamSupport} barColorClass="team-support" />
+                                    <ScoreDisplay label="Responsibility" score={detail.scores.responsibility} barColorClass="responsibility" />
+                                </div>
+                            </li>
                         ))}
                     </ul>
                 </div>
