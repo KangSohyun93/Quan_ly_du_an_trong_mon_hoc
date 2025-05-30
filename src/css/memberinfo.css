@@ -4,7 +4,18 @@
     padding: 20px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     border: 1px solid #e5e7eb;
-    height: 100%;
+    display: flex;
+    flex-direction: column;
+    min-height: 380px;
+    width: 100%; /* Đảm bảo .member-info-container chiếm 100% chiều rộng của grid cell của nó */
+    box-sizing: border-box; /* Để padding không làm tăng kích thước tổng thể vượt quá 100% */
+}
+.member-info-container.placeholder {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+    color: #6b7280;
 }
 
 .member-info-header {
@@ -12,10 +23,12 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
+    flex-shrink: 0;
+    /* Prevent header from shrinking if content below grows */
 }
 
 .member-select {
-    padding: 8px;
+    padding: 8px 12px;
     border-radius: 6px;
     border: 1px solid #d1d5db;
     background-color: #ffffff;
@@ -24,12 +37,20 @@
     color: #1F2937;
     cursor: pointer;
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    min-width: 160px;
+    /* Ensure select has some width */
 }
 
 .member-select:hover {
     border-color: #3B82F6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
+
+.member-select:focus {
+    outline: none;
+    border-color: #3B82F6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
 
 .member-details {
     display: flex;
@@ -43,6 +64,12 @@
     border-radius: 50%;
     border: 2px solid #ffffff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    object-fit: cover;
+    /* This will ensure the image covers the area, cropping if necessary. */
+    flex-shrink: 0;
+    /* Prevent image from shrinking */
+    background-color: #e0e0e0;
+    /* Fallback color if image fails to load */
 }
 
 .member-text {
@@ -54,11 +81,13 @@
     font-size: 18px;
     font-weight: 700;
     color: #1F2937;
+    line-height: 1.25;
 }
 
 .member-info-role {
     font-size: 14px;
     color: #3B82F6;
+    /* Blue for PM role, adjust if needed */
     font-weight: 500;
 }
 
@@ -67,10 +96,10 @@
     border-radius: 8px;
     padding: 16px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    max-height: 300px;
-    /* Chiều cao cố định cho 3 sprint */
-    overflow-y: auto;
-    /* Thanh cuộn dọc nếu thêm sprint */
+    overflow-y: auto; 
+    flex-grow: 1;
+    width: 100%; /* Đảm bảo nội dung bên trong cũng có thể co dãn */
+    box-sizing: border-box; /* Để padding không làm tăng kích thước */
 }
 
 .stats-title {
@@ -78,17 +107,27 @@
     font-weight: 600;
     color: #1F2937;
     margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e9ecef;
 }
 
 .stats-item {
     font-size: 14px;
     color: #4B5563;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
     display: flex;
     justify-content: space-between;
+    line-height: 1.5;
+}
+
+.stats-item:last-child {
+    margin-bottom: 0;
 }
 
 .stats-item span {
     font-weight: 600;
     color: #1F2937;
+    margin-left: 8px;
+    /* Ensure space between label and value */
+    text-align: right;
 }

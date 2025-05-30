@@ -2,24 +2,60 @@
     background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
     border-radius: 10px;
     padding: 20px;
-    height: 400px;
     margin: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.completion-chart-container.loading-state,
+.completion-chart-container.no-data-state,
+.completion-chart-container .error-message {
+    justify-content: center; 
+    align-items: center;
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+    color: #4B5563;
+    flex-grow: 1; 
+}
+.completion-chart-container .error-message {
+    color: #F44336;
+    font-weight: 500;
 }
 
 .chart-and-info {
     display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 20px;
-    align-items: stretch;
-    height: 100%;
+    grid-template-columns: 2fr 1fr; 
+    gap: 25px;
+    align-items: stretch; 
+    width: 100%; /* Đảm bảo .chart-and-info chiếm toàn bộ chiều rộng của .completion-chart-container */
+    flex-grow: 1; 
 }
 
 .chart-content {
-    max-width: 700px;
-    height: 100%;
+    min-height: 350px; 
+    position: relative; /* Cần thiết cho Chart.js responsive */
+    width: 100%; /* Đảm bảo .chart-content chiếm 100% chiều rộng của grid cell của nó */
 }
 
-/* Định dạng tooltip của Chart.js */
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    /* Adjust breakpoint if needed */
+    .chart-and-info {
+        grid-template-columns: 1fr;
+        /* Stack them on smaller screens */
+        gap: 20px; 
+    }
+
+    .completion-chart-container {
+        min-height: auto;
+        /* Allow container to adjust height when stacked */
+        height: auto; 
+        padding: 15px;
+    }
+}
+
+
+/* Chart.js tooltip styling (already provided, kept as is) */
 .chartjs-tooltip {
     opacity: 1 !important;
     background-color: #1F2937 !important;
