@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import StatCard from '../components/StatCard';
 import MemberCompletionChart from '../components/MemberCompletionChart';
-import LineChart from '../components/LineChart';
 import CommitActivityChart from '../components/CommitActivityChart';
 import LOCGrowthChart from '../components/LOCGrowthChart';
 import PeerReviewChart from '../components/PeerReviewChart';
