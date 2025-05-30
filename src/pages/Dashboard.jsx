@@ -10,7 +10,14 @@ import TaskChart from '../components/TaskChart';
 import BarChart from '../components/BarChart';
 import SprintPerformanceChart from '../components/SprintPerformanceChart';
 import '../css/dashboard.css';
-// import { FaInfoCircle } from 'react-icons/fa'; // Will be used in child components
+import { Chart as ChartJS } from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+
+ChartJS.register(ChartDataLabels);
+
+ChartJS.defaults.set('plugins.datalabels', {
+    display: false,
+});
 
 const avatars = [
     '/assets/images/classes/class1/group1/avatars/member1.svg',

@@ -68,4 +68,108 @@ router.get('/:groupId/peer-assessments', async (req, res) => {
     }
 });
 
+// API Endpoint để lấy dữ liệu tóm tắt nhiệm vụ cho TaskChart
+router.get('/:groupId/task-summary', async (req, res) => {
+    const { groupId } = req.params;
+    const { sprintId } = req.query; // sprintId có thể là 'all' hoặc một ID cụ thể
+
+    if (!groupId) {
+        return res.status(400).json({ error: 'Group ID is required.' });
+    }
+
+    try {
+        const connection = await pool.getConnection();
+
+        // 1. Lấy project_id từ group_id
+        const [projectRows] = await connection.query(
+            'SELECT project_id FROM Projects WHERE group_id = ?',
+            [groupId]
+        );
+
+        if (projectRows.length === 0) {
+            connection.release();
+            return res.status(404).json({ error: `Project not found for group ${groupId}` });
+        }
+        const projectId = projectRows[0].project_id;
+
+        // 2. Lấy danh sách tất cả các sprint của dự án để tạo select options
+        const [sprints] = await connection.query(
+            'SELECT sprint_id, sprint_number, sprint_name FROM Sprints WHERE project_id = ? ORDER BY sprint_number',
+            [projectId]
+        );
+
+        // 3. Xây dựng query để lấy dữ liệu tasks
+        let tasksQuery = `
+            SELECT 
+                t.status, 
+                t.due_date, 
+                t.completed_at,
+                COUNT(t.task_id) AS count
+            FROM Tasks t
+            JOIN Sprints s ON t.sprint_id = s.sprint_id
+            WHERE s.project_id = ?
+        `;
+        const queryParams = [projectId];
+
+        if (sprintId && sprintId !== 'all') {
+            tasksQuery += ' AND t.sprint_id = ?';
+            queryParams.push(sprintId);
+        }
+        tasksQuery += ' GROUP BY t.status, t.due_date, t.completed_at';
+
+        const [tasks] = await connection.query(tasksQuery, queryParams);
+        connection.release();
+
+        // 4. Xử lý dữ liệu tasks để tổng hợp
+        let completed = 0;
+        let inProgress = 0;
+        let toDo = 0;
+        let lateCompleted = 0; // Hoàn thành trễ hạn
+        let overdueIncomplete = 0; // Quá hạn nhưng chưa hoàn thành
+
+        const now = new Date();
+
+        tasks.forEach(task => {
+            const dueDate = task.due_date ? new Date(task.due_date) : null;
+            const completedAt = task.completed_at ? new Date(task.completed_at) : null;
+
+            if (task.status === 'Completed') {
+                if (completedAt && dueDate && completedAt > dueDate) {
+                    lateCompleted += task.count;
+                } else {
+                    completed += task.count;
+                }
+            } else if (task.status === 'In-Progress') {
+                if (dueDate && dueDate < now) { // Quá hạn nhưng vẫn đang làm -> coi như OverdueIncomplete
+                    overdueIncomplete += task.count;
+                } else {
+                    inProgress += task.count;
+                }
+            } else if (task.status === 'To-Do') {
+                if (dueDate && dueDate < now) { // Quá hạn nhưng vẫn To-Do -> coi như OverdueIncomplete
+                    overdueIncomplete += task.count;
+                } else {
+                    toDo += task.count;
+                }
+            }
+        });
+
+        res.json({
+            sprintOptions: sprints.map(s => ({ id: s.sprint_id, name: `Sprint ${s.sprint_number}${s.sprint_name ? ` - ${s.sprint_name}` : ''}` })),
+            summary: {
+                completed,
+                inProgress,
+                toDo,
+                lateCompleted,
+                overdueIncomplete,
+            }
+        });
+
+    } catch (error) {
+        console.error(`Error in GET /api/groups/${groupId}/task-summary:`, error);
+        res.status(500).json({ error: 'Internal server error while fetching task summary.' });
+    }
+});
+
+
 export default router;
