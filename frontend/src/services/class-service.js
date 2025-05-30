@@ -33,7 +33,7 @@ export async function SearchClass({ searchText }) {
   }
   try {
     const response = await fetch(
-      `http://localhost:5000/api/class?searchText=${searchText}`,
+      `http://localhost:5000/api/class/search?searchText=${searchText}`,
       {
         method: "GET",
         headers: {

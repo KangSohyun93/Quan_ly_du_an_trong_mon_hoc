@@ -248,6 +248,19 @@ exports.searchClass = async (req, res) => {
       const userGroup = c.Groups?.find((g) =>
         g.groupMembers?.some((gm) => gm.user_id === +userId)
       );
+      // Nếu không có group, trả về null
+      if (!userGroup) {
+        return {
+          classId: c.class_id,
+          className: c.class_name,
+          semester: c.semester,
+          memberCount: members.length,
+          members,
+          avatarNumber: index,
+          avatarColor: getRandomAvatarColor(),
+        };
+      }
+      // Nếu có group, trả về thông tin group
 
       return {
         classId: c.class_id,
