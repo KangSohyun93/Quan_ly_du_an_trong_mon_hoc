@@ -57,78 +57,145 @@ async function getGroups(userId, classId, userRole) {
 }
 
 async function getMembersByGroupId(groupId) {
+    const connection = await pool.getConnection();
     try {
-        // Kiểm tra nhóm tồn tại
-        const [groupCheck] = await pool.query(`SELECT 1 FROM \`Groups\` WHERE group_id = ?`, [groupId]);
+        const [groupCheck] = await connection.query(`SELECT 1 FROM \`Groups\` WHERE group_id = ?`, [groupId]);
         if (groupCheck.length === 0) {
+            connection.release();
             throw new Error(`Group with ID ${groupId} not found`);
         }
 
-        // Lấy danh sách thành viên trong nhóm
-        const [members] = await pool.query(`
+        // Lấy project_id để có thể join với Sprints và Tasks một cách chính xác
+        const [projectRows] = await connection.query(
+            'SELECT project_id FROM Projects WHERE group_id = ?',
+            [groupId]
+        );
+        if (projectRows.length === 0) {
+            connection.release();
+            throw new Error(`Project not found for group ${groupId}`);
+        }
+        const projectId = projectRows[0].project_id;
+
+        // Lấy danh sách thành viên và thông tin cơ bản
+        const [membersBasicInfo] = await connection.query(`
             SELECT 
                 u.user_id, u.username AS name, u.avatar,
                 g.leader_id, gm.joined_at AS joinDate,
-                DATEDIFF(NOW(), gm.joined_at) AS workDays,
-                COALESCE(COUNT(CASE WHEN t.status = 'Completed' THEN 1 END), 0) AS completed,
-                COALESCE(COUNT(CASE WHEN t.status = 'In-Progress' THEN 1 END), 0) AS inProgress,
-                COALESCE(COUNT(CASE WHEN t.status = 'To-Do' THEN 1 END), 0) AS notStarted,
-                COALESCE(COUNT(t.task_id), 0) AS total
+                DATEDIFF(NOW(), gm.joined_at) AS workDays
             FROM GroupMembers gm
             JOIN Users u ON gm.user_id = u.user_id
             JOIN \`Groups\` g ON gm.group_id = g.group_id
-            LEFT JOIN Tasks t ON t.assigned_to = u.user_id AND t.sprint_id IN (SELECT sprint_id FROM Sprints s JOIN Projects pr ON s.project_id = pr.project_id WHERE pr.group_id = gm.group_id) -- Ensure tasks are for the project of this group
             WHERE gm.group_id = ?
-            GROUP BY u.user_id, u.username, u.avatar, g.leader_id, gm.joined_at
         `, [groupId]);
 
-        // Lấy dữ liệu sprint cho từng thành viên
-        const [sprintDataRaw] = await pool.query(`
+        if (membersBasicInfo.length === 0) {
+            connection.release();
+            return { members: [], sprintData: {} }; // Trả về rỗng nếu không có thành viên
+        }
+
+        // Lấy tất cả tasks của project, cùng với thông tin sprint_id, due_date, completed_at, status, assigned_to
+        const [allProjectTasks] = await connection.query(`
+            SELECT 
+                t.task_id, t.assigned_to, t.status, t.due_date, t.completed_at, t.sprint_id, s.sprint_number
+            FROM Tasks t
+            JOIN Sprints s ON t.sprint_id = s.sprint_id
+            WHERE s.project_id = ?
+        `, [projectId]);
+
+        const now = new Date();
+        const formattedMembers = membersBasicInfo.map(member => {
+            const memberTasks = allProjectTasks.filter(task => task.assigned_to === member.user_id);
+            
+            let completed = 0;
+            let inProgress = 0;
+            let toDo = 0;
+            let lateCompletion = 0;
+            let overdueIncomplete = 0;
+            let totalMemberTasks = memberTasks.length; // Tổng số task của thành viên này
+
+            memberTasks.forEach(task => {
+                const dueDate = task.due_date ? new Date(task.due_date) : null;
+                const completedAt = task.completed_at ? new Date(task.completed_at) : null;
+
+                if (task.status === 'Completed') {
+                    if (completedAt && dueDate && completedAt > dueDate) {
+                        lateCompletion++;
+                    } else {
+                        completed++;
+                    }
+                } else if (task.status === 'In-Progress') {
+                    if (dueDate && dueDate < now) {
+                        overdueIncomplete++;
+                    } else {
+                        inProgress++;
+                    }
+                } else if (task.status === 'To-Do') {
+                    if (dueDate && dueDate < now) {
+                        overdueIncomplete++;
+                    } else {
+                        toDo++;
+                    }
+                }
+            });
+
+            return {
+                name: member.name,
+                avatar: member.avatar || 'https://i.pravatar.cc/150?img=1',
+                role: member.user_id === member.leader_id ? 'PM' : 'Member',
+                joinDate: member.joinDate,
+                workDays: Number(member.workDays),
+                // Các trường mới cho MemberCompletionChart
+                completed: completed,
+                inProgress: inProgress,
+                toDo: toDo,
+                lateCompletion: lateCompletion,
+                overdueIncomplete: overdueIncomplete,
+                total: totalMemberTasks, // Tổng số task được assign cho member này
+                // Các trường cũ (notStarted) không còn cần thiết nếu dùng 5 trạng thái mới
+                // notStarted: toDo, // Hoặc giữ lại nếu vẫn dùng ở đâu đó, nhưng sẽ thừa nếu dùng 5 trạng thái
+            };
+        });
+
+        // Lấy dữ liệu sprint cho từng thành viên (sprintData cho MemberInfo)
+        // Phần này cần đảm bảo nó vẫn hoạt động đúng, hoặc có thể cần điều chỉnh nếu
+        // định nghĩa "late" trong sprintData khác với "lateCompletion" ở trên.
+        // Hiện tại, "late" trong sprintData có vẻ là tổng số task bị trễ (bao gồm cả chưa hoàn thành)
+        const [sprintDataRaw] = await connection.query(`
             SELECT 
                 u.user_id, u.username, s.sprint_id, s.sprint_number AS sprint,
-                COALESCE(COUNT(CASE WHEN t.status = 'Completed' THEN 1 END), 0) AS completed,
-                COALESCE(COUNT(t.task_id), 0) AS total,
-                COALESCE(COUNT(CASE WHEN t.completed_at > t.due_date 
-                                OR (t.due_date < NOW() AND t.status != 'Completed') THEN 1 END), 0) AS late
+                COALESCE(SUM(CASE WHEN t.status = 'Completed' THEN 1 ELSE 0 END), 0) AS sprint_completed_tasks,
+                COALESCE(COUNT(t.task_id), 0) AS sprint_total_tasks,
+                COALESCE(SUM(CASE 
+                                WHEN t.status = 'Completed' AND t.completed_at IS NOT NULL AND t.due_date IS NOT NULL AND t.completed_at > t.due_date THEN 1 
+                                WHEN t.status != 'Completed' AND t.due_date IS NOT NULL AND t.due_date < NOW() THEN 1
+                                ELSE 0 
+                            END), 0) AS sprint_late_tasks 
             FROM GroupMembers gm
             JOIN Users u ON gm.user_id = u.user_id
-            JOIN Projects p_details ON p_details.group_id = gm.group_id -- Get project_id via group_id
-            JOIN Sprints s ON s.project_id = p_details.project_id -- Link sprints to that project_id
+            JOIN Projects p_details ON p_details.group_id = gm.group_id
+            JOIN Sprints s ON s.project_id = p_details.project_id
             LEFT JOIN Tasks t ON t.sprint_id = s.sprint_id AND t.assigned_to = u.user_id
             WHERE gm.group_id = ?
             GROUP BY u.user_id, u.username, s.sprint_id, s.sprint_number
-            ORDER BY s.sprint_number
+            ORDER BY u.user_id, s.sprint_number
         `, [groupId]);
-
-        // Định dạng sprintData
+        
         const sprintData = {};
-        members.forEach(member => {
+        membersBasicInfo.forEach(member => {
             sprintData[member.name] = sprintDataRaw
                 .filter(row => row.user_id === member.user_id)
                 .map(row => ({
                     sprint: row.sprint,
-                    completed: Number(row.completed),
-                    total: Number(row.total),
-                    late: Number(row.late),
+                    completed: Number(row.sprint_completed_tasks), // Đổi tên cho rõ
+                    total: Number(row.sprint_total_tasks),       // Đổi tên cho rõ
+                    late: Number(row.sprint_late_tasks),         // Đổi tên cho rõ
                 }));
         });
-
-        // Thêm role và format members
-        const formattedMembers = members.map(member => ({
-            name: member.name,
-            completed: Number(member.completed),
-            total: Number(member.total),
-            inProgress: Number(member.inProgress),
-            notStarted: Number(member.notStarted),
-            role: member.user_id === member.leader_id ? 'PM' : 'Member',
-            avatar: member.avatar || 'https://i.pravatar.cc/150?img=1', // Default avatar
-            joinDate: member.joinDate,
-            workDays: Number(member.workDays),
-        }));
-
+        connection.release();
         return { members: formattedMembers, sprintData };
     } catch (error) {
-        console.error(`Error fetching members for group ${groupId}:`, error);
+        if (connection) connection.release(); // Đảm bảo giải phóng connection nếu có lỗi sớm
+        console.error(`Error fetching members and detailed task stats for group ${groupId}:`, error);
         throw error;
     }
 }
@@ -209,6 +276,160 @@ async function getPeerAssessments(groupId) {
     } catch (error) {
         console.error(`Error fetching peer assessments for group ${groupId}:`, error.message, error.stack);
         throw error;
+    }
+}
+
+export async function getSprintsByGroupId(groupId) {
+    const connection = await pool.getConnection();
+    try {
+        const [projectRows] = await connection.query(
+            'SELECT project_id FROM Projects WHERE group_id = ?',
+            [groupId]
+        );
+        if (projectRows.length === 0) {
+            throw new Error(`Project not found for group ${groupId}`);
+        }
+        const projectId = projectRows[0].project_id;
+
+        const [sprints] = await connection.query(
+            'SELECT sprint_id, sprint_number, sprint_name, start_date, end_date FROM Sprints WHERE project_id = ? ORDER BY sprint_number ASC',
+            [projectId]
+        );
+        return sprints.map(s => ({
+            id: s.sprint_id,
+            number: s.sprint_number,
+            name: s.sprint_name || `Sprint ${s.sprint_number}`, // Fallback name
+            startDate: s.start_date,
+            endDate: s.end_date
+        }));
+    } finally {
+        connection.release();
+    }
+}
+
+export async function getProjectStats(groupId, sprintIdFilter) {
+    const connection = await pool.getConnection();
+    try {
+        const [projectRows] = await connection.query(
+            'SELECT project_id FROM Projects WHERE group_id = ?',
+            [groupId]
+        );
+        if (projectRows.length === 0) {
+            throw new Error(`Project not found for group ${groupId}`);
+        }
+        const projectId = projectRows[0].project_id;
+
+        let totalTasks = 0;
+        let sprintTasks = 0; // Nhiệm vụ của sprint được chọn (hoặc sprint hiện tại)
+        let completedTasks = 0; // Tổng hoàn thành của project hoặc sprint được chọn
+        let lateTasks = 0; // Tổng trễ hạn của project hoặc sprint được chọn
+
+        // 1. Tổng Commit và Tổng LOC cho toàn bộ project
+        const [commitStats] = await connection.query(
+            `SELECT 
+                COUNT(contribution_id) AS totalCommits,
+                SUM(lines_added) AS totalLinesAdded,
+                SUM(lines_removed) AS totalLinesRemoved
+             FROM GitContributions WHERE project_id = ?`,
+            [projectId]
+        );
+        const totalCommits = commitStats[0]?.totalCommits || 0;
+        const totalLOC = (commitStats[0]?.totalLinesAdded || 0); // Chỉ tính dòng thêm, hoặc (added - removed) tùy bạn
+
+        // 2. Task stats
+        let taskQueryBase = `SELECT COUNT(t.task_id) AS count, t.status, t.due_date, t.completed_at 
+                             FROM Tasks t JOIN Sprints s ON t.sprint_id = s.sprint_id 
+                             WHERE s.project_id = ?`;
+        const queryParamsBase = [projectId];
+
+        // Lấy tổng nhiệm vụ toàn dự án
+        const [allTasksCountRows] = await connection.query(
+            `SELECT COUNT(*) as count FROM Tasks t JOIN Sprints s ON t.sprint_id = s.sprint_id WHERE s.project_id = ?`,
+            [projectId]
+        );
+        totalTasks = allTasksCountRows[0]?.count || 0;
+
+        // Xử lý sprintIdFilter
+        let currentSprintIdToFilter = null;
+        if (sprintIdFilter && sprintIdFilter !== 'all') {
+            if (sprintIdFilter === 'current') {
+                // Logic để xác định sprint hiện tại (ví dụ: sprint có end_date gần nhất trong tương lai hoặc start_date gần nhất trong quá khứ)
+                // Đây là ví dụ đơn giản, bạn có thể cần logic phức tạp hơn
+                const [currentSprintRows] = await connection.query(
+                    `SELECT sprint_id FROM Sprints 
+                     WHERE project_id = ? AND end_date >= CURDATE() 
+                     ORDER BY end_date ASC LIMIT 1`,
+                    [projectId]
+                );
+                if (currentSprintRows.length > 0) {
+                    currentSprintIdToFilter = currentSprintRows[0].sprint_id;
+                } else {
+                    // Fallback: lấy sprint cuối cùng nếu không có sprint nào đang diễn ra
+                    const [lastSprintRows] = await connection.query(
+                        `SELECT sprint_id FROM Sprints 
+                         WHERE project_id = ? 
+                         ORDER BY sprint_number DESC LIMIT 1`,
+                        [projectId]
+                    );
+                    if (lastSprintRows.length > 0) {
+                        currentSprintIdToFilter = lastSprintRows[0].sprint_id;
+                    }
+                }
+            } else {
+                currentSprintIdToFilter = parseInt(sprintIdFilter, 10);
+            }
+        }
+
+        // Tính toán completedTasks và lateTasks dựa trên sprint được filter (hoặc toàn bộ project nếu không filter)
+        let filterCondition = "";
+        const filterParams = [projectId];
+        if (currentSprintIdToFilter) {
+            filterCondition = " AND s.sprint_id = ?";
+            filterParams.push(currentSprintIdToFilter);
+        }
+
+        const [tasksForStats] = await connection.query(
+            `SELECT t.status, t.due_date, t.completed_at 
+             FROM Tasks t JOIN Sprints s ON t.sprint_id = s.sprint_id 
+             WHERE s.project_id = ? ${filterCondition}
+            `, filterParams
+        );
+
+        tasksForStats.forEach(task => {
+            if (task.status === 'Completed') {
+                completedTasks++;
+                if (task.completed_at && task.due_date && new Date(task.completed_at) > new Date(task.due_date)) {
+                    lateTasks++;
+                }
+            } else if (task.due_date && new Date(task.due_date) < new Date() && task.status !== 'Completed') {
+                // Task quá hạn nhưng chưa hoàn thành cũng được tính là "trễ" theo một nghĩa nào đó cho StatCard
+                // Hoặc bạn có thể có định nghĩa khác cho "Trễ hạn" trong StatCard
+                lateTasks++;
+            }
+        });
+
+        // Lấy số nhiệm vụ cho sprint cụ thể (nếu có filter)
+        if (currentSprintIdToFilter) {
+            const [sprintSpecificTasksCountRows] = await connection.query(
+                `SELECT COUNT(*) as count FROM Tasks WHERE sprint_id = ?`,
+                [currentSprintIdToFilter]
+            );
+            sprintTasks = sprintSpecificTasksCountRows[0]?.count || 0;
+        } else {
+            // Nếu không filter sprint, "Sprint Tasks" có thể là tổng tasks hoặc một giá trị mặc định/ý nghĩa khác
+            sprintTasks = totalTasks;
+        }
+
+        return {
+            totalProjectTasks: totalTasks,       // Tổng nhiệm vụ của dự án
+            selectedSprintTasks: sprintTasks,    // Nhiệm vụ của sprint đang chọn (hoặc 'current')
+            tasksCompleted: completedTasks,      // Hoàn thành (của project hoặc sprint đang chọn)
+            tasksLate: lateTasks,                // Trễ hạn (của project hoặc sprint đang chọn)
+            totalCommits: totalCommits,
+            totalLOC: totalLOC,
+        };
+    } finally {
+        connection.release();
     }
 }
 

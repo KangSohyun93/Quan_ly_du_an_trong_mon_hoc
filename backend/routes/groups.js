@@ -1,6 +1,6 @@
 import express from 'express';
-import { getGroups, getMembersByGroupId, getPeerAssessments } from '../services/memberService.js';
-import pool from '../db.js'; // Import database pool
+import { getGroups, getMembersByGroupId, getPeerAssessments, getSprintsByGroupId, getProjectStats } from '../services/memberService.js';
+import pool from '../db.js'; 
 
 const router = express.Router();
 
@@ -171,5 +171,36 @@ router.get('/:groupId/task-summary', async (req, res) => {
     }
 });
 
+// API Lấy danh sách Sprints cho một Group (thông qua Project)
+router.get('/:groupId/sprints', async (req, res) => {
+    const { groupId } = req.params;
+    if (!groupId) {
+        return res.status(400).json({ error: 'Group ID is required.' });
+    }
+    try {
+        const sprints = await getSprintsByGroupId(groupId);
+        res.json(sprints);
+    } catch (error) {
+        console.error(`Error in GET /api/groups/${groupId}/sprints:`, error);
+        res.status(500).json({ error: 'Could not fetch sprints for the group.' });
+    }
+});
+
+// API Lấy dữ liệu thống kê cho StatCards
+router.get('/:groupId/stats', async (req, res) => {
+    const { groupId } = req.params;
+    const { sprintId } = req.query; // sprintId có thể là 'current', 'all', hoặc một ID cụ thể
+
+    if (!groupId) {
+        return res.status(400).json({ error: 'Group ID is required.' });
+    }
+    try {
+        const stats = await getProjectStats(groupId, sprintId);
+        res.json(stats);
+    } catch (error) {
+        console.error(`Error in GET /api/groups/${groupId}/stats:`, error);
+        res.status(500).json({ error: 'Could not fetch project statistics.' });
+    }
+});
 
 export default router;

@@ -35,6 +35,18 @@ const Dashboard = () => {
     const [isMasterRefreshing, setIsMasterRefreshing] = useState(false);
     const [refreshNonce, setRefreshNonce] = useState(0);
 
+    const [sprints, setSprints] = useState([]);
+    const [selectedSprintId, setSelectedSprintId] = useState('all'); // 'all', 'current', or sprint_id
+    const [statData, setStatData] = useState({
+        totalProjectTasks: 0,
+        selectedSprintTasks: 0,
+        tasksCompleted: 0,
+        tasksLate: 0,
+        totalCommits: 0,
+        totalLOC: 0,
+    });
+    const [loadingStats, setLoadingStats] = useState(false);
+
     useEffect(() => {
         const fetchGroups = async () => {
             setLoadingGroups(true);
@@ -70,6 +82,55 @@ const Dashboard = () => {
     const currentProjectId = selectedGroup?.project_id;
     const currentGroupId = selectedGroup?.group_id;
 
+    useEffect(() => {
+        if (currentGroupId) {
+            axios.get(`http://localhost:3000/api/groups/${currentGroupId}/sprints`)
+                .then(response => {
+                    setSprints(response.data || []);
+                    // Optionally, set selectedSprintId to 'current' or the first sprint
+                    if (response.data && response.data.length > 0) {
+                        // Tìm sprint hiện tại (ví dụ, hoặc sprint đầu tiên làm mặc định)
+                        const now = new Date();
+                        const currentOrUpcomingSprint = response.data.find(s => new Date(s.endDate) >= now && new Date(s.startDate) <= now) ||
+                            response.data.find(s => new Date(s.startDate) > now) || // Sắp tới
+                            response.data.sort((a, b) => new Date(b.startDate) - new Date(a.startDate))[0]; // Sprint cuối cùng
+                        setSelectedSprintId(currentOrUpcomingSprint ? currentOrUpcomingSprint.id : 'all');
+                    } else {
+                        setSelectedSprintId('all');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching sprints:', error);
+                    setSprints([]);
+                    setSelectedSprintId('all');
+                });
+        } else {
+            setSprints([]);
+            setSelectedSprintId('all');
+        }
+    }, [currentGroupId]);
+
+    useEffect(() => {
+        if (currentGroupId) {
+            setLoadingStats(true);
+            axios.get(`http://localhost:3000/api/groups/${currentGroupId}/stats?sprintId=${selectedSprintId}`)
+                .then(response => {
+                    setStatData(response.data || {
+                        totalProjectTasks: 0, selectedSprintTasks: 0, tasksCompleted: 0,
+                        tasksLate: 0, totalCommits: 0, totalLOC: 0,
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching stats:', error);
+                    setStatData({
+                        totalProjectTasks: 0, selectedSprintTasks: 0, tasksCompleted: 0,
+                        tasksLate: 0, totalCommits: 0, totalLOC: 0,
+                    });
+                })
+                .finally(() => setLoadingStats(false));
+        }
+    }, [currentGroupId, selectedSprintId, refreshNonce]); // Thêm refreshNonce để cập nhật stats sau khi refresh commits
+
     const handleMasterRefresh = async () => {
         if (!currentProjectId) {
             console.warn("[Dashboard] No project selected, cannot refresh.");
@@ -95,7 +156,7 @@ const Dashboard = () => {
         return (
             <section className="dashboard-container">
                 <div className="dashboard-content" style={{ textAlign: 'center', paddingTop: '50px' }}>
-                    <p>Đang tải danh sách nhóm...</p>
+                    <p>Loading group list...</p>
                 </div>
             </section>
         );
@@ -106,7 +167,7 @@ const Dashboard = () => {
             <div className="dashboard-content">
                 <div className="dashboard-header">
                     <div className="dashboard-title">
-                        <h1 className="project-name">{selectedGroup?.group_name || 'Chưa chọn nhóm'}</h1>
+                        <h1 className="project-name">{selectedGroup?.group_name || 'No Group Selected'}</h1>
                         <select
                             className="project-select"
                             value={currentGroupId || ''}
@@ -118,7 +179,7 @@ const Dashboard = () => {
                             disabled={groups.length === 0 || (currentUserRole === 'Student' && groups.length <= 1)}
                         >
                             {groups.length === 0 ? (
-                                <option value="">Không có nhóm nào</option>
+                                <option value="">No groups available</option>
                             ) : (
                                 groups.map(group => (
                                     <option key={group.group_id} value={group.group_id}>
@@ -144,8 +205,22 @@ const Dashboard = () => {
                 {/* Dashboard Controls */}
                 <div className="dashboard-controls">
                     <div className="tab-section">
-                        <select className="sprint-select">
+                        {/* <select className="sprint-select">
                             <option>Sprint 4</option>
+                        </select> */}
+                        <select
+                            className="sprint-select"
+                            value={selectedSprintId}
+                            onChange={(e) => setSelectedSprintId(e.target.value)}
+                            disabled={sprints.length === 0}
+                        >
+                            <option value="all">All Sprints (Project)</option> {/* Tiếng Anh */}
+                            {/* <option value="current">Current Sprint</option> // Tiếng Anh, tùy chọn thêm nếu backend có logic tốt */}
+                            {sprints.map(sprint => (
+                                <option key={sprint.id} value={sprint.id}>
+                                    {sprint.name}
+                                </option>
+                            ))}
                         </select>
                         <div className="vertical-line"></div>
                         <div className="dashboard-btn-container">
@@ -186,12 +261,12 @@ const Dashboard = () => {
 
                 <div className="dashboard-stats-container">
                     <div className="dashboard-stats">
-                        <StatCard title="Tổng nhiệm vụ" value="190" background="bg-violet" />
-                        <StatCard title="Nhiệm vụ Sprint" value="77" background="bg-blue" />
-                        <StatCard title="Hoàn thành" value="153" background="bg-violet" />
-                        <StatCard title="Trễ hạn" value="12" background="bg-blue" />
-                        <StatCard title="Tổng Commit" value="1200" background="bg-violet" />
-                        <StatCard title="Tổng LOC" value="150000" background="bg-blue" />
+                        <StatCard title="Total Project Tasks" value={loadingStats ? "..." : statData.totalProjectTasks} background="bg-violet" />
+                        <StatCard title="Selected Sprint Tasks" value={loadingStats ? "..." : statData.selectedSprintTasks} background="bg-blue" />
+                        <StatCard title="Tasks Completed" value={loadingStats ? "..." : statData.tasksCompleted} background="bg-violet" />
+                        <StatCard title="Tasks Late" value={loadingStats ? "..." : statData.tasksLate} background="bg-blue" />
+                        <StatCard title="Total Commits" value={loadingStats ? "..." : statData.totalCommits} background="bg-violet" />
+                        <StatCard title="Total LOC" value={loadingStats ? "..." : statData.totalLOC} background="bg-blue" />
                     </div>
                     <div className="dashboard-charts">
                         <MemberCompletionChart groupId={currentGroupId} />

@@ -277,12 +277,12 @@ const LOCGrowthChart = ({ projectId, onRefreshCommits, isParentRefreshing, refre
 
 
     let content;
-    if (loading && !isFetchingData) content = <p>Loading LOC data...</p>;
-    else if (isParentRefreshing) content = <p>Refreshing LOC data from source...</p>;
-    else if (isFetchingData) content = <p>Updating chart data...</p>;
+    if (loading && !isFetchingData) content = <p style={{ textAlign: 'center', padding: '20px' }}>Loading LOC data...</p>;
+    else if (isParentRefreshing) content = <p style={{ textAlign: 'center', padding: '20px' }}>Refreshing LOC data from source...</p>;
+    else if (isFetchingData) content = <p style={{ textAlign: 'center', padding: '20px' }}>Updating chart data...</p>;
     else if (error) content = <p className="error">{error}</p>;
-    else if (weeklyLOCActivity.length === 0 && projectId) content = <p>No LOC data found for this project or selection.</p>;
-    else if (!projectId) content = <p>Please select a project to view LOC activity.</p>;
+    else if (weeklyLOCActivity.length === 0 && projectId) content = <p style={{ textAlign: 'center', padding: '20px' }}>No LOC data found for this project or selection.</p>;
+    else if (!projectId) content = <p style={{ textAlign: 'center', padding: '20px' }}>Please select a project to view LOC activity.</p>;
     else content = <Line data={chartData} options={chartOptions} />;
 
     return (
