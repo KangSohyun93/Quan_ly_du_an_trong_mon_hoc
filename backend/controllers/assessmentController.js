@@ -12,6 +12,8 @@ const getPeerAssessments = async (req, res) => {
   try {
     const projectId = parseInt(req.params.projectId, 10);
     const assessorId = parseInt(req.params.assessorId, 10);
+    // console.log("projectId:", projectId);
+    // console.log("assessorId:", assessorId);
     if (
       isNaN(projectId) ||
       projectId <= 0 ||

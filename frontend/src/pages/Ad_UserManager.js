@@ -1,9 +1,8 @@
 // components/layout/HomeLayout.js
 import React from "react";
 import Sidebar from "../components/shared/Sidebar/Sidebar.js";
-import JoinClassBar from "../components/classHeader/classHeader.js";
 import { Outlet } from "react-router-dom";
-import ImportHeader from "../components/import/import.js";
+import UserTable from "../components/user-manager/UserTable.js";
 
 function UserManager() {
   return (
@@ -11,9 +10,7 @@ function UserManager() {
       <Sidebar />
       <div className="flex-grow-1">
         {/* <Navbar_SV /> */}
-        <JoinClassBar />
-        <ImportHeader />
-        <div className="page-content p-4">
+        <div className="page-content p-3">
           <Outlet />
         </div>
       </div>

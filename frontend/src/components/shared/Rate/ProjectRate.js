@@ -22,6 +22,7 @@ const ProjectRate = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
+        console.log("Current User ID:", currentUserId);
         const assessmentsData = await fetchPeerAssessments(
           projectId,
           currentUserId,
@@ -50,8 +51,9 @@ const ProjectRate = () => {
         setLoading(false);
       }
     };
+
     fetchData();
-  }, [projectId, currentUserId]);
+  }, [projectId, currentUserId, groupId]);
 
   const handleRatingChange = (id, field, value) => {
     setAssessments((prev) => ({
@@ -113,7 +115,7 @@ const ProjectRate = () => {
   const renderStars = (id, field, value, editable) =>
     Array.from({ length: 5 }, (_, i) => (
       <span
-        key={i}
+        key={`${id}-${field}-${i}`}
         className={`projectrate-star ${i + 1 <= value ? "filled" : ""} ${
           editable ? "editable" : ""
         }`}
@@ -124,6 +126,18 @@ const ProjectRate = () => {
         ★
       </span>
     ));
+
+  const renderTotalRateStars = (id) => {
+    const total = calculateTotalRate(id);
+    return Array.from({ length: 5 }, (_, i) => (
+      <span
+        key={`${id}-total-${i}`}
+        className={`projectrate-star ${i + 1 <= total ? "filled" : ""}`}
+      >
+        ★
+      </span>
+    ));
+  };
 
   const calculateTotalRate = (id) => {
     const scores = assessments[id] || {};
@@ -142,18 +156,6 @@ const ProjectRate = () => {
         responsibilityScore) /
         5
     );
-  };
-
-  const renderTotalRateStars = (id) => {
-    const total = calculateTotalRate(id);
-    return Array.from({ length: 5 }, (_, i) => (
-      <span
-        key={i}
-        className={`projectrate-star ${i + 1 <= total ? "filled" : ""}`}
-      >
-        ★
-      </span>
-    ));
   };
 
   if (error) return <div className="projectrate-error-message">{error}</div>;

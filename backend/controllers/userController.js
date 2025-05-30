@@ -18,3 +18,26 @@ exports.fetchUser = async (req, res) => {
     res.status(500).json({ error: "Lỗi server" });
   }
 };
+exports.fetchAllUsers = async (req, res) => {
+  try {
+    const users = await User.findAll({
+      attributes: [
+        "user_id",
+        "username",
+        "email",
+        "role",
+        "created_at",
+        "is_active",
+      ],
+    });
+
+    if (!users || users.length === 0) {
+      return res.status(404).json({ error: "Không có người dùng nào" });
+    }
+
+    res.json(users);
+  } catch (error) {
+    console.error("Lỗi trong fetchAllUsers:", error);
+    res.status(500).json({ error: "Lỗi server" });
+  }
+};

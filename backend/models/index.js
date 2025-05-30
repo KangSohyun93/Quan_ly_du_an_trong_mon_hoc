@@ -9,7 +9,25 @@ const Project = require("./ProjectModel");
 const ClassMember = require("./MemberClassModel");
 const GroupMember = require("./MemberGroupModel");
 const { Task, TaskChecklist, Sprint, TaskComment } = require("./TaskModel");
-// Thiết lập mối quan hệ
+const PeerAssessment = require("./peerAssessmentModel");
+// Define associations
+User.hasMany(PeerAssessment, {
+  foreignKey: "assessor_id",
+  as: "assessmentsGiven",
+});
+PeerAssessment.belongsTo(User, {
+  foreignKey: "assessor_id",
+  as: "assessor",
+});
+User.hasMany(PeerAssessment, {
+  foreignKey: "assessee_id",
+  as: "assessmentsReceived",
+});
+PeerAssessment.belongsTo(User, {
+  foreignKey: "assessee_id",
+  as: "assessee",
+});
+
 User.belongsToMany(Class, {
   through: ClassMember,
   foreignKey: "user_id",
@@ -88,4 +106,5 @@ module.exports = {
   TaskChecklist,
   Sprint,
   TaskComment,
+  PeerAssessment,
 };

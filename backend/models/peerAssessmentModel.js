@@ -1,5 +1,8 @@
-module.exports = (sequelize, DataTypes) => {
-  const PeerAssessment = sequelize.define('PeerAssessment', {
+const { DataTypes } = require("sequelize");
+const sequelize = require("../config/db-connect"); // File config kết nối Sequelize
+const PeerAssessment = sequelize.define(
+  "PeerAssessment",
+  {
     assessment_id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
@@ -25,16 +28,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.TEXT,
       allowNull: true,
     },
-  }, {
-    tableName: 'peer_assessments',
+  },
+  {
+    tableName: "PeerAssessments", // <- Phải đúng với tên bạn đặt trong DB
     timestamps: false,
-  });
+  }
+);
 
-  PeerAssessment.associate = (models) => {
-    PeerAssessment.belongsTo(models.Group, { foreignKey: 'group_id' });
-    PeerAssessment.belongsTo(models.User, { foreignKey: 'assessor_id', as: 'assessor' });
-    PeerAssessment.belongsTo(models.User, { foreignKey: 'assessee_id', as: 'assessee' });
-  };
-
-  return PeerAssessment;
-};
+module.exports = PeerAssessment;

@@ -25,7 +25,7 @@ const Sidebar = () => {
       console.error("Error fetching user data:", error);
     }
   }, []);
-  console.log("User:", user);
+  //console.log("User:", user);
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
