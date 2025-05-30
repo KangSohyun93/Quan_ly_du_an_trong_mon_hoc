@@ -18,6 +18,32 @@ exports.fetchUser = async (req, res) => {
     res.status(500).json({ error: "Lỗi server" });
   }
 };
+exports.fetchUserData = async (req, res) => {
+  try {
+    const userId = req.params.userId; // Lấy user_id từ tham số URL
+    const user = await User.findOne({
+      where: { user_id: userId },
+      attributes: [
+        "user_id",
+        "username",
+        "email",
+        "role",
+        "created_at",
+        "is_active",
+        "avatar",
+      ],
+    });
+
+    if (!user) {
+      return res.status(404).json({ error: "Người dùng không tồn tại" });
+    }
+
+    res.json(user);
+  } catch (error) {
+    console.error("Lỗi trong fetchUser:", error);
+    res.status(500).json({ error: "Lỗi server" });
+  }
+};
 exports.fetchAllUsers = async (req, res) => {
   try {
     const users = await User.findAll({
@@ -30,7 +56,7 @@ exports.fetchAllUsers = async (req, res) => {
         "is_active",
       ],
     });
-
+    console.log("Lấy tất cả người dùng:", users);
     if (!users || users.length === 0) {
       return res.status(404).json({ error: "Không có người dùng nào" });
     }

@@ -1,0 +1,264 @@
+/* frontend/src/pages/EditUserPage.css */
+.edit-user-page-container {
+  padding: 32px 24px;
+  background-color: #f4f7fb;
+  max-width: 1100px;
+  margin: 32px auto;
+  border-radius: 18px;
+  box-shadow: 0 6px 32px rgba(0, 123, 255, 0.1);
+}
+
+.form-container {
+  /* Shared style for forms */
+  /* background-color: #fff; */ /* Đã có ở edit-user-page-container */
+  /* padding: 25px; */
+  /* border-radius: 8px; */
+  /* box-shadow: 0 2px 8px rgba(0,0,0,0.1); */
+}
+
+.form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+  padding-bottom: 18px;
+  border-bottom: 2px solid #e3e8ee;
+}
+
+.form-header h2 {
+  margin: 0;
+  font-size: 2.2em;
+  color: #2563eb;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.button-back {
+  background: none;
+  border: none;
+  color: #2563eb;
+  cursor: pointer;
+  font-size: 1.1em;
+  padding: 10px 0;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+.button-back:hover {
+  color: #174ea6;
+  text-decoration: underline;
+}
+
+.user-form .form-layout {
+  display: flex;
+  gap: 40px;
+}
+
+.profile-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 20px;
+  background-color: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(37, 99, 235, 0.07);
+  text-align: center;
+  min-width: 260px;
+}
+
+.user-avatar-large {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 18px;
+  border: 4px solid #2563eb;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.1);
+}
+
+.profile-section h3 {
+  font-size: 1.6em;
+  margin-bottom: 8px;
+  color: #222;
+  font-weight: 700;
+}
+
+.profile-section p {
+  font-size: 1.08em;
+  color: #444;
+  margin-bottom: 10px;
+  word-break: break-all;
+}
+.profile-section p:last-child {
+  margin-bottom: 0;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 7px 18px;
+  border-radius: 16px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.status-active {
+  background-color: #e6f9ed;
+  color: #1a7f37;
+  border: 1.5px solid #b7e4c7;
+}
+
+.status-blocked {
+  background-color: #fff1f0;
+  color: #cf1322;
+  border: 1.5px solid #ffd6d4;
+}
+
+.details-section {
+  flex: 2;
+  padding: 32px 24px;
+  background-color: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(37, 99, 235, 0.07);
+  min-width: 320px;
+}
+
+.details-section h4 {
+  font-size: 1.35em;
+  color: #2563eb;
+  margin-bottom: 28px;
+  padding-bottom: 12px;
+  border-bottom: 1.5px solid #e3e8ee;
+  font-weight: 700;
+}
+
+.form-group {
+  margin-bottom: 28px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: 700;
+  color: #2563eb;
+  font-size: 1.08em;
+  letter-spacing: 0.5px;
+}
+
+.form-control,
+.form-control-readonly {
+  width: 100%;
+  padding: 14px 16px;
+  font-size: 1.08em;
+  border: 1.5px solid #bcd0ee;
+  border-radius: 7px;
+  box-sizing: border-box;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  background: #f8fafc;
+}
+
+.form-control:focus {
+  border-color: #2563eb;
+  outline: 0;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.13);
+}
+
+.form-control-readonly {
+  background-color: #e9ecef;
+  cursor: not-allowed;
+  color: #888;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 18px;
+  margin-top: 38px;
+  padding-top: 22px;
+  border-top: 1.5px solid #e3e8ee;
+}
+
+/* Các style button đã có trong global.css, hoặc bạn có thể định nghĩa lại ở đây nếu cần */
+.button-primary,
+.button-secondary,
+.button-danger,
+.button-success {
+  font-size: 1.08em;
+  padding: 12px 28px;
+  border-radius: 7px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+}
+
+.button-primary {
+  background: linear-gradient(90deg, #2563eb 60%, #174ea6 100%);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.1);
+}
+.button-primary:disabled {
+  background: #bcd0ee;
+  color: #fff;
+  cursor: not-allowed;
+}
+
+.button-secondary {
+  background: #e9ecef;
+  color: #2563eb;
+}
+.button-secondary:hover {
+  background: #dbeafe;
+}
+
+.button-danger {
+  background: #fff1f0;
+  color: #cf1322;
+  border: 1.5px solid #ffd6d4;
+}
+.button-danger:hover {
+  background: #ffeaea;
+  color: #a8071a;
+}
+
+.button-success {
+  background: #e6f9ed;
+  color: #1a7f37;
+  border: 1.5px solid #b7e4c7;
+}
+.button-success:hover {
+  background: #d2f4e3;
+  color: #237a3b;
+}
+
+.loading-container,
+.error-container {
+  text-align: center;
+  padding: 60px;
+  font-size: 1.25em;
+  color: #2563eb;
+}
+
+/* Responsive cho tablet/mobile */
+@media (max-width: 900px) {
+  .edit-user-page-container {
+    padding: 16px 4px;
+    max-width: 98vw;
+  }
+  .user-form .form-layout {
+    flex-direction: column;
+    gap: 24px;
+  }
+  .profile-section,
+  .details-section {
+    min-width: 0;
+    padding: 18px 8px;
+  }
+  .form-actions {
+    flex-direction: column;
+    gap: 10px;
+    align-items: stretch;
+  }
+}

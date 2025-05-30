@@ -29,7 +29,7 @@ function LoginForm() {
       sessionStorage.setItem("token", userData.token);
       // Chuyển hướng sau khi đăng nhập
       if (userData.user.role === "Admin") {
-        navigate("/admin");
+        navigate("/admin/user-manager");
       } else {
         navigate("/home");
       }

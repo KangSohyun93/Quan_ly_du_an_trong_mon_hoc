@@ -37,6 +37,7 @@ const UserManagerPage = () => {
       setLoading(true);
       try {
         const data = await fetchAllUser();
+        console.log("Fetched users:", data);
 
         // ⚠️ Chuyển đổi is_active -> status
         const formattedUsers = data.map((user) => ({

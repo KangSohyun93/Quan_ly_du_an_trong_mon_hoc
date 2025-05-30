@@ -84,9 +84,17 @@ function SV_TeamDetail({ currentUserId }) {
   };
 
   return (
-    <div className="app-content d-flex">
-      <Sidebar />
-      <div className="flex-grow-1">
+    <div
+      className="app-content d-flex"
+      style={{ height: "100vh", overflow: "hidden" }}
+    >
+      <div style={{ flexShrink: 0 }}>
+        <Sidebar />
+      </div>
+      <div
+        className="flex-grow-1 d-flex flex-column"
+        style={{ overflow: "hidden" }}
+      >
         <TeamHeader
           className={group.className}
           classCode={group.classId}
@@ -102,7 +110,14 @@ function SV_TeamDetail({ currentUserId }) {
           onTabChange={handleTabChange}
           onUserChange={setSelectedUserId} // thêm nếu cần user filter
         />
-        <div className="page-content p-4">
+        <div
+          className="page-content p-4"
+          style={{
+            flexGrow: 2,
+            overflowY: "auto", // Cho phép phần nội dung cuộn
+            height: "100%",
+          }}
+        >
           <Outlet
             context={{
               activeTab: activeTab,

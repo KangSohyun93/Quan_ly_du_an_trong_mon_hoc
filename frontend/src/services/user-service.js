@@ -21,6 +21,26 @@ export async function fetchUser(credentials) {
     throw error;
   }
 }
+export async function fetchUserData(userId) {
+  try {
+    const response = await fetch(`http://localhost:5000/api/user/${userId}`, {
+      // Sửa URL backend
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Lấy thông tin người dùng thất bại");
+    }
+
+    return await response.json(); // Thường trả về { token, user }
+  } catch (error) {
+    throw error;
+  }
+}
 export async function fetchAllUser(credentials) {
   try {
     const response = await fetch("http://localhost:5000/api/user/all", {

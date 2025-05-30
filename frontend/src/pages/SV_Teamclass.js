@@ -34,14 +34,29 @@ function SV_TeamClass() {
   }, [searchText]);
 
   return (
-    <div className="app-content d-flex">
-      <Sidebar />
-      <div className="flex-grow-1">
+    <div
+      className="app-content d-flex"
+      style={{ height: "100vh", overflow: "hidden" }}
+    >
+      <div style={{ flexShrink: 0 }}>
+        <Sidebar />
+      </div>
+      <div
+        className="flex-grow-1 d-flex flex-column"
+        style={{ overflow: "hidden" }}
+      >
         <JoinClassBar
           onSearchChange={setSearchText}
           onJoinSuccess={fetchClasses} // reload khi join thành công
         />
-        <div className="page-content p-4">
+        <div
+          className="page-content p-4"
+          style={{
+            flexGrow: 1,
+            overflowY: "auto", // Cho phép phần nội dung cuộn
+            height: "100%",
+          }}
+        >
           <ClassCardList data={classCards} loading={loading} />
         </div>
       </div>

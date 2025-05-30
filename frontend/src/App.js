@@ -10,6 +10,7 @@ import RequireRole from "./components/auth/RequireRole.js";
 import ProjectRate from "./components/shared/Rate/ProjectRate.js";
 import UserManagerPage from "./components/user-manager/UserManagerPage.js";
 import ClassManagerPage from "./components/class-manager/ClassManagerPage.js";
+import EditUserPage from "./components/user-manager/EditUserPage.js";
 import UserManager from "./pages/Ad_UserManager.js";
 import SV_TeamClass from "./pages/SV_Teamclass.js";
 import SV_TeamDetail from "./pages/SV_TeamDetail.js";
@@ -32,6 +33,10 @@ function App() {
             }
           >
             <Route path="user-manager" element={<UserManagerPage />} />
+            <Route
+              path="user-manager/edit/:userId"
+              element={<EditUserPage />}
+            />
             <Route path="class-manager" element={<ClassManagerPage />} />
           </Route>
           <Route
