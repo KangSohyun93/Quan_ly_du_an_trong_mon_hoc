@@ -125,7 +125,7 @@ const Sidebar = () => {
           <a className="user-ava-name flex items-center mt-6">
             <img src={avatarSrc} alt="User Avatar" className="avatar mr-3" />
             <span className="user-name text-gray-700">
-              {user?.name || "Your name"}
+              {user?.username || "Your name"}
             </span>
           </a>
 
