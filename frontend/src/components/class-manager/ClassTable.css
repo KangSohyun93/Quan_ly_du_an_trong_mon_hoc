@@ -1,0 +1,111 @@
+/* frontend/src/components/user_manager/UserTable.css */
+.class-table-container {
+  background-color: #fff;
+  border-radius: 14px;
+  box-shadow: 0 4px 18px rgba(74, 144, 226, 0.08);
+  overflow-x: auto;
+  margin-top: 12px;
+  padding: 0 0 8px 0;
+}
+
+.class-table-container table {
+  width: 100%;
+  min-width: 900px; /* Đảm bảo table không bị co lại quá nhỏ */
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: fixed; /* Các cột sẽ chia đều */
+}
+
+th,
+td {
+  padding: 14px 18px;
+  font-size: 15px;
+  border-bottom: 1.5px solid #f0f2f5;
+  background: none;
+  text-align: left;
+  word-break: break-word;
+}
+
+th {
+  background: #f5f8fa;
+  font-weight: 700;
+  color: #357abd;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid #e3e8ee;
+}
+
+th:first-child,
+td:first-child,
+th:last-child,
+td:last-child {
+  text-align: center;
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+tr:hover {
+  background: #f0f6ff;
+  transition: background 0.2s;
+}
+
+.action-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 19px;
+  margin: 0 6px;
+  padding: 6px;
+  color: #555;
+  border-radius: 50%;
+  transition: color 0.2s, background 0.2s;
+  vertical-align: middle;
+}
+
+.action-icon:hover {
+  color: #4a90e2;
+  background: #e6f7ff;
+}
+
+.delete-icon:hover {
+  color: #f5222d;
+  background: #fff1f0;
+}
+
+.loading-text.table-feedback,
+.no-data-text.table-feedback,
+.error-text.table-feedback {
+  text-align: center;
+  padding: 24px;
+  font-style: italic;
+  color: #888;
+  font-size: 15px;
+}
+
+/* Responsive cho mobile/tablet */
+@media (max-width: 900px) {
+  .class-table-container table {
+    min-width: 600px;
+    font-size: 14px;
+  }
+  th,
+  td {
+    padding: 10px 8px;
+  }
+}
+
+@media (max-width: 600px) {
+  .class-table-container {
+    border-radius: 8px;
+    padding: 0 0 4px 0;
+  }
+  .class-table-container table {
+    min-width: 480px;
+    font-size: 13px;
+  }
+  th,
+  td {
+    padding: 8px 4px;
+  }
+}

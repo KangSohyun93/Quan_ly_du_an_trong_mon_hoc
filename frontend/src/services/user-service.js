@@ -42,3 +42,22 @@ export async function fetchAllUser(credentials) {
     throw error;
   }
 }
+export async function AdFetchClass() {
+  try {
+    const response = await fetch("http://localhost:5000/api/class/all", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Lấy danh sách lớp học thất bại");
+    }
+
+    return await response.json(); // Trả về danh sách lớp học
+  } catch (error) {
+    throw error;
+  }
+}

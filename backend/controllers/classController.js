@@ -371,3 +371,34 @@ function getRandomAvatarColor() {
   ];
   return colors[Math.floor(Math.random() * colors.length)];
 }
+exports.getAllClass = async (req, res) => {
+  try {
+    const classes = await Class.findAll({
+      include: [
+        {
+          model: User,
+          as: "instructor", // alias đặt rõ ràng
+          attributes: ["user_id", "username"],
+        },
+      ],
+      attributes: ["class_id", "class_name", "semester", "created_at"],
+      order: [["created_at", "DESC"]],
+      raw: true,
+      nest: true,
+    });
+    const result = classes.map((c, index) => ({
+      classId: c.class_id,
+      className: c.class_name || "",
+      semester: c.semester,
+      createdAt: c.created_at,
+      createdBy: c.instructor?.username || "Unknown",
+      avatarNumber: index,
+      avatarColor: getRandomAvatarColor(),
+    }));
+
+    return res.status(200).json(result);
+  } catch (err) {
+    console.error("Error fetching classes:", err);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};

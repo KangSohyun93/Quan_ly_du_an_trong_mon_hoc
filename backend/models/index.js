@@ -57,7 +57,7 @@ Group.hasOne(Project, { foreignKey: "group_id" });
 Project.belongsTo(Group, { foreignKey: "group_id" });
 
 User.hasMany(Class, { foreignKey: "instructor_id" });
-Class.belongsTo(User, { foreignKey: "instructor_id" });
+Class.belongsTo(User, { foreignKey: "instructor_id", as: "instructor" });
 
 User.hasMany(Group, { foreignKey: "leader_id" });
 // Group -> User (leader)
