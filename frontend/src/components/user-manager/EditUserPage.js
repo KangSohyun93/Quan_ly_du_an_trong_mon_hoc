@@ -4,7 +4,7 @@ import ConfirmModal from "./ConfirmModal";
 import "./EditUserPage.css";
 import "../../assets/styles/global.css";
 import defaultAvatar from "../../assets/images/avatar-default.svg";
-import { fetchUserData } from "../../services/user-service";
+import { fetchUserData, updateUser } from "../../services/user-service";
 
 const EditUserPage = () => {
   const { userId } = useParams();
@@ -48,16 +48,21 @@ const EditUserPage = () => {
     );
   };
 
-  const handleSaveChanges = (e) => {
+  const handleSaveChanges = async (e) => {
     e.preventDefault();
     if (!canSaveChanges()) {
       return;
     }
     setIsSaving(true);
-    setTimeout(() => {
-      setInitialUser(user);
+    try {
+      const updatedUser = await updateUser(userId, user); // gọi API
+      setInitialUser(updatedUser); // cập nhật bản gốc theo dữ liệu từ server
+    } catch (error) {
+      console.error("Failed to update user:", error);
+      alert("Có lỗi khi lưu thông tin người dùng.");
+    } finally {
       setIsSaving(false);
-    }, 1000);
+    }
   };
 
   const handleBlockUnblockToggle = () => {
@@ -76,17 +81,26 @@ const EditUserPage = () => {
     setShowConfirmModal(true);
   };
 
-  const confirmBlockUnblock = () => {
+  const confirmBlockUnblock = async () => {
     setIsBlocking(true);
     setShowConfirmModal(false);
-    setTimeout(() => {
-      setUser((prevUser) => {
-        const updatedUser = { ...prevUser, is_active: !prevUser.is_active };
-        setInitialUser(updatedUser);
-        return updatedUser;
-      });
+    try {
+      const updatedData = {
+        ...user,
+        is_active: user.is_active ? 0 : 1, // 🔁 chuyển boolean -> số
+      };
+
+      const updatedUser = await updateUser(userId, updatedData);
+
+      // Cập nhật UI theo dữ liệu trả về từ server
+      setUser(updatedUser);
+      setInitialUser(updatedUser);
+    } catch (error) {
+      console.error("Failed to update user status:", error);
+      alert("Có lỗi khi cập nhật trạng thái người dùng.");
+    } finally {
       setIsBlocking(false);
-    }, 1000);
+    }
   };
 
   if (!user) {

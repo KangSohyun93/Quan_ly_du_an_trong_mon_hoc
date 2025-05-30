@@ -81,3 +81,26 @@ export async function AdFetchClass() {
     throw error;
   }
 }
+export async function updateUser(userId, userData) {
+  try {
+    const response = await fetch(`http://localhost:5000/api/user/${userId}`, {
+      // Sửa URL backend
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userData),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(
+        errorData.message || "Cập nhật thông tin người dùng thất bại"
+      );
+    }
+
+    return await response.json(); // Trả về thông tin người dùng đã cập nhật
+  } catch (error) {
+    throw error;
+  }
+}

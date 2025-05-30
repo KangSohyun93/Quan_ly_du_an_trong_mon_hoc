@@ -1,5 +1,4 @@
-// frontend/src/pages/UserManagerPage.js
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 
 import UserTable from "./UserTable.js";
@@ -18,8 +17,6 @@ const UserManagerPage = () => {
   const [deleteError, setDeleteError] = useState(null);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [totalUsers, setTotalUsers] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -31,23 +28,16 @@ const UserManagerPage = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [userToDelete, setUserToDelete] = useState(null);
 
-  // ✅ Lấy dữ liệu từ API
   useEffect(() => {
     const fetchUsers = async () => {
       setLoading(true);
       try {
         const data = await fetchAllUser();
-        console.log("Fetched users:", data);
-
-        // ⚠️ Chuyển đổi is_active -> status
         const formattedUsers = data.map((user) => ({
           ...user,
-          status: user.is_active === 1 ? "active" : "banned",
+          status: user.is_active == 1 ? "active" : "banned",
         }));
-
         setUsers(formattedUsers);
-        setTotalUsers(formattedUsers.length);
-        setTotalPages(Math.ceil(formattedUsers.length / rowsPerPage));
       } catch (err) {
         console.error("Failed to fetch users", err);
         setUsers([]);
@@ -58,21 +48,15 @@ const UserManagerPage = () => {
 
     fetchUsers();
   }, []);
-  // ✅ Cập nhật lại phân trang khi số dòng mỗi trang thay đổi
-  useEffect(() => {
-    setTotalPages(Math.ceil(users.length / rowsPerPage));
-    setCurrentPage(1);
-  }, [rowsPerPage, users]);
-
-  const handlePageChange = (newPage) => setCurrentPage(newPage);
-  const handleRowsPerPageChange = (e) =>
-    setRowsPerPage(parseInt(e.target.value));
 
   const handleSearchChange = (e) => setSearchTerm(e.target.value);
   const handleRoleChange = (e) => setSelectedRole(e.target.value);
   const handleStatusChange = (e) => setSelectedStatus(e.target.value);
   const handleStartDateChange = (e) => setStartDate(e.target.value);
   const handleEndDateChange = (e) => setEndDate(e.target.value);
+  const handleRowsPerPageChange = (e) =>
+    setRowsPerPage(parseInt(e.target.value));
+  const handlePageChange = (page) => setCurrentPage(page);
 
   const handleAddUser = () => navigate("/admin/user-manager/add");
   const handleEditUser = (userId) =>
@@ -82,6 +66,7 @@ const UserManagerPage = () => {
     setUserToDelete(user);
     setShowDeleteModal(true);
   };
+
   const closeDeleteModal = () => setShowDeleteModal(false);
 
   const confirmDeleteUser = () => {
@@ -91,10 +76,52 @@ const UserManagerPage = () => {
 
   const formatDisplayDate = (dateStr) =>
     dateStr ? new Date(dateStr).toLocaleDateString("en-US") : "N/A";
-  // ✅ Cắt danh sách user theo trang hiện tại
+
+  // ✅ Lọc dữ liệu theo điều kiện
+  const filteredUsers = useMemo(() => {
+    return users.filter((user) => {
+      const matchesSearch =
+        user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.email.toLowerCase().includes(searchTerm.toLowerCase());
+
+      const matchesRole = selectedRole ? user.role === selectedRole : true;
+      const matchesStatus = selectedStatus
+        ? user.status === selectedStatus
+        : true;
+
+      const createdAt = new Date(user.created_at);
+      const matchesStartDate = startDate
+        ? createdAt >= new Date(startDate)
+        : true;
+      const matchesEndDate = endDate ? createdAt <= new Date(endDate) : true;
+
+      return (
+        matchesSearch &&
+        matchesRole &&
+        matchesStatus &&
+        matchesStartDate &&
+        matchesEndDate
+      );
+    });
+  }, [users, searchTerm, selectedRole, selectedStatus, startDate, endDate]);
+
+  const totalUsers = filteredUsers.length;
+  const totalPages = Math.ceil(totalUsers / rowsPerPage);
+
   const indexOfLastUser = currentPage * rowsPerPage;
   const indexOfFirstUser = indexOfLastUser - rowsPerPage;
-  const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
+  const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [
+    searchTerm,
+    selectedRole,
+    selectedStatus,
+    startDate,
+    endDate,
+    rowsPerPage,
+  ]);
 
   return (
     <div className="user-manager-page">
