@@ -5,3 +5,49 @@
     margin: 10px;
     min-height: 300px;
 }
+
+.refresh-controls-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.refresh-button-group {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Space between button and icon */
+}
+
+.refresh-button-group .info-icon {
+    color: #007bff; /* Or your theme color */
+    cursor: help;
+    font-size: 1.1em; /* Adjust size as needed */
+}
+
+.spinner {
+    border: 2px solid rgba(0, 0, 0, 0.1); /* Lighter border for dark text buttons */
+    border-radius: 50%;
+    border-top-color: #007bff; /* Spinner color, matching button or theme */
+    width: 16px;
+    height: 16px;
+    animation: spin 1s ease-in-out infinite;
+    display: inline-block;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+/* If button text is white, use a white spinner */
+.refresh-button-group button:disabled .spinner,
+.refresh-button-group button.is-parent-refreshing .spinner {
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #fff;
+}
+
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
