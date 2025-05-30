@@ -89,3 +89,28 @@ exports.updateUser = async (req, res) => {
     res.status(500).json({ error: "Lỗi server" });
   }
 };
+exports.createUser = async (req, res) => {
+  try {
+    const { username, email, password, role } = req.body;
+
+    // Kiểm tra xem người dùng đã tồn tại chưa
+    const existingUser = await User.findOne({ where: { email } });
+    if (existingUser) {
+      return res.status(400).json({ error: "Email đã được sử dụng" });
+    }
+
+    // Tạo người dùng mới
+    const newUser = await User.create({
+      username,
+      email,
+      password, // Mã hóa mật khẩu trước khi lưu vào cơ sở dữ liệu
+      role,
+      is_active: 1, // Mặc định là hoạt động
+    });
+
+    res.status(201).json(newUser);
+  } catch (error) {
+    console.error("Lỗi trong createUser:", error);
+    res.status(500).json({ error: "Lỗi server" });
+  }
+};
