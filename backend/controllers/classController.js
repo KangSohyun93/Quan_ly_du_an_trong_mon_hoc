@@ -230,7 +230,7 @@ exports.searchClass = async (req, res) => {
           ],
         },
       ],
-      attributes: ["class_id", "class_name", "semester"],
+      attributes: ["class_id", "class_name", "semester", "instructor_id"],
     });
 
     const result = classes.map((c, index) => {
@@ -251,6 +251,7 @@ exports.searchClass = async (req, res) => {
       // Nếu không có group, trả về null
       if (!userGroup) {
         return {
+          instructorId: c.instructor_id,
           classId: c.class_id,
           className: c.class_name,
           semester: c.semester,
@@ -263,6 +264,7 @@ exports.searchClass = async (req, res) => {
       // Nếu có group, trả về thông tin group
 
       return {
+        instructorId: c.instructor_id,
         classId: c.class_id,
         className: c.class_name,
         semester: c.semester,
@@ -412,6 +414,61 @@ exports.getAllClass = async (req, res) => {
     return res.status(200).json(result);
   } catch (err) {
     console.error("Error fetching classes:", err);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+exports.getClassforGV = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const classes = await Class.findAll({
+      where: { instructor_id: userId },
+      include: [
+        {
+          model: User,
+          as: "instructor",
+          attributes: ["user_id", "username"],
+        },
+        {
+          model: ClassMember,
+          include: [
+            {
+              model: User,
+              attributes: ["user_id", "username", "avatar"],
+            },
+          ],
+        },
+      ],
+      attributes: ["class_id", "class_name", "semester", "created_at"],
+      order: [["created_at", "DESC"]],
+    });
+    const result = classes.map((c, index) => {
+      // Lấy member từ ClassMember
+      const members =
+        c.ClassMembers?.map((cm) => ({
+          id: cm.User.user_id,
+          username: cm.User.username,
+          avatar: cm.User.avatar,
+        })) || [];
+
+      return {
+        hasJoin: true,
+        classId: c.class_id,
+        className: c.class_name,
+        semester: c.semester,
+        groupName: null,
+        groupId: null,
+        projectName: null,
+        projectId: null,
+        memberCount: members.length,
+        members,
+        avatarNumber: index,
+        avatarColor: getRandomAvatarColor(),
+      };
+    });
+
+    return res.json(result);
+  } catch (error) {
+    console.error("Error fetching classes for instructor:", error);
     return res.status(500).json({ error: "Internal server error" });
   }
 };

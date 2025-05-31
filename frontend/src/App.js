@@ -15,6 +15,7 @@ import AddUserPage from "./components/user-manager/AddUserPage.js";
 import UserManager from "./pages/Ad_UserManager.js";
 import SV_TeamClass from "./pages/SV_Teamclass.js";
 import SV_TeamDetail from "./pages/SV_TeamDetail.js";
+import GV_TeamClass from "./pages/GV_Teamclass.js";
 
 function App() {
   return (
@@ -47,6 +48,16 @@ function App() {
               <RequireAuth>
                 <RequireRole role="Student">
                   <SV_TeamClass />
+                </RequireRole>
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/instructor/home"
+            element={
+              <RequireAuth>
+                <RequireRole role="Instructor">
+                  <GV_TeamClass />
                 </RequireRole>
               </RequireAuth>
             }

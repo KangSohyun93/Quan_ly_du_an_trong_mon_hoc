@@ -8,6 +8,7 @@ const verifyToken = require("../middleware/verify-token");
 router.post("/join", verifyToken, classController.joinClass);
 router.get("/search", verifyToken, classController.searchClass);
 router.get("/get-info-class", verifyToken, classController.getClass);
+router.get("/instructor", verifyToken, classController.getClassforGV);
 router.get("/all", classController.getAllClass);
 router.post(
   "/:id/instructor",

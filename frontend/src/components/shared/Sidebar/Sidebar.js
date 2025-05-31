@@ -45,7 +45,7 @@ const Sidebar = () => {
   const renderMenuItems = () => {
     if (!user) return null;
 
-    if (user.role === "Student") {
+    if (user.role === "Student" || user.role === "Instructor") {
       return (
         <>
           <a
@@ -53,7 +53,12 @@ const Sidebar = () => {
             className={`sidebar-item flex items-center p-2 text-gray-700 rounded ${
               selectedItem === "Teams" ? "bg-blue-100" : ""
             }`}
-            onClick={() => handleItemClick("Teams", "/home")}
+            onClick={() =>
+              handleItemClick(
+                "Teams",
+                user.role === "Student" ? "/home" : "/instructor/home"
+              )
+            }
           >
             <i className="icon mr-3 fa-solid fa-people-group"></i>
             <p>Teams</p>
@@ -63,7 +68,12 @@ const Sidebar = () => {
             className={`sidebar-item flex items-center p-2 text-gray-700 rounded ${
               selectedItem === "Thông báo" ? "bg-blue-100" : ""
             }`}
-            onClick={() => handleItemClick("Thông báo", "/home")}
+            onClick={() =>
+              handleItemClick(
+                "Thông báo",
+                user.role === "Student" ? "/home" : "/instructor/home"
+              )
+            }
           >
             <i className="icon mr-3 fa-solid fa-bell"></i>
             <p>Thông báo</p>

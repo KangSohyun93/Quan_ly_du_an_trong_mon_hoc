@@ -28,11 +28,16 @@ const ClassCard = ({
     members && members.length > 0 ? members.length : memberCount || 0;
 
   const handleCardClick = () => {
+    const role = JSON.parse(localStorage.getItem("user"))?.role;
     if (hasJoin) {
-      if (groupId)
-        navigate(`/home/classes/${classId}/group/${groupId}/introduce`);
-      else {
-        alert("Bạn chưa có nhóm trong lớp này.");
+      if (role === "Student") {
+        if (groupId)
+          navigate(`/home/classes/${classId}/group/${groupId}/introduce`);
+        else {
+          alert("Bạn chưa có nhóm trong lớp này.");
+        }
+      } else if (role === "Instructor") {
+        navigate(`/home/classes/${classId}/group/${groupId}`);
       }
     } else {
       alert("Bạn chưa tham gia lớp này.");

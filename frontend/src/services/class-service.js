@@ -26,6 +26,30 @@ export async function getInfoClass() {
     throw error;
   }
 }
+export async function getClassByGv() {
+  const token = sessionStorage.getItem("token");
+  if (!token) {
+    throw new Error("Không có token, yêu cầu đăng nhập");
+  }
+  try {
+    const response = await fetch(`http://localhost:5000/api/class/instructor`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Không lấy được dữ liệu");
+    }
+
+    return await response.json();
+  } catch (error) {
+    throw error;
+  }
+}
 export async function SearchClass({ searchText }) {
   const token = sessionStorage.getItem("token");
   if (!token) {

@@ -30,6 +30,8 @@ function LoginForm() {
       // Chuyển hướng sau khi đăng nhập
       if (userData.user.role === "Admin") {
         navigate("/admin/user-manager");
+      } else if (userData.user.role === "Instructor") {
+        navigate("/instructor/home");
       } else {
         navigate("/home");
       }
