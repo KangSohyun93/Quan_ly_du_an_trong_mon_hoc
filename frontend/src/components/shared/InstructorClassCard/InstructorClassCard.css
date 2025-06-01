@@ -1,0 +1,131 @@
+.instructorclasscard-container {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  width: 308px;
+  height: 198px;
+  background-color: #ffffff;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.instructorclasscard-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.instructorclasscard-avatar {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+  margin-bottom: 5px;
+}
+
+.instructorclasscard-avatar-bg {
+  border-radius: 0;
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.instructorclasscard-avatar-number {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.instructorclasscard-content {
+  flex: 1;
+}
+
+.instructorclasscard-title {
+  font-size: 16.67px;
+  font-weight: bold;
+  color: #1a1a1a;
+  line-height: 1.2;
+  flex: 1;
+}
+
+.instructorclasscard-description-text {
+  font-size: 13.33px;
+  font-weight: normal;
+  color: #666666;
+  margin-bottom: 50px;
+}
+
+.instructorclasscard-members {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 5px;
+}
+
+.instructorclasscard-members-list {
+  display: flex;
+  align-items: center;
+}
+
+.instructorclasscard-member {
+  width: 22px;
+  height: 22px;
+  margin-left: 0px;
+  position: relative;
+  z-index: 1;
+}
+
+.instructorclasscard-member:first-child {
+  margin-left: 0;
+}
+
+.instructorclasscard-member-img {
+  border-radius: 50%;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border: 2px solid #ffffff;
+}
+
+.instructorclasscard-more-members {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background-color: #ecf0f1;
+  color: #2c3e50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: -8px;
+  border: 2px solid #ffffff;
+  font-size: 10px;
+  font-weight: 500;
+  z-index: 2;
+}
+
+.instructorclasscard-members-count {
+  font-size: 10.67px;
+  font-weight: 500;
+  color: #999999;
+}
+
+.instructorclasscard-more-icon {
+  position: absolute;
+  right: 16px;
+  top: 16px;
+  font-size: 16px;
+  color: #666666;
+  line-height: 1;
+}
+
+.no-members {
+  font-size: 10.67px;
+  color: #999999;
+}

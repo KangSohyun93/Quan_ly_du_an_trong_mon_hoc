@@ -1,0 +1,81 @@
+/* frontend/src/components/shared/ConfirmDeleteModal.css */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6); /* Tăng độ mờ */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000; /* Đảm bảo modal ở trên cùng */
+}
+
+.modal-content {
+    background: white;
+    padding: 25px 30px; /* Tăng padding */
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 450px; /* Tăng max-width chút */
+}
+
+.modal-content h4 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 20px; /* Tăng font size */
+    color: #333;
+}
+
+.modal-content p {
+    margin-bottom: 25px; /* Tăng margin */
+    font-size: 15px;
+    color: #555;
+    line-height: 1.6;
+}
+
+.modal-content p strong {
+    color: #222;
+}
+
+.modal-error {
+    background-color: #fff1f0;
+    border: 1px solid #ffccc7;
+    color: #cf1322;
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px; /* Tăng gap */
+}
+
+.modal-actions button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 500; /* Chữ vừa phải */
+    font-size: 14px;
+    transition: opacity 0.2s;
+}
+
+.modal-actions button:hover {
+    opacity: 0.85;
+}
+
+.button-secondary {
+    background-color: #f0f2f5; /* Xám nhạt */
+    color: #595959;
+    border: 1px solid #d9d9d9;
+}
+
+.button-danger {
+    background-color: #ff4d4f; /* Đỏ (Ant Design danger) */
+    color: white;
+}

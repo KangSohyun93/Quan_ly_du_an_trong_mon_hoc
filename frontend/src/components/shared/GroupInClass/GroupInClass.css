@@ -1,0 +1,90 @@
+.group-in-class-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 800px;
+}
+
+.group-in-class-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.group-in-class-details {
+  flex: 1;
+}
+
+.group-in-class-name {
+  margin: 0 0 8px 0;
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+.group-in-class-description {
+  margin: 0;
+  color: #666;
+}
+
+.group-in-class-status {
+  padding-left: 16px;
+}
+
+.group-in-class-completed {
+  color: #28a745;
+  font-weight: bold;
+}
+
+.group-in-class-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #666;
+  font-size: 0.9em;
+}
+
+.group-in-class-files {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.group-in-class-file-icon {
+  font-size: 1em;
+  color: #999;
+}
+
+.group-in-class-members {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.group-in-class-member-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid #ddd;
+}
+
+.group-in-class-member-count {
+  margin-left: 4px;
+}
+
+.group-in-class-error,
+.group-in-class-loading {
+  padding: 16px;
+  color: #d9534f;
+  text-align: center;
+}
+.group-in-class-ongoing {
+  color: #f39c12;
+  font-weight: bold;
+}

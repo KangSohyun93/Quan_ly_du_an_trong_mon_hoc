@@ -1,0 +1,12 @@
+.edit-class-popup-overlay {
+  transition: opacity 0.3s ease-in-out;
+}
+
+.edit-class-popup-content {
+  transition: transform 0.3s ease-in-out;
+  transform: scale(1);
+}
+
+.edit-class-popup-content:hover {
+  transform: scale(1.02);
+}

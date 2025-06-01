@@ -1,0 +1,208 @@
+/* Đặt lại toàn trang */
+body,
+html {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: #eceff8;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo {
+  height: 100px;
+  width: 200px;
+}
+.login-form {
+  flex: 1;
+  align-items: flex-start;
+  text-align: left;
+  max-width: 450px;
+}
+
+.login-form h1 {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 0.3rem;
+}
+
+.login-form p {
+  margin-bottom: 1.5rem;
+  color: #000000;
+}
+
+.login-form label {
+  font-size: 14px;
+  margin-bottom: 0.3rem;
+}
+
+.login-form input {
+  width: 100%;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border: none;
+  border-radius: 8px;
+  background-color: #d0dfff;
+  font-size: 0.95rem;
+  box-sizing: border-box;
+}
+.showpass {
+  position: relative;
+}
+.toggle-password {
+  position: absolute;
+  right: 12px;
+  top: 9px; /* hoặc tùy chỉnh để icon nằm giữa input */
+  cursor: pointer;
+  font-size: 1.1rem;
+  color: #666;
+  transition: color 0.2s;
+}
+
+/* Remember + Forgot */
+.form-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+}
+
+.remember-label {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: #000;
+}
+
+.remember-label input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #474bca; /* cho cùng tone màu nếu muốn */
+  margin: 0;
+  margin-right: 8px;
+  padding: 0;
+}
+
+.forgot-link {
+  text-decoration: none;
+  color: #474bca;
+  font-size: 14px;
+  margin-bottom: 0.4rem;
+}
+
+/* Button chính */
+button[type="submit"] {
+  width: 100%;
+  padding: 0.9rem;
+  background-color: #474bca;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+button:disabled {
+  background-color: #aaa;
+  cursor: not-allowed;
+}
+
+/* Signup link */
+.signup-link {
+  margin-top: 1rem;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.signup-link a {
+  text-decoration: none;
+  color: #474bca;
+  font-weight: 600;
+}
+
+.signup-link b {
+  color: #ffa3be;
+  font-family: "Poppins", sans-serif; /* Hoặc Quicksand nếu muốn mềm hơn */
+  font-weight: 500;
+  font-size: 14px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.signup-link b:hover {
+  color: #ffa3be;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  opacity: 0.9;
+}
+
+/* Divider */
+.divider {
+  text-align: center;
+  margin: 2rem 0 1rem;
+  color: #aaa;
+  font-size: 0.9rem;
+  position: relative;
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  position: absolute;
+  height: 1px;
+  width: 34%;
+  background-color: #ccc;
+  top: 50%;
+}
+
+.divider::before {
+  left: 0;
+}
+.divider::after {
+  right: 0;
+}
+
+/* Google button */
+.google-button {
+  width: 100%;
+  padding: 0.9rem;
+  background-color: #a3c0ff;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px; /* khoảng cách giữa logo và text */
+}
+
+.google-button img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+/* Ảnh minh họa bên phải */
+.illustration {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.illustration img {
+  width: 90%;
+  max-width: 500px;
+}
