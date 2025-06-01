@@ -44,16 +44,18 @@
   margin-left: 16px;
   background-color: #a0c0e0;
   color: black;
-  padding: 8px 16px;
+  padding: 8px 24px;           /* Tăng padding ngang cho nút dài hơn khi cần */
   border: none;
   border-radius: 8px;
   cursor: pointer;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: background-color 0.2s;
-}
-
-.join-class-button:hover {
-  background-color: #8bb0d0;
+  font-size: 1em;
+  font-weight: 600;
+  min-width: 0;                /* Cho phép co lại nếu nội dung ngắn */
+  width: auto;                 /* Tự động theo nội dung */
+  max-width: 100%;             /* Không vượt quá container */
+  white-space: nowrap;         /* Không xuống dòng trong nút */
 }
 .popup-join-team {
   position: fixed;

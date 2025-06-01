@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import './CreateClassPopup.css';
+import React, { useState, useEffect } from "react";
+import "./CreateClassPopup.css";
+import { CreateClass } from "../../../services/class-service";
 
 const CreateClassPopup = ({ onClose, onCreate, instructorId }) => {
   const [formData, setFormData] = useState({
-    classId: '',
-    className: '',
-    semester: '',
-    code: '',
-    instructorId: instructorId || '', // Nhận instructorId từ props
+    classId: "",
+    className: "",
+    semester: "",
+    code: "",
+    instructorId: instructorId || "", // Nhận instructorId từ props
   });
   const [semesters, setSemesters] = useState([]);
   const [error, setError] = useState(null);
@@ -18,24 +19,24 @@ const CreateClassPopup = ({ onClose, onCreate, instructorId }) => {
     const years = [currentYear - 1, currentYear, currentYear + 1];
     const semesterOptions = [];
 
-    years.forEach(year => {
+    years.forEach((year) => {
       semesterOptions.push(`${year}.1`);
       semesterOptions.push(`${year}.2`);
       semesterOptions.push(`${year}.3`);
     });
 
     setSemesters(semesterOptions);
-    setFormData(prev => ({ ...prev, semester: `${currentYear}.1` }));
+    setFormData((prev) => ({ ...prev, semester: `${currentYear}.1` }));
   }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     // Kiểm tra độ dài code không vượt quá 10 ký tự
-    if (name === 'code' && value.length > 10) {
-      setError('Secret code must not exceed 10 characters');
+    if (name === "code" && value.length > 10) {
+      setError("Secret code must not exceed 10 characters");
       return;
     }
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
     setError(null); // Xóa lỗi khi người dùng nhập lại
   };
 
@@ -46,7 +47,7 @@ const CreateClassPopup = ({ onClose, onCreate, instructorId }) => {
     // Chuyển classId sang số nguyên
     const classIdAsInt = parseInt(formData.classId, 10);
     if (isNaN(classIdAsInt)) {
-      setError('Class ID must be a valid number');
+      setError("Class ID must be a valid number");
       return;
     }
 
@@ -58,22 +59,10 @@ const CreateClassPopup = ({ onClose, onCreate, instructorId }) => {
       secret_code: formData.code,
       instructor_id: parseInt(formData.instructorId, 10),
     };
+    //console.log("Payload to create class:", payload);
 
     try {
-      const response = await fetch('http://localhost:5000/api/classes/create', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to create class');
-      }
-
+      const response = await CreateClass(payload);
       if (onCreate) {
         onCreate({
           classId: payload.class_id,
@@ -85,7 +74,7 @@ const CreateClassPopup = ({ onClose, onCreate, instructorId }) => {
       onClose();
     } catch (err) {
       setError(err.message);
-      console.error('Error creating class:', err);
+      console.error("Error creating class:", err);
     }
   };
 
@@ -93,7 +82,7 @@ const CreateClassPopup = ({ onClose, onCreate, instructorId }) => {
     <div className="CreateClassPopup-overlay">
       <div className="CreateClassPopup-popup">
         <h2 className="CreateClassPopup-title">Create Class</h2>
-        {error && <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>}
+        {error && <p style={{ color: "red", textAlign: "center" }}>{error}</p>}
         <form onSubmit={handleSubmit}>
           <div className="CreateClassPopup-form-group">
             <label className="CreateClassPopup-label">ID Class</label>
@@ -128,7 +117,7 @@ const CreateClassPopup = ({ onClose, onCreate, instructorId }) => {
               className="CreateClassPopup-input"
               required
             >
-              {semesters.map(semester => (
+              {semesters.map((semester) => (
                 <option key={semester} value={semester}>
                   {semester}
                 </option>
@@ -136,7 +125,9 @@ const CreateClassPopup = ({ onClose, onCreate, instructorId }) => {
             </select>
           </div>
           <div className="CreateClassPopup-form-group">
-            <label className="CreateClassPopup-label">Code (If you don't input, it will random)</label>
+            <label className="CreateClassPopup-label">
+              Code (If you don't input, it will random)
+            </label>
             <input
               type="text"
               name="code"
@@ -146,9 +137,13 @@ const CreateClassPopup = ({ onClose, onCreate, instructorId }) => {
               className="CreateClassPopup-input"
             />
           </div>
-          <button type="submit" className="CreateClassPopup-button">Create</button>
+          <button type="submit" className="CreateClassPopup-button">
+            Create
+          </button>
         </form>
-        <button onClick={onClose} className="CreateClassPopup-close-button">×</button>
+        <button onClick={onClose} className="CreateClassPopup-close-button">
+          ×
+        </button>
       </div>
     </div>
   );

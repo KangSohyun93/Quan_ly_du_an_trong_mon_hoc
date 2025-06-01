@@ -122,3 +122,28 @@ export async function ImportClass(formData, classId) {
     throw error;
   }
 }
+export async function CreateClass(formData) {
+  const token = sessionStorage.getItem("token");
+  if (!token) {
+    throw new Error("Không có token, yêu cầu đăng nhập");
+  }
+  try {
+    const response = await fetch("http://localhost:5000/api/class/create", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(formData),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Không tạo được lớp học");
+    }
+
+    return await response.json();
+  } catch (error) {
+    throw error;
+  }
+}

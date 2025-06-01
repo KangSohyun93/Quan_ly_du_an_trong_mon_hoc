@@ -437,10 +437,15 @@ exports.getClassforGV = async (req, res) => {
             },
           ],
         },
+        {
+          model: Group,
+          attributes: ["group_id"], // chỉ cần ID để đếm số lượng
+        },
       ],
       attributes: ["class_id", "class_name", "semester", "created_at"],
       order: [["created_at", "DESC"]],
     });
+
     const result = classes.map((c, index) => {
       // Lấy member từ ClassMember
       const members =
@@ -449,6 +454,8 @@ exports.getClassforGV = async (req, res) => {
           username: cm.User.username,
           avatar: cm.User.avatar,
         })) || [];
+
+      const groupCount = c.Groups?.length || 0;
 
       return {
         hasJoin: true,
@@ -460,6 +467,7 @@ exports.getClassforGV = async (req, res) => {
         projectName: null,
         projectId: null,
         memberCount: members.length,
+        groupCount,
         members,
         avatarNumber: index,
         avatarColor: getRandomAvatarColor(),
@@ -470,5 +478,90 @@ exports.getClassforGV = async (req, res) => {
   } catch (error) {
     console.error("Error fetching classes for instructor:", error);
     return res.status(500).json({ error: "Internal server error" });
+  }
+};
+exports.createClass = async (req, res) => {
+  const { class_id, class_name, semester, secret_code } = req.body;
+  const userId = req.userId;
+  // Kiểm tra dữ liệu đầu vào
+  //console.log(">>>createClass:", req.body);
+  try {
+    // Kiểm tra xem lớp đã tồn tại chưa
+    const existingClass = await Class.findOne({
+      where: { class_id: class_id },
+    });
+
+    if (existingClass) {
+      return res.status(400).json({ message: "Lớp đã tồn tại" });
+    }
+
+    // Tạo lớp mới
+    const newClass = await Class.create({
+      class_id: class_id,
+      class_name: class_name,
+      semester,
+      instructor_id: userId,
+      secret_code: secret_code || generateSecretCode(), // Nếu không có secret_code thì tự động tạo
+    });
+
+    // // Tạo bản ghi ClassMember cho người tạo lớp
+    // await ClassMember.create({
+    //   class_id: newClass.class_id,
+    //   user_id: userId,
+    // });
+
+    return res.status(201).json(newClass);
+  } catch (error) {
+    console.error("Error creating class:", error);
+    return res.status(500).json({ error: "Lỗi server" });
+  }
+};
+const generateSecretCode = () => {
+  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let code = "";
+  for (let i = 0; i < 6; i++) {
+    code += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+  return code;
+};
+exports.deleteClass = async (req, res) => {
+  const classId = req.params.id;
+  try {
+    // Tìm lớp theo ID
+    const classroom = await Class.findByPk(classId);
+    if (!classroom) {
+      return res.status(404).json({ message: "Lớp không tồn tại" });
+    }
+
+    // Xoá lớp
+    await classroom.destroy();
+    return res.status(200).json({ message: "Xoá lớp thành công" });
+  } catch (error) {
+    console.error("Error deleting class:", error);
+    return res.status(500).json({ error: "Lỗi server" });
+  }
+};
+exports.updateClass = async (req, res) => {
+  const classId = req.params.id;
+  const { class_name, semester, secret_code } = req.body;
+
+  try {
+    // Tìm lớp theo ID
+    const classroom = await Class.findByPk(classId);
+    if (!classroom) {
+      return res.status(404).json({ message: "Lớp không tồn tại" });
+    }
+
+    // Cập nhật thông tin lớp
+    classroom.class_name = class_name || classroom.class_name;
+    classroom.semester = semester || classroom.semester;
+    classroom.secret_code = secret_code || classroom.secret_code;
+
+    await classroom.save();
+
+    return res.status(200).json(classroom);
+  } catch (error) {
+    console.error("Error updating class:", error);
+    return res.status(500).json({ error: "Lỗi server" });
   }
 };

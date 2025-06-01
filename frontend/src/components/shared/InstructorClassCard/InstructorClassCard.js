@@ -2,6 +2,7 @@ import React from "react";
 import placeholderMember from "../../../assets/images/placeholders/placeholder-member.jpg";
 import InstructorClassCardMenu from "../ClassCardMenu/InstructorClassCardMenu";
 import "./InstructorClassCard.css";
+import { useNavigate } from "react-router-dom";
 
 const InstructorClassCard = ({
   classId,
@@ -13,7 +14,9 @@ const InstructorClassCard = ({
   avatarColor,
   members,
   onClick,
+  onEdit,
 }) => {
+  const navigate = useNavigate();
   console.log("InstructorClassCard props:", {
     classId,
     className,
@@ -25,9 +28,11 @@ const InstructorClassCard = ({
   });
 
   const displayStudentCount = studentCount || 0;
-
+  const handleCardClick = () => {
+    navigate(`/home/classes/${classId}`);
+  };
   return (
-    <div className="instructorclasscard-container">
+    <div className="instructorclasscard-container" onClick={handleCardClick}>
       <div onClick={onClick} style={{ cursor: "pointer" }}>
         <div className="instructorclasscard-header">
           <div
@@ -93,7 +98,7 @@ const InstructorClassCard = ({
           }
           onDelete={() => {
             if (window.confirm(`Bạn có chắc muốn xóa lớp ${classId}?`)) {
-              fetch(`http://localhost:5000/api/classes/delete/${classId}`, {
+              fetch(`http://localhost:5000/api/class/delete/${classId}`, {
                 method: "DELETE",
               })
                 .then((response) => {
@@ -107,7 +112,7 @@ const InstructorClassCard = ({
                 .catch((err) => alert(err.message));
             }
           }}
-          onEdit={() => {}} // Để trống vì đã xử lý trong InstructorGroupPage
+          onEdit={() => onEdit(classId)} // Để trống vì đã xử lý trong InstructorGroupPage
         />
       </div>
     </div>

@@ -1,10 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "./classHeader.css";
 import { JoinClass } from "../../services/class-service";
-const JoinClassBar = ({ onSearchChange, onJoinSuccess }) => {
+import CreateClassPopup from "../shared/CreateClassPopup/CreateClassPopup";
+
+const JoinClassBar = ({ onSearchChange, onJoinSuccess, onCreateSuccess }) => {
   const [joinCode, setJoinCode] = useState("");
   const [searchText, setSearchText] = useState("");
-  const [showPopup, setShowPopup] = useState(false);
+  const [showJoinPopup, setShowJoinPopup] = useState(false);
+  const [showCreatePopup, setShowCreatePopup] = useState(false);
+
+  const user = JSON.parse(localStorage.getItem("user"));
+  const role = user?.role || null;
+  const instructorId = user?.id;
 
   const handleSearchChange = (e) => {
     const value = e.target.value;
@@ -13,22 +20,40 @@ const JoinClassBar = ({ onSearchChange, onJoinSuccess }) => {
       onSearchChange(value);
     }
   };
-  const [result, setResult] = useState([]);
 
-  const handleJoinClick = () => setShowPopup(true);
-  const handlePopupClose = () => setShowPopup(false);
+  const handleJoinClick = () => setShowJoinPopup(true);
+  const handleCreateClick = () => setShowCreatePopup(true);
+  const handlePopupClose = () => {
+    setShowJoinPopup(false);
+    setShowCreatePopup(false);
+  };
+
   const handlePopupJoin = async () => {
     try {
       const joinResponse = await JoinClass({ joinCode });
       console.log(joinResponse);
-      setShowPopup(false);
-      // Gọi callback báo hiệu join thành công
-      if (onJoinSuccess) {
-        onJoinSuccess();
-      }
+      setShowJoinPopup(false);
+      if (onJoinSuccess) onJoinSuccess(); // 🔁 callback sau khi Join
     } catch (error) {
       console.error("Có lỗi khi tham gia:", error);
     }
+  };
+
+  const renderButton = () => {
+    if (role === "Student") {
+      return (
+        <button className="join-class-button" onClick={handleJoinClick}>
+          Join Class
+        </button>
+      );
+    } else if (role === "Instructor") {
+      return (
+        <button className="join-class-button" onClick={handleCreateClick}>
+          Create Class
+        </button>
+      );
+    }
+    return null;
   };
 
   return (
@@ -49,12 +74,11 @@ const JoinClassBar = ({ onSearchChange, onJoinSuccess }) => {
           />
         </div>
 
-        <button className="join-class-button" onClick={handleJoinClick}>
-          Join Class
-        </button>
+        {renderButton()}
       </div>
 
-      {showPopup && (
+      {/* Join Class Popup for Student */}
+      {showJoinPopup && role === "Student" && (
         <div className="popup-join-team">
           <div className="popup-content">
             <button className="popup-close-button" onClick={handlePopupClose}>
@@ -74,6 +98,15 @@ const JoinClassBar = ({ onSearchChange, onJoinSuccess }) => {
             </button>
           </div>
         </div>
+      )}
+
+      {/* Create Class Popup for Instructor */}
+      {showCreatePopup && role === "Instructor" && (
+        <CreateClassPopup
+          instructorId={instructorId}
+          onClose={handlePopupClose}
+          onCreate={onCreateSuccess} // ✅ sử dụng callback riêng khi tạo lớp
+        />
       )}
     </>
   );
