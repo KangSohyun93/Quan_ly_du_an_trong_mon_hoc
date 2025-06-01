@@ -8,7 +8,6 @@ const InstructorClassCard = ({
   classId,
   className,
   groupCount,
-  studentCount,
   semester,
   avatarNumber,
   avatarColor,
@@ -17,19 +16,9 @@ const InstructorClassCard = ({
   onEdit,
 }) => {
   const navigate = useNavigate();
-  console.log("InstructorClassCard props:", {
-    classId,
-    className,
-    groupCount,
-    studentCount,
-    semester,
-    members,
-    membersLength: members ? members.length : 0,
-  });
-
-  const displayStudentCount = studentCount || 0;
+  const displayStudentCount = members.length || 0;
   const handleCardClick = () => {
-    navigate(`/home/classes/${classId}`);
+    navigate(`/instructor/home/classes/${classId}`);
   };
   return (
     <div className="instructorclasscard-container" onClick={handleCardClick}>
