@@ -13,134 +13,124 @@ const {
 } = require("../models");
 const { Op } = require("sequelize");
 const jwt = require("jsonwebtoken");
+
 exports.importClass = async (req, res) => {
   try {
     const classId = req.params.id;
     if (!req.file) return res.status(400).send("No file uploaded");
 
-    // Lấy đường dẫn file đã upload
     const filePath = req.file.path;
 
-    try {
-      // Đọc workbook
-      const workbook = xlsx.readFile(filePath);
-      // Đọc sheet đầu tiên
-      const sheetName = workbook.SheetNames[0];
-      // console.log(">>>sheetName", sheetName);
-      const worksheet = workbook.Sheets[sheetName];
-      // console.log(">>>worksheet", worksheet);
+    const workbook = xlsx.readFile(filePath);
+    const sheetName = workbook.SheetNames[0];
+    const worksheet = workbook.Sheets[sheetName];
+    const data = xlsx.utils.sheet_to_json(worksheet);
 
-      // Chuyển sheet sang JSON
-      const data = xlsx.utils.sheet_to_json(worksheet);
-      // console.log(">>>data", data);
+    for (let i = 1; i < data.length; i++) {
+      const row = data[i];
+      const groupNumber = row.__EMPTY;
+      const email = row.__EMPTY_1?.trim().toLowerCase();
+      const isLeader = row.__EMPTY_2 === "Yes";
+      const groupName = row.__EMPTY_3;
+      const projectName = row.__EMPTY_4;
+      const description = row.__EMPTY_5;
+      const toolsUsed = row.__EMPTY_6;
 
-      for (let i = 1; i < data.length; i++) {
-        const row = data[i];
-        const groupNumber = row.__EMPTY;
-        const email = row.__EMPTY_1?.trim().toLowerCase();
-        const isLeader = row.__EMPTY_2 === "Yes";
-        const groupName = row.__EMPTY_3;
-        const projectName = row.__EMPTY_4;
-        const description = row.__EMPTY_5;
-        const toolsUsed = row.__EMPTY_6;
+      if (!email) continue;
 
-        console.log(`Row ${i + 1}:`);
-        console.log(`  Group Number: ${groupNumber}`);
-        console.log(`  Email: ${email}`);
-        console.log(`  Is Leader: ${isLeader}`);
-        console.log(`  Group Name: ${groupName}`);
-        console.log(`  Project Name: ${projectName}`);
-        console.log(`  Description: ${description}`);
-        console.log(`  Tools Used: ${toolsUsed}`);
-        console.log("---------------------");
+      // Tìm user theo email
+      const user = await User.findOne({ where: { email } });
+      if (!user) continue;
 
-        // Tìm user theo email
-        const user = await User.findOne({ where: { email: email } });
-        if (!user) continue;
-
-        // Tìm (hoặc tạo) group theo groupNumber và class_id
-        let group = await Group.findOne({
-          where: { group_number: groupNumber, class_id: classId },
+      // Đảm bảo user đã là thành viên của lớp
+      const existingClassMember = await ClassMember.findOne({
+        where: { class_id: classId, user_id: user.user_id },
+      });
+      if (!existingClassMember) {
+        await ClassMember.create({
+          class_id: classId,
+          user_id: user.user_id,
         });
+      }
 
-        if (!group) {
-          const groupData = {
-            group_name: isLeader
-              ? groupName || "Unnamed Group"
-              : "Unnamed Group",
-            group_number: groupNumber,
-            class_id: classId,
-          };
+      // Tìm hoặc tạo group
+      let group = await Group.findOne({
+        where: { group_number: groupNumber, class_id: classId },
+      });
 
-          // Chỉ thêm leader_id nếu là leader (và user_id tồn tại)
-          if (isLeader && user && user.user_id) {
-            groupData.leader_id = user.user_id;
-          }
+      if (!group) {
+        const groupData = {
+          group_name: isLeader ? groupName || "Unnamed Group" : "Unnamed Group",
+          group_number: groupNumber,
+          class_id: classId,
+        };
 
-          group = await Group.create(groupData);
+        if (isLeader && user.user_id) {
+          groupData.leader_id = user.user_id;
         }
 
-        // Nếu là leader, có thể cập nhật leader_id hoặc group_name
-        if (isLeader) {
-          let updated = false;
+        group = await Group.create(groupData);
+      }
 
-          if (!group.leader_id && user && user.user_id) {
-            group.leader_id = user.user_id;
-            updated = true;
-          }
+      // Nếu là leader, cập nhật leader_id và group_name nếu cần
+      if (isLeader) {
+        let updated = false;
 
-          if (
-            (!group.group_name || group.group_name === "Unnamed Group") &&
-            groupName
-          ) {
-            group.group_name = groupName;
-            updated = true;
-          }
-
-          if (updated) {
-            await group.save();
-          }
+        if (!group.leader_id && user.user_id) {
+          group.leader_id = user.user_id;
+          updated = true;
         }
 
-        // Thêm vào GroupMembers nếu chưa có
-        const existingGM = await GroupMember.findOne({
-          where: { group_id: group.group_id, user_id: user.user_id },
-        });
-        if (!existingGM) {
-          await GroupMember.create({
-            group_id: group.group_id,
-            user_id: user.user_id,
-          });
+        if (
+          (!group.group_name || group.group_name === "Unnamed Group") &&
+          groupName
+        ) {
+          group.group_name = groupName;
+          updated = true;
         }
 
-        // Nếu là leader và có project name → tạo Project nếu chưa có
-        const existingProject = await Project.findOne({
-          where: { group_id: group.group_id },
-        });
-
-        if (isLeader && projectName && !existingProject) {
-          await Project.create({
-            project_name: projectName,
-            group_id: group.group_id,
-            description: description || null,
-            tools_used: toolsUsed || null,
-          });
+        if (updated) {
+          await group.save();
         }
       }
 
-      // Xoá file tạm sau khi xử lý (tùy chọn)
-      fs.unlinkSync(filePath);
+      // Thêm user vào group nếu chưa có
+      const existingGM = await GroupMember.findOne({
+        where: { group_id: group.group_id, user_id: user.user_id },
+      });
 
-      res.json({});
-    } catch (err) {
-      console.error("error:", err);
-      res.status(500).send("Lỗi đọc file Excel");
+      if (!existingGM) {
+        await GroupMember.create({
+          group_id: group.group_id,
+          user_id: user.user_id,
+        });
+      }
+
+      // Nếu là leader và có project name, tạo project nếu chưa có
+      const existingProject = await Project.findOne({
+        where: { group_id: group.group_id },
+      });
+
+      if (isLeader && projectName && !existingProject) {
+        await Project.create({
+          project_name: projectName,
+          group_id: group.group_id,
+          description: description || null,
+          tools_used: toolsUsed || null,
+        });
+      }
     }
+
+    // Xoá file tạm
+    fs.unlinkSync(filePath);
+
+    return res.json({ message: "Import thành công" });
   } catch (error) {
-    console.error("error:", error);
-    res.status(500).json({ error: "Lỗi server" });
+    console.error("Lỗi khi import class:", error);
+    return res.status(500).json({ error: "Lỗi xử lý dữ liệu Excel" });
   }
 };
+
 exports.joinClass = async (req, res) => {
   const { code } = req.body;
   const userId = req.userId;
@@ -420,6 +410,7 @@ exports.getAllClass = async (req, res) => {
 exports.getClassforGV = async (req, res) => {
   try {
     const userId = req.userId;
+
     const classes = await Class.findAll({
       where: { instructor_id: userId },
       include: [
@@ -433,13 +424,20 @@ exports.getClassforGV = async (req, res) => {
           include: [
             {
               model: User,
-              attributes: ["user_id", "username", "avatar"],
+              attributes: ["user_id", "username", "avatar", "email"],
             },
           ],
         },
         {
           model: Group,
-          attributes: ["group_id"], // chỉ cần ID để đếm số lượng
+          include: [
+            {
+              model: User, // Thành viên nhóm
+              attributes: ["user_id", "username", "avatar", "email"],
+              through: { attributes: [] }, // Xóa thông tin phụ từ bảng trung gian (GroupMember)
+            },
+          ],
+          attributes: ["group_id", "group_name", "group_number"],
         },
       ],
       attributes: ["class_id", "class_name", "semester", "created_at"],
@@ -447,28 +445,39 @@ exports.getClassforGV = async (req, res) => {
     });
 
     const result = classes.map((c, index) => {
-      // Lấy member từ ClassMember
+      // Members của lớp học
       const members =
         c.ClassMembers?.map((cm) => ({
           id: cm.User.user_id,
           username: cm.User.username,
           avatar: cm.User.avatar,
+          email: cm.User.email,
         })) || [];
 
-      const groupCount = c.Groups?.length || 0;
+      // Danh sách các group trong lớp học
+      const groups =
+        c.Groups?.map((g) => ({
+          groupId: g.group_id,
+          groupName: g.group_name,
+          groupNumber: g.group_number,
+          members:
+            g.Users?.map((u) => ({
+              id: u.user_id,
+              username: u.username,
+              avatar: u.avatar,
+              //email: u.email,
+            })) || [],
+        })) || [];
 
       return {
         hasJoin: true,
         classId: c.class_id,
         className: c.class_name,
         semester: c.semester,
-        groupName: null,
-        groupId: null,
-        projectName: null,
-        projectId: null,
         memberCount: members.length,
-        groupCount,
+        groupCount: groups.length,
         members,
+        groups,
         avatarNumber: index,
         avatarColor: getRandomAvatarColor(),
       };
@@ -480,6 +489,7 @@ exports.getClassforGV = async (req, res) => {
     return res.status(500).json({ error: "Internal server error" });
   }
 };
+
 exports.createClass = async (req, res) => {
   const { class_id, class_name, semester, secret_code } = req.body;
   const userId = req.userId;

@@ -16,6 +16,9 @@ import UserManager from "./pages/Ad_UserManager.js";
 import SV_TeamClass from "./pages/SV_Teamclass.js";
 import SV_TeamDetail from "./pages/SV_TeamDetail.js";
 import GV_TeamClass from "./pages/GV_Teamclass.js";
+import ClassGroupsPage from "./components/classInfo/ClassGroupPage.js";
+import ClassMembersPage from "./components/classInfo/ClassMembersPage.js";
+import GV_GroupDetailOfClass from "./pages/GV_GroupDetailOfClass.js";
 
 function App() {
   return (
@@ -76,6 +79,26 @@ function App() {
             <Route path="team-task" element={<KanbanView />} />
             <Route path="my-task" element={<KanbanView />} />
             <Route path="rate" element={<ProjectRate />} />
+          </Route>
+          <Route
+            path="/instructor/home/classes/:classId"
+            element={<ClassGroupsPage />}
+          />
+          <Route
+            path="/instructor/home/classes/:classId/members"
+            element={<ClassMembersPage />}
+          />
+          <Route
+            path="/instructor/home/classes/:classId/group/:groupId"
+            element={
+              <RequireAuth>
+                <RequireRole role="Instructor">
+                  <GV_GroupDetailOfClass />
+                </RequireRole>
+              </RequireAuth>
+            }
+          >
+            <Route path="introduce" element={<ProjectInfo />} />
           </Route>
           <Route
             path="*"

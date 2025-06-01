@@ -1,0 +1,113 @@
+.class-members-page {
+  display: flex;
+  height: 100vh;
+}
+
+.class-members-content {
+  flex: 1;
+  padding: 20px;
+  background-color: #f0f2f5; /* Đồng bộ nền với ClassGroupsPage */
+}
+
+.class-members-header {
+  margin-bottom: 20px; /* Đồng bộ khoảng cách với ClassGroupsPage */
+}
+
+.class-members-header h1 {
+  font-size: 1.5em;
+  margin: 0 0 10px 0;
+  color: #2c3e50; /* Đồng bộ màu chữ với ClassGroupsPage */
+}
+
+.class-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Đồng bộ shadow với ClassGroupsPage */
+}
+
+.class-info h2 {
+  margin: 0;
+  font-size: 1.2em;
+  color: #34495e; /* Đồng bộ màu chữ với ClassGroupsPage */
+}
+
+.class-nav a {
+  margin-left: 15px;
+  color: #3498db; /* Đồng bộ màu link với ClassGroupsPage */
+  text-decoration: none;
+}
+
+.class-nav a:hover {
+  text-decoration: underline; /* Đồng bộ hover với ClassGroupsPage */
+}
+
+.class-members-main {
+  display: flex;
+  flex-direction: column; /* Đồng bộ bố cục với groups-list trong ClassGroupsPage */
+  gap: 10px;
+}
+
+.group-section {
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 5px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Đồng bộ shadow với ClassGroupsPage */
+  margin-bottom: 10px;
+}
+
+.group-section h3 {
+  font-size: 1.1em;
+  margin: 0 0 10px 0;
+  color: #2c3e50; /* Đồng bộ màu chữ với sidebar-placeholder h3 trong ClassGroupsPage */
+}
+
+.members-list ul {
+  list-style: none;
+  padding: 0;
+}
+
+.member-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #ececec; /* Viền nhẹ để phân cách */
+}
+
+.member-item:last-child {
+  border-bottom: none; /* Không có viền cho mục cuối */
+}
+
+.member-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+  object-fit: cover;
+}
+
+.member-info {
+  flex: 1;
+}
+
+.member-name {
+  margin: 0;
+  font-size: 1em;
+  color: #2c3e50; /* Đồng bộ màu chữ với ClassGroupsPage */
+}
+
+.member-email {
+  margin: 0;
+  font-size: 0.9em;
+  color: #7f8c8d; /* Đồng bộ màu chữ phụ với ClassGroupsPage */
+}
+
+.error-message,
+.class-members-loading {
+  text-align: center;
+  padding: 20px;
+  color: #e74c3c; /* Đồng bộ màu lỗi với ClassGroupsPage */
+}

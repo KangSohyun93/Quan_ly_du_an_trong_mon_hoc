@@ -1,0 +1,89 @@
+.class-groups-page {
+  display: flex;
+  height: 100vh;
+}
+
+.class-groups-content {
+  flex: 1;
+  padding: 20px;
+  background-color: #f0f2f5;
+}
+
+.class-groups-header {
+  margin-bottom: 20px;
+}
+
+.class-groups-header h1 {
+  font-size: 1.5em;
+  margin: 0 0 10px 0;
+  color: #2c3e50;
+}
+
+.class-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.class-info h2 {
+  margin: 0;
+  font-size: 1.2em;
+  color: #34495e;
+}
+
+.class-nav a {
+  margin-left: 15px;
+  color: #3498db;
+  text-decoration: none;
+}
+
+.class-nav a:hover {
+  text-decoration: underline;
+}
+
+.class-groups-main {
+  display: flex;
+}
+
+.sidebar-placeholder {
+  width: 200px;
+  background-color: #fff;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-right: 20px;
+}
+
+.sidebar-placeholder h3 {
+  font-size: 1em;
+  margin: 0 0 10px 0;
+  color: #2c3e50;
+}
+
+.sidebar-placeholder ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar-placeholder ul li {
+  padding: 5px 0;
+  color: #7f8c8d;
+}
+
+.groups-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 cột */
+  gap: 18px;
+  width: 100%;
+}
+
+.error-message,
+.class-groups-loading {
+  text-align: center;
+  padding: 20px;
+  color: #e74c3c;
+}
