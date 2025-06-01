@@ -1,28 +1,25 @@
 import React, { useEffect, useState } from "react";
 import Sidebar from "../components/shared/Sidebar/Sidebar.js";
 import JoinClassBar from "../components/classHeader/classHeader.js";
-import ClassCardList from "../components/shared/ClassCard/classList.js";
+import ClassCardList from "../components/shared/InstructorClassCard/instructorClassList.js";
+import EditClassPopup from "../components/shared/EditClassPopup/EditClassPopup.js";
 import { SearchClass, getClassByGv } from "../services/class-service.js";
 
 function GV_TeamClass() {
   const [searchText, setSearchText] = useState("");
   const [classCards, setClassCards] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [editingClass, setEditingClass] = useState(null); // ✅ Quản lý popup
 
   const fetchClasses = async () => {
     setLoading(true);
     try {
+      const userId = JSON.parse(localStorage.getItem("user"))?.id;
+
       if (searchText.trim() !== "") {
         const searchResult = await SearchClass({ searchText });
-
-        // Lọc các lớp tìm được có instructorId = userId
-        const userId = JSON.parse(localStorage.getItem("user"))?.id;
-        console.log("User ID:", userId);
-        const filteredClasses = searchResult.filter(
-          (c) => c.instructorId === userId
-        );
-        console.log("Filtered Classes:", filteredClasses);
-        setClassCards(Array.isArray(filteredClasses) ? filteredClasses : []);
+        const filtered = searchResult.filter((c) => c.instructorId === userId);
+        setClassCards(Array.isArray(filtered) ? filtered : []);
       } else {
         const allClasses = await getClassByGv();
         setClassCards(Array.isArray(allClasses) ? allClasses : []);
@@ -41,6 +38,11 @@ function GV_TeamClass() {
     return () => clearTimeout(delayDebounce);
   }, [searchText]);
 
+  const handleEditClass = (classId) => {
+    const classToEdit = classCards.find((c) => c.classId === classId);
+    if (classToEdit) setEditingClass(classToEdit);
+  };
+
   return (
     <div
       className="app-content d-flex"
@@ -55,19 +57,36 @@ function GV_TeamClass() {
       >
         <JoinClassBar
           onSearchChange={setSearchText}
-          onJoinSuccess={fetchClasses} // reload khi join thành công
+          onCreateSuccess={fetchClasses}
         />
         <div
           className="page-content p-4"
           style={{
             flexGrow: 1,
-            overflowY: "auto", // Cho phép phần nội dung cuộn
+            overflowY: "auto",
             height: "100%",
           }}
         >
-          <ClassCardList data={classCards} loading={loading} />
+          <ClassCardList
+            data={classCards}
+            loading={loading}
+            onEdit={handleEditClass} // ✅ Truyền hàm mở popup
+          />
         </div>
       </div>
+
+      {/* ✅ Popup chỉnh sửa lớp */}
+      {editingClass && (
+        <EditClassPopup
+          classId={editingClass.classId}
+          initialData={editingClass}
+          onClose={() => setEditingClass(null)}
+          onUpdate={() => {
+            setEditingClass(null);
+            fetchClasses();
+          }}
+        />
+      )}
     </div>
   );
 }
