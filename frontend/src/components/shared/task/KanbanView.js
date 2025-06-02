@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCheckCircle as fasCheckCircle,
@@ -8,7 +8,11 @@ import {
   faPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import { faCircle as farCircle } from "@fortawesome/free-regular-svg-icons";
-import { fetchTasks, updateChecklistItem } from "../../../services/api-client";
+import {
+  fetchTasks,
+  updateChecklistItem,
+  updateTaskStatus,
+} from "../../../services/api-client";
 import CreateTask from "./CreateTask";
 import TaskCommentPage from "./TaskCommentPage";
 import { filterTasksByUser } from "./UserFilter";
@@ -25,9 +29,7 @@ const KanbanView = (sprints) => {
     selectedUserId,
     selectedSprintId,
   } = useOutletContext();
-  // console.log("selectedUserId:", selectedUserId);
-  // console.log("selectedSprintId", selectedSprintId);
-  // console.log("activeTab", activeTab);
+
   const user = JSON.parse(localStorage.getItem("user"));
   const userId = user.id;
   const [tasks, setTasks] = useState([]);
@@ -38,18 +40,21 @@ const KanbanView = (sprints) => {
   const [showCommentPage, setShowCommentPage] = useState(null);
 
   const statusMap = {
-    "to-do": "to-do",
-    todo: "to-do",
-    "in-progress": "in-progress",
-    done: "done",
-    completed: "done",
+    "to-do": "To-Do",
+    todo: "To-Do",
+    "To-Do": "To-Do",
+    "in-progress": "In-Progress",
+    "In-Progress": "In-Progress",
+    done: "Completed",
+    completed: "Completed",
+    Completed: "Completed",
   };
+
   const loadTasks = async () => {
     if (!projectId || selectedSprintId === null) return;
 
     try {
       const isTeamTask = activeTab === "team-task";
-      // tạo biến có thể thay đổi:
       let selectedUserIdToUse = isTeamTask ? selectedUserId || null : userId;
       const mode = isTeamTask
         ? !selectedUserIdToUse
@@ -64,12 +69,10 @@ const KanbanView = (sprints) => {
       );
       const currentDate = new Date();
 
-      // Không cần lọc lại sprint nữa vì backend đã lọc rồi
       const mapped = data.map((task) => {
         const user = members?.find((m) => m.id === task.assigned_to) || {};
-        //console.log("User:", user);
         const normalizedStatus = (task.status || "").toLowerCase();
-        const finalStatus = statusMap[normalizedStatus] || "to-do";
+        const finalStatus = statusMap[normalizedStatus] || "To-Do";
 
         return {
           id: task.task_id,
@@ -83,7 +86,7 @@ const KanbanView = (sprints) => {
                 minute: "2-digit",
               })
             : "",
-          tags: ["SQL", "Backend"], // bạn có thể chỉnh thành dynamic nếu có
+          tags: ["SQL", "Backend"], // tùy chỉnh nếu dynamic
           avatar: user.avatarUrl,
           comments: task.comment_count || 0,
           subTasks: (task.checklists || []).map((c) => ({
@@ -95,7 +98,7 @@ const KanbanView = (sprints) => {
           overdue:
             task.due_date &&
             new Date(task.due_date) < currentDate &&
-            finalStatus !== "done",
+            finalStatus !== "Completed",
           progress_percentage: task.progress_percentage || 0,
           assigned_to: task.assigned_to,
           sprint_id: task.sprint_id,
@@ -119,21 +122,26 @@ const KanbanView = (sprints) => {
   };
 
   const updateReportData = (tasks) => {
-    const counts = { "to-do": 0, "in-progress": 0, done: 0 };
+    const counts = { "To-Do": 0, "In-Progress": 0, Completed: 0 };
     tasks.forEach((t) => {
       if (counts[t.status] !== undefined) {
         counts[t.status]++;
       }
     });
     setReportData([
-      { id: 1, name: "To-Do", status: "to-do", count: counts["to-do"] },
+      { id: 1, name: "To-Do", status: "To-Do", count: counts["To-Do"] },
       {
         id: 2,
-        name: "In-progress",
-        status: "in-progress",
-        count: counts["in-progress"],
+        name: "In-Progress",
+        status: "In-Progress",
+        count: counts["In-Progress"],
       },
-      { id: 3, name: "Done", status: "done", count: counts["done"] },
+      {
+        id: 3,
+        name: "Completed",
+        status: "Completed",
+        count: counts["Completed"],
+      },
     ]);
   };
 
@@ -144,7 +152,7 @@ const KanbanView = (sprints) => {
       selectedSprintId !== null &&
       selectedSprintId !== undefined &&
       projectId &&
-      activeTab !== undefined // thêm điều kiện để đảm bảo tab đã sẵn sàng
+      activeTab !== undefined
     ) {
       loadTasks();
     }
@@ -158,6 +166,24 @@ const KanbanView = (sprints) => {
       if (!sub) return;
 
       await updateChecklistItem(subTaskId, !sub.completed);
+
+      const updatedSubTasks = task.subTasks.map((s) =>
+        s.id === subTaskId ? { ...s, completed: !s.completed } : s
+      );
+
+      const total = updatedSubTasks.length;
+      const completed = updatedSubTasks.filter((s) => s.completed).length;
+
+      let newStatus = task.status;
+      if (completed === total) {
+        newStatus = "Completed";
+      } else if (completed > 0) {
+        newStatus = "In-Progress";
+      } else {
+        newStatus = "To-Do";
+      }
+
+      if (newStatus !== task.status) await updateTaskStatus(taskId, newStatus);
       await loadTasks();
     } catch (err) {
       console.error("Toggle error:", err);
@@ -238,7 +264,7 @@ const KanbanView = (sprints) => {
                             }`}
                             onClick={() => {
                               if (
-                                task.assigned_to === currentUserId &&
+                                task.assigned_to === currentUserId ||
                                 isTeamLead
                               ) {
                                 toggleSubTask(task.id, s.id);
@@ -259,7 +285,7 @@ const KanbanView = (sprints) => {
                 </div>
               ))}
 
-            {group.status === "to-do" && isTeamLead && (
+            {group.status === "To-Do" && isTeamLead && (
               <button
                 onClick={() => setShowCreateTask(true)}
                 className="add-task-btn"
@@ -272,11 +298,12 @@ const KanbanView = (sprints) => {
 
         {showCreateTask && (
           <CreateTask
-            onClose={() => {
+            onCancel={() => {
               setShowCreateTask(false);
               loadTasks();
             }}
             selectedSprintId={selectedSprintId}
+            members={members}
           />
         )}
 
