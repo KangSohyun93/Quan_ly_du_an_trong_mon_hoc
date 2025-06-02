@@ -1,0 +1,18 @@
+.sprintperformance-chart-container {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border-radius: 10px;
+    padding: 20px;
+    margin: 10px;
+    min-height: 350px;
+    max-height: 900px;
+}
+
+.error {
+    color: #721c24;
+    padding: 10px 15px;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: 6px;
+    margin-top: 15px;
+    font-size: 14px;
+}

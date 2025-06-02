@@ -1,117 +1,162 @@
-import { Octokit } from '@octokit/rest';
-import dotenv from 'dotenv';
-import pool from '../db.js';
-import { storeCommits } from '../models/contributionModel.js';
+const { User, GitContribution, Project, sequelize, Sequelize, QueryTypes } = require('../models');
 
-dotenv.config({ path: './.github.env' });
-
-const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
-
-export const fetchAndStoreCommits = async (projectId) => {
-    console.log(`[Service] Fetching commits for projectId: ${projectId}`);
+const storeCommits = async (projectId, commitsToStore) => { // Giữ tên hàm
     try {
-        const connection = await pool.getConnection();
-        const [rows] = await connection.query(
-            'SELECT github_repo_url FROM Projects WHERE project_id = ?',
-            [projectId]
-        );
-        connection.release();
+        console.log(`[ContributionService] Storing ${commitsToStore.length} commits into DB for projectId: ${projectId}`);
+        for (const commit of commitsToStore) {
+            let userId = null;
+            let foundUser = null;
 
-        if (!rows[0]?.github_repo_url) {
-            console.error(`[Service] Không tìm thấy github_repo_url cho project ${projectId}`);
-            return [];
-        }
-
-        const repoUrl = rows[0].github_repo_url;
-        const parts = repoUrl.split('/');
-        if (parts.length < 5 || !repoUrl.startsWith('https://github.com/')) {
-            console.error(`[Service] Định dạng repoUrl không hợp lệ hoặc không parse được owner/repo: ${repoUrl}`);
-            return [];
-        }
-        const owner = parts[3];
-        const repo = parts[4].replace('.git', '');
-
-        console.log(`[Service] Owner: ${owner}, Repo: ${repo}`);
-
-        const branchesResponse = await octokit.request('GET /repos/{owner}/{repo}/branches', {
-            owner,
-            repo,
-            headers: { 'X-GitHub-Api-Version': '2022-11-28' },
-        });
-
-        let allCommitsData = [];
-        for (const branch of branchesResponse.data) {
-            console.log(`[Service] Fetching commits for branch: ${branch.name}`);
-            // Lấy danh sách commit SHA cho nhánh
-            const commitsListResponse = await octokit.request('GET /repos/{owner}/{repo}/commits', {
-                owner,
-                repo,
-                sha: branch.name,
-                per_page: 100, // Giới hạn số commit lấy về, có thể cần phân trang nếu nhiều hơn
-                headers: { 'X-GitHub-Api-Version': '2022-11-28' },
-            });
-            console.log(`[Service] Found ${commitsListResponse.data.length} commits on branch ${branch.name}. Fetching details...`);
-
-            for (const commitListItem of commitsListResponse.data) {
-                try {
-                    // Gọi API chi tiết cho từng commit để lấy stats (lines added/removed)
-                    const detailedCommitResponse = await octokit.request('GET /repos/{owner}/{repo}/commits/{commit_sha}', {
-                        owner,
-                        repo,
-                        commit_sha: commitListItem.sha,
-                        headers: { 'X-GitHub-Api-Version': '2022-11-28' },
-                    });
-                    const detailedCommit = detailedCommitResponse.data;
-
-                    // console.log(`[Service] Commit SHA: ${detailedCommit.sha.substring(0,7)}, Stats:`, JSON.stringify(detailedCommit.stats, null, 2));
-
-                    allCommitsData.push({
-                        sha: detailedCommit.sha,
-                        message: detailedCommit.commit.message,
-                        author_email: detailedCommit.commit.author?.email || 'unknown@example.com',
-                        author_name: detailedCommit.commit.author?.name || 'Unknown Author',
-                        date: detailedCommit.commit.author?.date || new Date().toISOString(),
-                        github_login: detailedCommit.author?.login || null,
-                        github_id: detailedCommit.author?.id || null,
-                        lines_added: detailedCommit.stats?.additions || 0, // Lấy lines_added từ stats
-                        lines_removed: detailedCommit.stats?.deletions || 0, // Lấy lines_removed từ stats
-                    });
-                } catch (detailError) {
-                    console.warn(`[Service] Could not fetch details for commit ${commitListItem.sha}: ${detailError.message}. Storing with 0 lines changed.`);
-                    // Fallback nếu không lấy được chi tiết commit (ví dụ commit không có parent)
-                    allCommitsData.push({
-                        sha: commitListItem.sha,
-                        message: commitListItem.commit.message,
-                        author_email: commitListItem.commit.author?.email || 'unknown@example.com',
-                        author_name: commitListItem.commit.author?.name || 'Unknown Author',
-                        date: commitListItem.commit.author?.date || new Date().toISOString(),
-                        github_login: commitListItem.author?.login || null,
-                        github_id: commitListItem.author?.id || null,
-                        lines_added: 0,
-                        lines_removed: 0,
-                    });
+            if (commit.github_login) {
+                foundUser = await User.findOne({
+                    where: { github_username: commit.github_login },
+                    attributes: ['user_id']
+                });
+                if (foundUser) {
+                    userId = foundUser.user_id;
                 }
             }
+
+            if (!userId && commit.author_email && commit.author_email !== 'unknown@example.com' && !commit.author_email.includes('@users.noreply.github.com')) {
+                foundUser = await User.findOne({
+                    where: {
+                        [Sequelize.Op.or]: [
+                            { github_email: commit.author_email },
+                            {
+                                github_email: null,
+                                email: commit.author_email
+                            }
+                        ]
+                    },
+                    attributes: ['user_id']
+                });
+                if (foundUser) {
+                    userId = foundUser.user_id;
+                }
+            }
+
+            if (userId) {
+                await GitContribution.findOrCreate({
+                    where: {
+                        project_id: projectId,
+                        commit_hash: commit.sha
+                    },
+                    defaults: {
+                        project_id: projectId,
+                        user_id: userId,
+                        commit_hash: commit.sha,
+                        commit_message: commit.message,
+                        commit_date: new Date(commit.date),
+                        lines_added: commit.lines_added || 0,
+                        lines_removed: commit.lines_removed || 0,
+                    }
+                });
+            } else {
+                console.warn(`[ContributionService] Cannot map commit (SHA: ${commit.sha}, Email: ${commit.author_email}, GH Login: ${commit.github_login}) to any user for projectId ${projectId}. Commit will be skipped.`);
+            }
         }
-
-        const uniqueCommits = Array.from(new Map(allCommitsData.map(commit => [commit.sha, commit])).values());
-        console.log(`[Service] Total unique commits fetched for projectId ${projectId}: ${uniqueCommits.length}`);
-
-        if (uniqueCommits.length > 0) {
-            // Hàm storeCommits trong contributionModel.js cần được cập nhật để nhận lines_added, lines_removed
-            await storeCommits(projectId, uniqueCommits);
-            console.log(`[Service] Stored ${uniqueCommits.length} commits for projectId ${projectId}`);
-        } else {
-            console.log(`[Service] No commits to store for projectId ${projectId}.`);
-        }
-
-        return uniqueCommits;
+        console.log(`[ContributionService] Finished storing commits for projectId: ${projectId}`);
     } catch (error) {
-        if (error.status) { // Octokit error
-            console.error(`[Service] GitHub API Error ${error.status} for projectId ${projectId}. URL: ${error.request?.url}. Message: ${error.message}`);
-        } else {
-            console.error(`[Service] Error fetching commits for projectId ${projectId}: ${error.message}`);
-        }
-        return [];
+        console.error(`[ContributionService] Error storing commits into DB for projectId ${projectId}:`, error.message, error);
+        throw error;
     }
+};
+
+const getCommits = async (projectId) => { // Giữ tên hàm
+    try {
+        const commitsData = await GitContribution.findAll({
+            where: { project_id: projectId },
+            include: [{
+                model: User,
+                as: 'user',
+                attributes: ['user_id', 'username'],
+                required: true
+            }],
+            attributes: [
+                ['commit_hash', 'sha'],
+                ['commit_message', 'message'],
+                ['commit_date', 'date']
+            ],
+            order: [['commit_date', 'ASC']],
+        });
+        return commitsData.map(commitInstance => {
+            const commit = commitInstance.toJSON();
+            return {
+                sha: commit.sha,
+                message: commit.message,
+                date: commit.date,
+                user_id: commit.user.user_id,
+                username: commit.user.username
+            };
+        });
+    } catch (error) {
+        console.error(`[ContributionService] Error fetching commits from DB for projectId ${projectId}:`, error.message, error);
+        throw new Error('Could not fetch commits from database');
+    }
+};
+
+const getProjectLOCData = async (projectId) => { // Giữ tên hàm
+    console.log(`[ContributionService] Getting LOC data from DB for projectId: ${projectId}`);
+    try {
+        const locDataInstances = await GitContribution.findAll({
+            where: { project_id: projectId },
+            include: [{
+                model: User,
+                as: 'user',
+                attributes: ['user_id', 'username'],
+                required: true
+            }],
+            attributes: [
+                ['commit_date', 'date'],
+                'lines_added',
+                'lines_removed'
+            ],
+            order: [['commit_date', 'ASC']],
+        });
+        const result = locDataInstances.map(locInstance => {
+            const loc = locInstance.toJSON();
+            return {
+                date: loc.date,
+                lines_added: loc.lines_added,
+                lines_removed: loc.lines_removed,
+                user_id: parseInt(loc.user.user_id, 10),
+                username: loc.user.username
+            };
+        });
+        console.log(`[ContributionService] Found ${result.length} LOC entries in DB for projectId ${projectId}.`);
+        return result;
+    } catch (error) {
+        console.error(`[ContributionService] Error fetching LOC data from DB for projectId ${projectId}:`, error.message, error);
+        throw new Error('Could not fetch LOC data from database');
+    }
+};
+
+/**
+ * Lấy thống kê commit và LOC cho một project.
+ */
+async function getCommitStatsByProjectId(projectId) {
+    try {
+        const stats = await GitContribution.findOne({
+            where: { project_id: projectId },
+            attributes: [
+                [sequelize.fn('COUNT', sequelize.col('contribution_id')), 'totalCommits'],
+                [sequelize.fn('SUM', sequelize.col('lines_added')), 'totalLinesAdded'],
+            ],
+            raw: true // Trả về plain object
+        });
+        return {
+            totalCommits: stats?.totalCommits || 0,
+            totalLinesAdded: stats?.totalLinesAdded || 0,
+        };
+    } catch (error) {
+        console.error(`[ContributionService] Error fetching commit stats for project ${projectId}:`, error);
+        throw new Error(`Could not fetch commit stats for project ${projectId}`);
+    }
+}
+
+module.exports = {
+    storeCommits,
+    getCommits,
+    getProjectLOCData,
+    getCommitStatsByProjectId
 };

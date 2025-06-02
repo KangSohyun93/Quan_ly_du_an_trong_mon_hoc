@@ -1,0 +1,88 @@
+/* body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+} */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+}
+
+a {
+    text-decoration: none;
+}
+
+body {
+    font-family: "Roboto", sans-serif;
+    background-color: #ECEFF8;
+}
+
+button {
+    border: none;
+    cursor: pointer;
+}
+
+h1 {
+    font-size: 26.67px;
+    font-weight: bold;
+}
+
+h2 {
+    font-size: 21.33px;
+    font-weight: bold;
+}
+
+h3 {
+    font-size: 16.67px;
+    font-weight: bold;
+}
+
+h4 {
+    font-size: 13.33px;
+    font-weight: normal;
+}
+
+sub {
+    font-size: 8px;
+
+}
+
+label {
+    font-size: 10.67px;
+    font-weight: bold;
+}
+
+.caption {
+    font-size: 8px;
+
+}
+
+.body_1 {
+    font-size: 13.33px;
+}
+
+.body_2 {
+    font-size: 10.67px;
+    font-weight: 500;
+}
+
+.blueForActive {
+    color: #6AD2FF;
+}
+
+.blueForActive_Background {
+    color: #F4F8FF;
+}
+
+.blueBackground {
+    color: #ECEFF8;
+}

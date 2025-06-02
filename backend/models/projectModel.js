@@ -1,23 +1,42 @@
-import pool from '../db.js';
-
-export const getProjectById = async (projectId) => {
-    const connection = await pool.getConnection();
-    try {
-        console.log(`[Model] Fetching project details for projectId: ${projectId}`);
-        const [rows] = await connection.query(
-            'SELECT project_id, project_name, group_id, description, tools_used, status, github_repo_url, created_at, end_date FROM Projects WHERE project_id = ?',
-            [projectId]
-        );
-        if (rows.length === 0) {
-            console.warn(`[Model] Project with id ${projectId} not found.`);
-            return null; // Hoặc throw new Error('Project not found'); tùy theo cách bạn muốn xử lý
-        }
-        console.log(`[Model] Project details for ${projectId}:`, rows[0]);
-        return rows[0];
-    } catch (error) {
-        console.error(`[Model] Error fetching project by id ${projectId}:`, error);
-        throw error; // Ném lỗi để controller có thể bắt và xử lý
-    } finally {
-        connection.release();
+module.exports = (sequelize, DataTypes) => {
+  const Project = sequelize.define('Project', {
+    project_id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true
+    },
+    project_name: {
+      type: DataTypes.STRING(100),
+      allowNull: false
+    },
+    group_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      unique: true,
+    },
+    description: {
+      type: DataTypes.TEXT
+    },
+    tools_used: {
+      type: DataTypes.TEXT
+    },
+    status: {
+      type: DataTypes.ENUM('Ongoing', 'Completed', 'Cancelled'),
+      allowNull: false,
+      defaultValue: 'Ongoing'
+    },
+    github_repo_url: {
+      type: DataTypes.STRING(255)
+    },
+    end_date: {
+      type: DataTypes.DATE,
+      allowNull: true
     }
+  }, {
+    tableName: 'Projects',
+    timestamps: true,     
+    createdAt: 'created_at',
+    updatedAt: false,     
+  });
+  return Project;
 };
