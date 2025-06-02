@@ -1,106 +1,131 @@
 const Sequelize = require("sequelize");
-const sequelize = require("../config/db-connect");
+const sequelize = require("../config/db-connect"); // File config kết nối Sequelize
 
-const db = {};
-db.Sequelize = Sequelize;
-db.sequelize = sequelize;
+// Import models
+const User = require("./UserModel");
+const Class = require("./ClassModel");
+const Group = require("./GroupModel");
+const Project = require("./ProjectModel");
+const ClassMember = require("./MemberClassModel");
+const GroupMember = require("./MemberGroupModel");
+const { Task, TaskChecklist, Sprint, TaskComment } = require("./TaskModel");
+const PeerAssessment = require("./PeerAssessmentModel");
+const GitContribution = require("./GitContributionModel");
+// Define associations
+User.hasMany(PeerAssessment, {
+  foreignKey: "assessor_id",
+  as: "assessmentsGiven",
+});
+PeerAssessment.belongsTo(User, {
+  foreignKey: "assessor_id",
+  as: "assessor",
+});
+User.hasMany(PeerAssessment, {
+  foreignKey: "assessee_id",
+  as: "assessmentsReceived",
+});
+PeerAssessment.belongsTo(User, {
+  foreignKey: "assessee_id",
+  as: "assessee",
+});
 
-// Import models - Truyền sequelize và DataTypes
-db.User = require("./UserModel")(sequelize, Sequelize.DataTypes);
-db.Class = require("./ClassModel")(sequelize, Sequelize.DataTypes);
-db.Group = require("./GroupModel")(sequelize, Sequelize.DataTypes);
-db.Project = require("./ProjectModel")(sequelize, Sequelize.DataTypes);
-db.ClassMember = require("./MemberClassModel")(sequelize, Sequelize.DataTypes);
-db.GroupMember = require("./MemberGroupModel")(sequelize, Sequelize.DataTypes);
-db.PeerAssessment = require("./PeerAssessmentModel")(sequelize, Sequelize.DataTypes);
-db.GitContribution = require("./GitContributionModel")(sequelize, Sequelize.DataTypes);
-
-const taskModels = require("./TaskModel")(sequelize, Sequelize.DataTypes);
-db.Task = taskModels.Task;                     // Sử dụng tên model đã chuẩn hóa
-db.TaskChecklist = taskModels.TaskChecklist;   // Sử dụng tên model đã chuẩn hóa
-db.Sprint = taskModels.Sprint;                 // Sử dụng tên model đã chuẩn hóa
-db.TaskComment = taskModels.TaskComment;       // Sử dụng tên model đã chuẩn hóa
-
-db.User.hasMany(db.PeerAssessment, { foreignKey: "assessor_id", as: "assessmentsGiven" });
-db.PeerAssessment.belongsTo(db.User, { foreignKey: "assessor_id", as: "assessor" });
-
-db.User.hasMany(db.PeerAssessment, { foreignKey: "assessee_id", as: "assessmentsReceived" });
-db.PeerAssessment.belongsTo(db.User, { foreignKey: "assessee_id", as: "assessee" });
-
-db.User.belongsToMany(db.Class, {
-  through: db.ClassMember,
+User.belongsToMany(Class, {
+  through: ClassMember,
   foreignKey: "user_id",
   otherKey: "class_id",
 });
-db.Class.belongsToMany(db.User, {
-  through: db.ClassMember,
+Class.belongsToMany(User, {
+  through: ClassMember,
   foreignKey: "class_id",
   otherKey: "user_id",
 });
 
-db.User.belongsToMany(db.Group, {
-  through: db.GroupMember,
+User.belongsToMany(Group, {
+  through: GroupMember,
   foreignKey: "user_id",
   otherKey: "group_id",
 });
-db.Group.belongsToMany(db.User, {
-  through: db.GroupMember,
+Group.belongsToMany(User, {
+  through: GroupMember,
   foreignKey: "group_id",
   otherKey: "user_id",
 });
 
-db.Class.hasMany(db.Group, { foreignKey: "class_id" });
-db.Group.belongsTo(db.Class, { foreignKey: "class_id" });
+Class.hasMany(Group, { foreignKey: "class_id" });
+Group.belongsTo(Class, { foreignKey: "class_id" });
 
-db.Group.hasOne(db.Project, { foreignKey: "group_id" });
-db.Project.belongsTo(db.Group, { foreignKey: "group_id" });
+Group.hasOne(Project, { foreignKey: "group_id" });
+Project.belongsTo(Group, { foreignKey: "group_id" });
 
-db.User.hasMany(db.Class, { foreignKey: "instructor_id" });
-db.Class.belongsTo(db.User, { foreignKey: "instructor_id", as: "instructor" });
+User.hasMany(Class, { foreignKey: "instructor_id" });
+Class.belongsTo(User, { foreignKey: "instructor_id", as: "instructor" });
 
-db.User.hasMany(db.Group, { foreignKey: "leader_id" });
+User.hasMany(Group, { foreignKey: "leader_id" });
 // Group -> User (leader)
-db.Group.belongsTo(db.User, { as: "leader", foreignKey: "leader_id" });
+Group.belongsTo(User, { as: "leader", foreignKey: "leader_id" });
 // GroupMember -> User
-db.GroupMember.belongsTo(db.User, { foreignKey: "user_id" });
+GroupMember.belongsTo(User, { foreignKey: "user_id" });
 
-db.Group.hasMany(db.GroupMember, { foreignKey: "group_id", as: "groupMembers" });
-db.GroupMember.belongsTo(db.Group, { foreignKey: "group_id", as: "group" });
+Group.hasMany(GroupMember, { foreignKey: "group_id", as: "groupMembers" });
+GroupMember.belongsTo(Group, { foreignKey: "group_id", as: "group" });
 
 // Một lớp có nhiều ClassMember
-db.Class.hasMany(db.ClassMember, { foreignKey: "class_id" });
-db.ClassMember.belongsTo(db.Class, { foreignKey: "class_id" });
+Class.hasMany(ClassMember, { foreignKey: "class_id" });
+ClassMember.belongsTo(Class, { foreignKey: "class_id" });
 
 // ClassMember liên kết với User
-db.User.hasMany(db.ClassMember, { foreignKey: "user_id" });
-db.ClassMember.belongsTo(db.User, { foreignKey: "user_id" });
+User.hasMany(ClassMember, { foreignKey: "user_id" });
+ClassMember.belongsTo(User, { foreignKey: "user_id" });
 
 // Relationships with aliases for controller compatibility
-db.Project.hasMany(db.Sprint, { foreignKey: "project_id", as: "sprints" });
-db.Sprint.belongsTo(db.Project, { foreignKey: "project_id", as: "project" });
+Project.hasMany(Sprint, { foreignKey: "project_id", as: "sprints" });
+Sprint.belongsTo(Project, { foreignKey: "project_id", as: "project" });
 
-db.Sprint.hasMany(db.Task, { foreignKey: "sprint_id", as: "tasks" });
-db.Task.belongsTo(db.Sprint, { foreignKey: "sprint_id", as: "sprint" });
+Sprint.hasMany(Task, { foreignKey: "sprint_id", as: "tasks" });
+Task.belongsTo(Sprint, { foreignKey: "sprint_id", as: "sprint" });
 
-db.Task.hasMany(db.TaskChecklist, { foreignKey: "task_id", as: "checklists" });
-db.TaskChecklist.belongsTo(db.Task, { foreignKey: "task_id", as: "task" });
+Task.hasMany(TaskChecklist, { foreignKey: "task_id", as: "checklists" });
+TaskChecklist.belongsTo(Task, { foreignKey: "task_id", as: "task" });
 
-db.Task.hasMany(db.TaskComment, { foreignKey: "task_id", as: "comments" });
-db.TaskComment.belongsTo(db.Task, { foreignKey: "task_id", as: "task" });
+Task.hasMany(TaskComment, { foreignKey: "task_id", as: "comments" });
+TaskComment.belongsTo(Task, { foreignKey: "task_id", as: "task" });
 
-db.Task.belongsTo(db.User, { foreignKey: "assigned_to", as: "assignedUser" });
+Task.belongsTo(User, { foreignKey: "assigned_to", as: "assignedUser" });
 
-db.TaskComment.belongsTo(db.User, { foreignKey: "user_id", as: "author" });
+TaskComment.belongsTo(User, { foreignKey: "user_id", as: "author" });
 
-// Associations for GitContribution
-db.Project.hasMany(db.GitContribution, { foreignKey: "project_id", as: "gitContributions" });
-db.GitContribution.belongsTo(db.Project, { foreignKey: "project_id", as: "project" });
+Project.hasMany(GitContribution, {
+  foreignKey: 'project_id',
+  as: 'gitContributions'
+});
+GitContribution.belongsTo(Project, {
+  foreignKey: 'project_id',
+  as: 'project'
+});
 
-db.User.hasMany(db.GitContribution, { foreignKey: "user_id", as: "userContributions" });
-db.GitContribution.belongsTo(db.User, { foreignKey: "user_id", as: "user" });
+User.hasMany(GitContribution, {
+  foreignKey: 'user_id',
+  as: 'contributions' 
+});
+GitContribution.belongsTo(User, {
+  foreignKey: 'user_id',
+  as: 'user' // Or 'contributor'
+});
 
-// PeerAssessment <-> Group
-db.Group.hasMany(db.PeerAssessment, { foreignKey: "group_id", as: "peerAssessmentsInGroup" });
-db.PeerAssessment.belongsTo(db.Group, { foreignKey: "group_id", as: "group" });
-
-module.exports = db;
+// Export models & sequelize
+module.exports = {
+  sequelize,
+  Sequelize,
+  User,
+  Class,
+  Group,
+  Project,
+  ClassMember,
+  GroupMember,
+  Task,
+  TaskChecklist,
+  Sprint,
+  TaskComment,
+  PeerAssessment,
+  GitContribution
+};

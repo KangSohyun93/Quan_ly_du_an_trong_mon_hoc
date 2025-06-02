@@ -32,7 +32,7 @@ INSERT INTO Users (username, email, password, role, github_email, github_usernam
 ('Student29', 'student29@example.com', 'hashed_password_29', 'Student', 'student29@gmail.com', 'student29', TRUE, '/uploads/student29.jpg'),
 ('Student30', 'student30@example.com', 'hashed_password_30', 'Student', 'student30@gmail.com', 'student30', TRUE, '/uploads/student30.jpg'),
 -- 3 giảng viên
-('ProfSmith', 'smith@example.com', 'hashed_password_31', 'Instructor', 'smith@example.com', 'ProfSmith', TRUE, '/uploads/smith.jpg'),
+('ProfSmith', 'smith@example.com', 'smith@example.com', 'Instructor', 'smith@example.com', 'ProfSmith', TRUE, '/uploads/smith.jpg'),
 ('ProfJones', 'jones@example.com', 'hashed_password_32', 'Instructor', 'jones@example.com', 'ProfJones', TRUE, '/uploads/jones.jpg'),
 ('ProfBrown', 'brown@example.com', 'hashed_password_33', 'Instructor', 'brown@example.com', 'ProfBrown', TRUE, '/uploads/brown.jpg'),
 -- 1 quản trị viên

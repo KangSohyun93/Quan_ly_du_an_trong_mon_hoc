@@ -1,0 +1,178 @@
+/* frontend/src/components/task/TaskCommentPage.css */
+
+.comment-page {
+  width: 600px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.task-info {
+  margin-bottom: 16px;
+}
+
+.task-tags {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.tag {
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  margin-right: 4px;
+}
+
+.tag.backend {
+  background-color: #e0f7fa;
+  color: #006064;
+}
+
+.tag.sql {
+  background-color: #ffebee;
+  color: #b71c1c;
+}
+.body_1{
+  margin-top: 8px;
+  color: #000;
+  font-size: 14px;
+  font-family: 'Roboto', sans-serif;
+}
+.task-description {
+  margin-top: 8px;
+  color: #666;
+  font-size: 14px;
+  font-family: 'Roboto', sans-serif;
+}
+
+.assigned-user {
+  display: flex;
+  align-items: center;
+  margin: 16px 0;
+}
+
+.task-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.assigned-username {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.comments-section {
+  max-height: 200px;
+  overflow-y: auto;
+  margin-bottom: 16px;
+  padding-right: 8px;
+}
+
+.comment-block {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 8px;
+  background-color: #f9f9f9;
+}
+
+.comment-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  font-family: 'Roboto', sans-serif;
+}
+
+.comment-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.comment-username {
+  font-size: 14px;
+  font-weight: 500;
+  font-family: 'Roboto', sans-serif;
+}
+
+.comment-text {
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 4px;
+  font-family: 'Roboto', sans-serif;
+}
+
+.comment-timestamp {
+  font-size: 12px;
+  color: #999;
+}
+
+.add-comment-block {
+  border-top: 1px solid #e0e0e0;
+  padding-top: 16px;
+}
+
+.comment-input {
+  width: 95%;
+  height: 80px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 8px;
+  font-size: 14px;
+  resize: none;
+  margin-bottom: 8px;
+  font-family: 'Roboto', sans-serif;
+}
+
+.comment-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.cancel-btn,
+.save-btn {
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.cancel-btn {
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+  color: #333;
+}
+
+.save-btn {
+  background-color: #007bff;
+  border: none;
+  color: white;
+}
+
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 500px;
+  max-height: 80vh;
+  overflow-y: auto;
+  font-family: 'Roboto', sans-serif;
+}

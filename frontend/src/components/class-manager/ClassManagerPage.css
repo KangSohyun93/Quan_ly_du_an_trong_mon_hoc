@@ -1,0 +1,112 @@
+/* frontend/src/pages/ClassManagerPage.css */
+.class-manager-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.class-manager-content {
+  flex-grow: 1;
+  padding: 32px 24px;
+}
+
+.controls-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 28px;
+  padding: 18px 20px;
+  background-color: #fff;
+  border-radius: 14px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+.search-input,
+.filter-dropdown {
+  padding: 8px 14px;
+  border: 1.5px solid #d9d9d9;
+  border-radius: 24px;
+  font-size: 15px;
+  outline: none;
+  background: #f8fafc;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+.search-input:focus,
+.filter-dropdown:focus {
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.13);
+}
+
+.search-input {
+  width: 220px;
+  min-width: 180px;
+  flex-grow: 1;
+  background-image: url(data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%23aaa%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M11.742%2010.344a6.5%206.5%200%201%200-1.397%201.398h-.001c.03.04.062.078.098.115l3.85%203.85a1%201%200%200%200%201.415-1.414l-3.85-3.85a1.007%201.007%200%200%200-.115-.1zM12%206.5a5.5%205.5%200%201%201-11%200%205.5%205.5%200%200%201%2011%200z%22/%3E%3C/svg%3E);
+  background-repeat: no-repeat;
+  background-position: 14px center;
+  padding-left: 40px;
+}
+
+.filter-dropdown {
+  min-width: 120px;
+  background-color: #fff;
+}
+
+.date-filter {
+  min-width: 120px;
+  background: #f8fafc;
+}
+
+.add-class-button {
+  padding: 10px 28px;
+  background: linear-gradient(90deg, #4a90e2 60%, #357abd 100%);
+  color: #fff;
+  border: none;
+  border-radius: 24px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 15px;
+  box-shadow: 0 2px 8px rgba(74, 144, 226, 0.08);
+  transition: background 0.2s, box-shadow 0.2s;
+  margin-left: auto;
+}
+
+.add-class-button:hover {
+  background: linear-gradient(90deg, #357abd 60%, #4a90e2 100%);
+  box-shadow: 0 4px 16px rgba(74, 144, 226, 0.13);
+}
+
+.feedback-message {
+  padding: 12px;
+  margin-bottom: 18px;
+  border-radius: 6px;
+  text-align: center;
+  font-size: 15px;
+}
+
+.error-text.feedback-message {
+  background-color: #fff1f0;
+  border: 1.5px solid #ffccc7;
+  color: #cf1322;
+}
+
+/* Responsive chỉnh cho mobile */
+@media (max-width: 700px) {
+  .controls-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    padding: 12px 8px;
+  }
+  .add-class-button {
+    width: 100%;
+    margin-left: 0;
+  }
+  .search-input {
+    width: 100%;
+    min-width: 0;
+  }
+}

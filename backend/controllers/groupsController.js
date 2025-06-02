@@ -108,9 +108,13 @@ async function getGroupTaskSummary(req, res) {
             }],
             attributes: [
                 'status', 'due_date', 'completed_at',
-                [sequelize.fn('COUNT', sequelize.col('Task.task_id')), 'count'] // Đảm bảo Task.task_id
+                [sequelize.fn('COUNT', sequelize.col('Tasks.task_id')), 'count'] // Đảm bảo Task.task_id
             ],
-            group: ['Task.status', 'Task.due_date', 'Task.completed_at'], // Đảm bảo Task.status, ...
+            group: [
+                sequelize.col('Tasks.status'),
+                sequelize.col('Tasks.due_date'),
+                sequelize.col('Tasks.completed_at')
+            ], // Đảm bảo Task.status, ...
             raw: true
         });
 
@@ -141,6 +145,9 @@ async function getGroupTaskSummary(req, res) {
 
     } catch (error) {
         console.error(`Error in GET /api/groups/${groupId}/task-summary:`, error);
+        if (error.sql) {
+            console.error("Failed SQL:", error.sql);
+        }
         res.status(500).json({ error: 'Internal server error while fetching task summary.' });
     }
 }
