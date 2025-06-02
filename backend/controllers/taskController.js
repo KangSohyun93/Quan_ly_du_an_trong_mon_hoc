@@ -127,7 +127,7 @@ exports.addComment = async (req, res) => {
 exports.updateChecklistItem = async (req, res) => {
   const { checklistId } = req.params;
   const { is_completed } = req.body;
-  const userId = req.user?.user_id;
+  const userId = req.userId;
 
   try {
     const checklist = await TaskChecklist.findByPk(checklistId, {
@@ -152,7 +152,7 @@ exports.updateChecklistItem = async (req, res) => {
 exports.updateTaskStatus = async (req, res) => {
   const { taskId } = req.params;
   const { status } = req.body;
-  const userId = req.user?.user_id;
+  const userId = req.userId;
 
   try {
     const task = await Task.findByPk(taskId);
@@ -169,19 +169,6 @@ exports.updateTaskStatus = async (req, res) => {
   }
 };
 
-// // Get projects
-// exports.getProjects = async (req, res) => {
-//   try {
-//     const projects = await Project.findAll({
-//       attributes: ["project_id", "project_name"],
-//     });
-//     res.status(200).json(projects);
-//   } catch (error) {
-//     console.error("Error fetching projects:", error);
-//     res.status(500).json({ message: "Server error" });
-//   }
-// };
-
 // Get sprints
 exports.getSprints = async (req, res) => {
   try {
@@ -197,20 +184,20 @@ exports.getSprints = async (req, res) => {
 
 // Create sprint
 exports.createSprint = async (req, res) => {
-  const { sprint_name, start_date, end_date } = req.body;
-  const { projectId } = req;
+  const { project_id, sprint_name, start_date, end_date } = req.body;
+  console.log("projectID: >>>>>>>>:", project_id);
 
   try {
-    const project = await Project.findByPk(projectId);
+    const project = await Project.findByPk(project_id);
     if (!project) return res.status(404).json({ message: "Project not found" });
 
     const sprintCount = await Sprint.count({
-      where: { project_id: projectId },
+      where: { project_id },
     });
     const sprint_number = sprintCount + 1;
 
     const sprint = await Sprint.create({
-      project_id: projectId,
+      project_id,
       sprint_number,
       sprint_name,
       start_date,

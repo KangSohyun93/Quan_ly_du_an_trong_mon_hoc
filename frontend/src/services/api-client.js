@@ -105,17 +105,6 @@ export const updateTaskStatus = async (taskId, status) => {
   return response.json();
 };
 
-// // Fetch all projects
-// export const fetchProjects = async () => {
-//   const response = await fetch(`${API_BASE_URL}/api/projects`, {
-//     method: "GET",
-//     headers: { "Content-Type": "application/json" },
-//   });
-//   if (!response.ok)
-//     throw new Error(`Failed to fetch projects: ${response.status}`);
-//   return response.json();
-// };
-
 // Fetch all sprints
 export const fetchSprints = async (projectId) => {
   const token = sessionStorage.getItem("token");

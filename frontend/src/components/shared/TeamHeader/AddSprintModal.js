@@ -25,6 +25,7 @@ const AddSprintModal = ({ projectId, onClose, onSprintCreated }) => {
       } else {
         console.error("Error adding sprint: No sprintId returned");
       }
+      window.location.reload();
     } catch (error) {
       console.error("Error adding sprint:", error);
     }
