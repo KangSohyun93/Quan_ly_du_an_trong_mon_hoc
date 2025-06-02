@@ -30,6 +30,12 @@ router.get("/", verifyToken, taskController.getTasks);
 router.get("/:taskId", verifyToken, taskController.getTaskDetails);
 router.post("/", verifyToken, taskController.createTask);
 router.patch("/:taskId/status", verifyToken, taskController.updateTaskStatus);
+router.patch(
+  "/checklists/:checklistId",
+  verifyToken,
+  taskController.updateChecklistItem
+);
+router.post("/sprints", verifyToken, taskController.createSprint);
 // Route for team details
 // router.get("/team-details", taskController.getTeamDetails);
 

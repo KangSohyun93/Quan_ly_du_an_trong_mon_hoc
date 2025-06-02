@@ -74,9 +74,7 @@ function SV_TeamDetail({ currentUserId }) {
 
   const { project, group, members } = groupData;
 
-  const isTeamLead = members.some(
-    (m) => m.user_id === currentUserId && m.role === "team-lead"
-  );
+  const isTeamLead = group.leader_id === currentUserId;
 
   const handleTabChange = (tab) => {
     const path = tab.toLowerCase().replace(/\s+/g, "-");
