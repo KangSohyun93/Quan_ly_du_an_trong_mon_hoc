@@ -32,7 +32,7 @@ INSERT INTO Users (username, email, password, role, github_email, github_usernam
 ('Student29', 'student29@example.com', 'hashed_password_29', 'Student', 'student29@gmail.com', 'student29', TRUE, '/uploads/student29.jpg'),
 ('Student30', 'student30@example.com', 'hashed_password_30', 'Student', 'student30@gmail.com', 'student30', TRUE, '/uploads/student30.jpg'),
 -- 3 giảng viên
-('ProfSmith', 'smith@example.com', 'smith@example.com', 'Instructor', 'smith@example.com', 'ProfSmith', TRUE, '/uploads/smith.jpg'),
+('ProfSmith', 'smith@example.com', 'hashed_password_31', 'Instructor', 'smith@example.com', 'ProfSmith', TRUE, '/uploads/smith.jpg'),
 ('ProfJones', 'jones@example.com', 'hashed_password_32', 'Instructor', 'jones@example.com', 'ProfJones', TRUE, '/uploads/jones.jpg'),
 ('ProfBrown', 'brown@example.com', 'hashed_password_33', 'Instructor', 'brown@example.com', 'ProfBrown', TRUE, '/uploads/brown.jpg'),
 -- 1 quản trị viên
@@ -65,7 +65,7 @@ INSERT INTO `Groups` (group_name, class_id, leader_id) VALUES
 INSERT INTO ClassMembers (class_id, user_id) VALUES
 -- Lớp 100001 (ITSS): Student1-8 (đã có nhóm), Student9-10 (chưa có nhóm)
 (100001, 1), (100001, 2), (100001, 3), (100001, 4), (100001, 5), (100001, 6), (100001, 7), (100001, 8), (100001, 9), (100001, 10),
--- Lớp 100002 (Kỹ th uật phần mềm): Student7-14 (đã có nhóm), Student15-16 (chưa có nhóm)
+-- Lớp 100002 (Kỹ thuật phần mềm): Student7-14 (đã có nhóm), Student15-16 (chưa có nhóm)
 (100002, 1), (100002, 2), (100002, 4), (100002, 6), (100002, 7), (100002, 8), (100002, 9), (100002, 10), (100002, 11), (100002, 12), (100002, 13), (100002, 14), (100002, 15), (100002, 16),
 -- Lớp 100003 (Cấu trúc dữ liệu): Student13-20 (đã có nhóm), Student21-22 (chưa có nhóm)
 (100003, 13), (100003, 14), (100003, 15), (100003, 16), (100003, 17), (100003, 18), (100003, 19), (100003, 20), (100003, 21), (100003, 22),
