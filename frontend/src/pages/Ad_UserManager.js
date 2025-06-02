@@ -10,9 +10,9 @@ function UserManager() {
       className="app-content d-flex"
       style={{ height: "100vh", overflow: "hidden" }}
     >
-      <div style={{ flexShrink: 0 }}>
+      {/* <div style={{ flexShrink: 0 }}>
         <Sidebar />
-      </div>
+      </div> */}
 
       <div className="flex-grow-1" style={{ overflow: "hidden" }}>
         {/* <Navbar_SV /> */}

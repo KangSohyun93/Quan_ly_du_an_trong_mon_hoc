@@ -88,9 +88,9 @@ function SV_TeamDetail({ currentUserId }) {
       className="app-content d-flex"
       style={{ height: "100vh", overflow: "hidden" }}
     >
-      <div style={{ flexShrink: 0 }}>
+      {/* <div style={{ flexShrink: 0 }}>
         <Sidebar />
-      </div>
+      </div> */}
       <div
         className="flex-grow-1 d-flex flex-column"
         style={{ overflow: "hidden" }}

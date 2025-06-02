@@ -17,7 +17,7 @@ const Sidebar = () => {
       const user = fetchUser();
       user.then((data) => {
         setUser(data);
-        if (data.avatar) {
+        if (data & data.avatar) {
           setAvatarSrc(data.avatar);
         }
       });
@@ -26,6 +26,22 @@ const Sidebar = () => {
     }
   }, []);
   //console.log("User:", user);
+
+  useEffect(() => {
+    // Thêm/xóa class trên body để main content có thể dựa vào đó
+    if (isOpen) {
+      document.body.classList.remove("sidebar-collapsed");
+      document.body.classList.add("sidebar-expanded");
+    } else {
+      document.body.classList.remove("sidebar-expanded");
+      document.body.classList.add("sidebar-collapsed");
+    }
+    // Cleanup function để xóa class khi component unmount
+    return () => {
+      document.body.classList.remove("sidebar-collapsed");
+      document.body.classList.remove("sidebar-expanded");
+    };
+  }, [isOpen]);
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
@@ -39,6 +55,8 @@ const Sidebar = () => {
   const handleLogout = () => {
     sessionStorage.removeItem("token");
     localStorage.removeItem("user");
+    document.body.classList.remove("sidebar-collapsed");
+    document.body.classList.remove("sidebar-expanded");
     navigate("/login");
   };
 
