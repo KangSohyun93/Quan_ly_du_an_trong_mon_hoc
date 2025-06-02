@@ -263,10 +263,7 @@ const KanbanView = (sprints) => {
                               s.completed ? "completed" : ""
                             }`}
                             onClick={() => {
-                              if (
-                                task.assigned_to === currentUserId ||
-                                isTeamLead
-                              ) {
+                              if (task.assigned_to === currentUserId) {
                                 toggleSubTask(task.id, s.id);
                               }
                             }}
