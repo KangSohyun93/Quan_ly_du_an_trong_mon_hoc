@@ -24,14 +24,10 @@ const PeerAssessment = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    comment: {
-      type: DataTypes.TEXT,
-      allowNull: true,
-    },
     deadline_score: {
       type: DataTypes.INTEGER,
-      allowNull: true,
-      validate: { min: 0, max: 5 } // Giữ lại validation nếu có
+      allowNull: true, // Hoặc false nếu bắt buộc
+      validate: { min: 0, max: 5 } // Ví dụ thang điểm
     },
     friendly_score: {
       type: DataTypes.INTEGER,
@@ -52,6 +48,10 @@ const PeerAssessment = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: true,
       validate: { min: 0, max: 5 }
+    },
+    comment: {
+      type: DataTypes.TEXT,
+      allowNull: true,
     },
   },
   {
