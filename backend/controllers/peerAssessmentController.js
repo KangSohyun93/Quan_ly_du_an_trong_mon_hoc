@@ -1,0 +1,384 @@
+const {
+  GroupMember,
+  User,
+  PeerAssessment,
+  Task,
+  Sprint,
+  Project,
+} = require("../models");
+const { Op } = require("sequelize");
+
+const getPeerAssessments = async (req, res) => {
+  try {
+    const projectId = parseInt(req.params.projectId, 10);
+    const assessorId = parseInt(req.params.assessorId, 10);
+    const groupId = parseInt(req.params.groupId, 10);
+    if (
+      isNaN(projectId) ||
+      projectId <= 0 ||
+      isNaN(assessorId) ||
+      assessorId <= 0 ||
+      isNaN(groupId) ||
+      groupId <= 0
+    ) {
+      return res
+        .status(400)
+        .json({ message: "projectId, groupId và assessorId phải là số nguyên dương" });
+    }
+
+    const project = await Project.findOne({ where: { project_id: projectId } });
+    if (!project) {
+      return res.status(404).json({ message: "Dự án không tồn tại" });
+    }
+
+    if (project.group_id !== groupId) {
+      return res
+        .status(400)
+        .json({ message: "groupId không khớp với dự án" });
+    }
+
+    const isMember = await GroupMember.findOne({
+      where: {
+        group_id: project.group_id,
+        user_id: assessorId,
+      },
+    });
+    if (!isMember) {
+      return res
+        .status(403)
+        .json({ message: "Người dùng không thuộc nhóm này" });
+    }
+
+    const assessments = await PeerAssessment.findAll({
+      where: {
+        group_id: project.group_id,
+        assessor_id: assessorId,
+      },
+      include: [
+        {
+          model: User,
+          as: "assessee",
+          attributes: ["username"],
+        },
+      ],
+    });
+
+    res.status(200).json(assessments);
+  } catch (error) {
+    console.error("Lỗi trong getPeerAssessments:", error.message, error.stack);
+    res.status(500).json({ message: "Lỗi server" });
+  }
+};
+
+const saveAssessment = async (req, res) => {
+  try {
+    const projectId = parseInt(req.params.projectId, 10);
+    const groupId = parseInt(req.params.groupId, 10);
+    const {
+      assessor_id,
+      assessee_id,
+      deadline_score,
+      friendly_score,
+      quality_score,
+      team_support_score,
+      responsibility_score,
+      note,
+    } = req.body;
+
+    if (
+      isNaN(projectId) ||
+      projectId <= 0 ||
+      isNaN(groupId) ||
+      groupId <= 0 ||
+      !Number.isInteger(assessor_id) ||
+      !Number.isInteger(assessee_id) ||
+      !Number.isInteger(deadline_score) || deadline_score < 0 || deadline_score > 5 ||
+      !Number.isInteger(friendly_score) || friendly_score < 0 || friendly_score > 5 ||
+      !Number.isInteger(quality_score) || quality_score < 0 || quality_score > 5 ||
+      !Number.isInteger(team_support_score) || team_support_score < 0 || team_support_score > 5 ||
+      !Number.isInteger(responsibility_score) || responsibility_score < 0 || responsibility_score > 5
+    ) {
+      return res.status(400).json({ message: "Dữ liệu không hợp lệ: Điểm số phải là số nguyên từ 0 đến 5." });
+    }
+
+    const project = await Project.findOne({ where: { project_id: projectId } });
+    if (!project) {
+      return res.status(404).json({ message: "Dự án không tồn tại" });
+    }
+
+    if (project.group_id !== groupId) {
+      return res
+        .status(400)
+        .json({ message: "groupId không khớp với dự án" });
+    }
+
+    const [assessorMember, assesseeMember] = await Promise.all([
+      GroupMember.findOne({
+        where: { group_id: project.group_id, user_id: assessor_id },
+      }),
+      GroupMember.findOne({
+        where: { group_id: project.group_id, user_id: assessee_id },
+      }),
+    ]);
+    if (!assessorMember || !assesseeMember) {
+      return res
+        .status(403)
+        .json({ message: "Người đánh giá hoặc người được đánh giá không thuộc nhóm" });
+    }
+
+    if (assessor_id === assessee_id) {
+      return res
+        .status(400)
+        .json({ message: "Không thể tự đánh giá bản thân" });
+    }
+
+    const existingAssessment = await PeerAssessment.findOne({
+      where: {
+        group_id: project.group_id,
+        assessor_id,
+        assessee_id,
+      },
+    });
+    if (existingAssessment) {
+      return res
+        .status(400)
+        .json({ message: "Đánh giá đã tồn tại cho người này" });
+    }
+
+    await PeerAssessment.create({
+      group_id: project.group_id,
+      assessor_id,
+      assessee_id,
+      deadline_score,
+      friendly_score,
+      quality_score,
+      team_support_score,
+      responsibility_score,
+      note,
+    });
+
+    res.status(200).json({ message: "Đánh giá đã được lưu" });
+  } catch (error) {
+    console.error("Lỗi trong saveAssessment:", error.message, error.stack);
+    res.status(500).json({ message: "Lỗi server" });
+  }
+};
+
+const getTaskStats = async (req, res) => {
+  try {
+    const projectId = parseInt(req.params.projectId, 10);
+    if (isNaN(projectId) || projectId <= 0) {
+      return res
+        .status(400)
+        .json({ message: "projectId phải là số nguyên dương" });
+    }
+
+    const project = await Project.findOne({ where: { project_id: projectId } });
+    if (!project) {
+      return res.status(404).json({ message: "Dự án không tồn tại" });
+    }
+
+    const tasks = await Task.findAll({
+      include: [
+        {
+          model: Sprint,
+          as: "sprint",
+          where: { project_id: projectId },
+        },
+      ],
+    });
+
+    const stats = {
+      total: tasks.length,
+      toDo: tasks.filter((t) => t.status === "To Do").length,
+      inProgress: tasks.filter((t) => t.status === "In Progress").length,
+      done: tasks.filter((t) => t.status === "Done").length,
+    };
+
+    res.status(200).json(stats);
+  } catch (error) {
+    console.error("Lỗi trong getTaskStats:", error.message, error.stack);
+    res.status(500).json({ message: "Lỗi server" });
+  }
+};
+
+const getMemberTaskStats = async (req, res) => {
+  try {
+    const projectId = parseInt(req.params.projectId, 10);
+    const groupId = parseInt(req.params.groupId, 10);
+    if (isNaN(projectId) || projectId <= 0 || isNaN(groupId) || groupId <= 0) {
+      return res
+        .status(400)
+        .json({ message: "projectId và groupId phải là số nguyên dương" });
+    }
+
+    const project = await Project.findOne({ where: { project_id: projectId } });
+    if (!project) {
+      return res.status(404).json({ message: "Dự án không tồn tại" });
+    }
+
+    if (project.group_id !== groupId) {
+      return res
+        .status(400)
+        .json({ message: "groupId không khớp với dự án" });
+    }
+
+    // Lấy danh sách thành viên nhóm
+    const members = await GroupMember.findAll({
+      where: { group_id: project.group_id },
+      include: [
+        {
+          model: User,
+          attributes: ["user_id"],
+        },
+      ],
+    });
+
+    // Lấy tất cả sprint thuộc project
+    const sprints = await Sprint.findAll({
+      where: { project_id: projectId },
+      attributes: ["sprint_id"],
+    });
+    const sprintIds = sprints.map((s) => s.sprint_id);
+
+    // Lấy tất cả task của các thành viên trong các sprint của project
+    const tasks = await Task.findAll({
+      where: {
+        sprint_id: { [Op.in]: sprintIds },
+        assigned_to: { [Op.in]: members.map((m) => m.User.user_id) },
+      },
+    });
+
+    // Tính thống kê cho từng thành viên
+    const stats = members
+      .filter((member) => member.User?.user_id)
+      .map((member) => {
+        const userTasks = tasks.filter((t) => t.assigned_to === member.User.user_id);
+
+        return {
+          id: member.User.user_id, // Khớp với members.id
+          total: userTasks.length,
+          toDo: userTasks.filter((t) => t.status === "To-Do").length,
+          inProgress: userTasks.filter((t) => t.status === "In-Progress").length,
+          done: userTasks.filter((t) => t.status === "Completed").length,
+          delayed: userTasks.filter((t) => {
+            if (!t.due_date) return false;
+            const dueDate = new Date(t.due_date);
+            const checkDate =
+              t.status === "Completed" && t.completed_at
+                ? new Date(t.completed_at)
+                : new Date();
+            return dueDate < checkDate;
+          }).length,
+        };
+      });
+
+    console.log("Member Task Stats:", stats);
+    res.status(200).json(stats);
+  } catch (error) {
+    console.error("Lỗi trong getMemberTaskStats:", error.message, error.stack);
+    res.status(500).json({ message: "Lỗi server" });
+  }
+};
+
+const updateAssessment = async (req, res) => {
+  try {
+    const projectId = parseInt(req.params.projectId, 10);
+    const groupId = parseInt(req.params.groupId, 10);
+    const assessmentId = parseInt(req.params.assessmentId, 10); // ID của đánh giá cần chỉnh sửa
+    const {
+      assessor_id,
+      assessee_id,
+      deadline_score,
+      friendly_score,
+      quality_score,
+      team_support_score,
+      responsibility_score,
+      note,
+    } = req.body;
+
+    // Kiểm tra dữ liệu đầu vào
+    if (
+      isNaN(projectId) ||
+      projectId <= 0 ||
+      isNaN(groupId) ||
+      groupId <= 0 ||
+      isNaN(assessmentId) ||
+      assessmentId <= 0 ||
+      !Number.isInteger(assessor_id) ||
+      !Number.isInteger(assessee_id) ||
+      !Number.isInteger(deadline_score) || deadline_score < 0 || deadline_score > 5 ||
+      !Number.isInteger(friendly_score) || friendly_score < 0 || friendly_score > 5 ||
+      !Number.isInteger(quality_score) || quality_score < 0 || quality_score > 5 ||
+      !Number.isInteger(team_support_score) || team_support_score < 0 || team_support_score > 5 ||
+      !Number.isInteger(responsibility_score) || responsibility_score < 0 || responsibility_score > 5
+    ) {
+      return res.status(400).json({ message: "Dữ liệu không hợp lệ: Điểm số phải là số nguyên từ 0 đến 5." });
+    }
+
+    // Kiểm tra dự án
+    const project = await Project.findOne({ where: { project_id: projectId } });
+    if (!project) {
+      return res.status(404).json({ message: "Dự án không tồn tại" });
+    }
+
+    if (project.group_id !== groupId) {
+      return res.status(400).json({ message: "groupId không khớp với dự án" });
+    }
+
+    // Kiểm tra thành viên
+    const [assessorMember, assesseeMember] = await Promise.all([
+      GroupMember.findOne({
+        where: { group_id: project.group_id, user_id: assessor_id },
+      }),
+      GroupMember.findOne({
+        where: { group_id: project.group_id, user_id: assessee_id },
+      }),
+    ]);
+    if (!assessorMember || !assesseeMember) {
+      return res
+        .status(403)
+        .json({ message: "Người đánh giá hoặc người được đánh giá không thuộc nhóm" });
+    }
+
+    if (assessor_id === assessee_id) {
+      return res.status(400).json({ message: "Không thể tự đánh giá bản thân" });
+    }
+
+    // Tìm đánh giá cần chỉnh sửa
+    const assessment = await PeerAssessment.findOne({
+      where: {
+        assessment_id: assessmentId,
+        group_id: project.group_id,
+        assessor_id,
+        assessee_id,
+      },
+    });
+    if (!assessment) {
+      return res.status(404).json({ message: "Đánh giá không tồn tại hoặc bạn không có quyền chỉnh sửa" });
+    }
+
+    // Cập nhật đánh giá
+    await assessment.update({
+      deadline_score,
+      friendly_score,
+      quality_score,
+      team_support_score,
+      responsibility_score,
+      note,
+    });
+
+    res.status(200).json({ message: "Đánh giá đã được cập nhật" });
+  } catch (error) {
+    console.error("Lỗi trong updateAssessment:", error.message, error.stack);
+    res.status(500).json({ message: "Lỗi server" });
+  }
+};
+
+module.exports = {
+  getPeerAssessments,
+  saveAssessment,
+  getTaskStats,
+  getMemberTaskStats,
+  updateAssessment, // Thêm hàm mới vào exports
+};

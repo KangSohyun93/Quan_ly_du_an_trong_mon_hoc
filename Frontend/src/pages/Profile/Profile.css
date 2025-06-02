@@ -1,0 +1,213 @@
+/* Reset margin và padding mặc định */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.profile-wrapper {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f5f7fb;
+}
+
+.profile-content-container {
+  flex: 1;
+  padding: 20px 40px;
+  background-color: #f5f7fb;
+  width: 100%;
+  box-sizing: border-box;
+  margin-left: 250px;
+}
+
+.profile-content {
+  background-color: #fff;
+  padding: 20px;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  margin-top: 20px;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.profile-avatar-small {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin-right: 15px;
+  object-fit: cover;
+}
+
+.profile-info h2 {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0;
+  color: #1a1a1a;
+}
+
+.profile-info p {
+  font-size: 14px;
+  color: #555;
+  font-weight: 500;
+  margin: 5px 0 0;
+}
+
+.profile-details {
+  display: flex;
+  gap: 20px;
+}
+
+.detail-section {
+  flex: 1;
+}
+
+.detail-section label {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.detail-section p {
+  font-size: 14px;
+  color: #333;
+  margin: 0 0 15px;
+}
+
+.profile-edit-input {
+  width: 100%;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #e0e0e0;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.profile-avatar-preview-container {
+  margin-top: 10px;
+}
+
+.profile-avatar-preview {
+  width: 150px;
+  height: 150px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.profile-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.profile-cancel-button,
+.profile-done-button,
+.profile-edit-button,
+.profile-change-password-button,
+.profile-set-password-button,
+.profile-cancel-modal-button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.profile-cancel-button,
+.profile-cancel-modal-button {
+  background-color: #6c757d;
+  color: white;
+}
+
+.profile-cancel-button:hover,
+.profile-cancel-modal-button:hover {
+  background-color: #5a6268;
+}
+
+.profile-done-button,
+.profile-set-password-button {
+  background-color: #28a745;
+  color: white;
+}
+
+.profile-done-button:hover,
+.profile-set-password-button:hover {
+  background-color: #218838;
+}
+
+.profile-edit-button {
+  background-color: #007bff;
+  color: white;
+}
+
+.profile-edit-button:hover {
+  background-color: #0056b3;
+}
+
+.profile-change-password-button {
+  background-color: #ffc107;
+  color: #1a1a1a;
+}
+
+.profile-change-password-button:hover {
+  background-color: #e0a800;
+}
+
+.profile-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.profile-modal-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  max-width: 500px;
+  width: 100%;
+}
+
+.profile-modal-section {
+  margin-bottom: 15px;
+}
+
+.profile-modal-section h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 15px;
+}
+
+.profile-error-message {
+  color: #dc3545;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.profile-loading {
+  padding: 20px;
+  font-size: 16px;
+  color: #333;
+  text-align: center;
+}

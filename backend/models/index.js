@@ -11,6 +11,7 @@ const GroupMember = require("./MemberGroupModel");
 const { Task, TaskChecklist, Sprint, TaskComment } = require("./TaskModel");
 const PeerAssessment = require("./peerAssessmentModel");
 // Define associations
+// Code cũ (giữ nguyên)
 User.hasMany(PeerAssessment, {
   foreignKey: "assessor_id",
   as: "assessmentsGiven",
@@ -28,6 +29,16 @@ PeerAssessment.belongsTo(User, {
   as: "assessee",
 });
 
+// Thêm mối quan hệ với Group
+Group.hasMany(PeerAssessment, {
+  foreignKey: "group_id",
+  as: "assessments",
+});
+PeerAssessment.belongsTo(Group, {
+  foreignKey: "group_id",
+  as: "group",
+});
+// Thêm mối quan hệ với Class
 User.belongsToMany(Class, {
   through: ClassMember,
   foreignKey: "user_id",

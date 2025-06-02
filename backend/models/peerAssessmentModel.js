@@ -1,5 +1,6 @@
 const { DataTypes } = require("sequelize");
-const sequelize = require("../config/db-connect"); // File config kết nối Sequelize
+const sequelize = require("../config/db-connect");
+
 const PeerAssessment = sequelize.define(
   "PeerAssessment",
   {
@@ -11,26 +12,72 @@ const PeerAssessment = sequelize.define(
     group_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      // Thêm ràng buộc khóa ngoại
+      references: {
+        model: "Groups",
+        key: "group_id",
+      },
+      onDelete: "CASCADE",
     },
     assessor_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      // Thêm ràng buộc khóa ngoại
+      references: {
+        model: "Users",
+        key: "user_id",
+      },
+      onDelete: "CASCADE",
     },
     assessee_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      // Thêm ràng buộc khóa ngoại
+      references: {
+        model: "Users",
+        key: "user_id",
+      },
+      onDelete: "CASCADE",
     },
-    rating: {
+    // rating: {
+    //   type: DataTypes.INTEGER,
+    //   allowNull: false,
+    // },
+    // comment: {
+    //   type: DataTypes.TEXT,
+    //   allowNull: true,
+    // },
+    deadline_score: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true, // Schema DB không yêu cầu NOT NULL
     },
-    comment: {
+    friendly_score: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+    quality_score: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+    team_support_score: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+    responsibility_score: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+    note: {
       type: DataTypes.TEXT,
       allowNull: true,
     },
+    created_at: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+    },
   },
   {
-    tableName: "PeerAssessments", // <- Phải đúng với tên bạn đặt trong DB
+    tableName: "PeerAssessments",
     timestamps: false,
   }
 );

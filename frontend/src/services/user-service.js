@@ -1,73 +1,108 @@
-export async function fetchUser(credentials) {
+// services/user-service.js
+export async function fetchUser() {
   try {
-    const token = sessionStorage.getItem("token");
+    const token = localStorage.getItem("token") || sessionStorage.getItem("token");
+    if (!token) {
+      throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+    }
+
     const response = await fetch("http://localhost:5000/api/user", {
-      // Sửa URL backend
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`, // Thêm token vào header
+        Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(credentials),
     });
 
     if (!response.ok) {
       const errorData = await response.json();
-      throw new Error(errorData.message || "Lấy thông tin người dùng thất bại");
+      throw new Error(errorData.error || "Lấy thông tin người dùng thất bại");
     }
 
-    return await response.json(); // Thường trả về { token, user }
+    const userData = await response.json();
+    // Xử lý avatar với fallback
+    userData.avatar = userData.avatar || "/assets/images/default-user.jpg";
+    return userData;
   } catch (error) {
+    console.error("Lỗi trong fetchUser:", error.message);
     throw error;
   }
 }
+
 export async function fetchUserData(userId) {
   try {
+    const token = localStorage.getItem("token") || sessionStorage.getItem("token");
+    if (!token) {
+      throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+    }
+
     const response = await fetch(`http://localhost:5000/api/user/${userId}`, {
-      // Sửa URL backend
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`, // Thêm token để phù hợp với backend
       },
     });
 
     if (!response.ok) {
       const errorData = await response.json();
-      throw new Error(errorData.message || "Lấy thông tin người dùng thất bại");
+      throw new Error(errorData.error || "Lấy thông tin người dùng thất bại");
     }
 
-    return await response.json(); // Thường trả về { token, user }
+    const userData = await response.json();
+    // Xử lý avatar với fallback
+    userData.avatar = userData.avatar || "/assets/images/default-user.jpg";
+    return userData;
   } catch (error) {
+    console.error("Lỗi trong fetchUserData:", error.message);
     throw error;
   }
 }
-export async function fetchAllUser(credentials) {
+
+export async function fetchAllUser() {
   try {
+    const token = localStorage.getItem("token") || sessionStorage.getItem("token");
+    if (!token) {
+      throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+    }
+
     const response = await fetch("http://localhost:5000/api/user/all", {
-      // Sửa URL backend
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`, // Thêm token nếu backend yêu cầu
       },
-      body: JSON.stringify(credentials),
     });
 
     if (!response.ok) {
       const errorData = await response.json();
-      throw new Error(errorData.message || "Lấy thông tin người dùng thất bại");
+      throw new Error(errorData.error || "Lấy danh sách người dùng thất bại");
     }
 
-    return await response.json(); // Thường trả về { token, user }
+    const users = await response.json();
+    // Xử lý avatar cho tất cả người dùng
+    return users.map((user) => ({
+      ...user,
+      avatar: user.avatar || "/assets/images/default-user.jpg",
+    }));
   } catch (error) {
+    console.error("Lỗi trong fetchAllUser:", error.message);
     throw error;
   }
 }
+
 export async function AdFetchClass() {
   try {
+    const token = localStorage.getItem("token") || sessionStorage.getItem("token");
+    if (!token) {
+      throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+    }
+
     const response = await fetch("http://localhost:5000/api/class/all", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`, // Thêm token nếu backend yêu cầu
       },
     });
 
@@ -76,38 +111,46 @@ export async function AdFetchClass() {
       throw new Error(errorData.message || "Lấy danh sách lớp học thất bại");
     }
 
-    return await response.json(); // Trả về danh sách lớp học
+    return await response.json();
   } catch (error) {
+    console.error("Lỗi trong AdFetchClass:", error.message);
     throw error;
   }
 }
+
 export async function updateUser(userId, userData) {
   try {
+    const token = localStorage.getItem("token") || sessionStorage.getItem("token");
+    if (!token) {
+      throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+    }
+
     const response = await fetch(`http://localhost:5000/api/user/${userId}`, {
-      // Sửa URL backend
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(userData),
     });
 
     if (!response.ok) {
       const errorData = await response.json();
-      throw new Error(
-        errorData.message || "Cập nhật thông tin người dùng thất bại"
-      );
+      throw new Error(errorData.message || "Cập nhật thông tin người dùng thất bại");
     }
 
-    return await response.json(); // Trả về thông tin người dùng đã cập nhật
+    const updatedUser = await response.json();
+    updatedUser.avatar = updatedUser.avatar || "/assets/images/default-user.jpg";
+    return updatedUser;
   } catch (error) {
+    console.error("Lỗi trong updateUser:", error.message);
     throw error;
   }
 }
+
 export async function createUser(userData) {
   try {
     const response = await fetch("http://localhost:5000/api/user", {
-      // Sửa URL backend
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -120,8 +163,11 @@ export async function createUser(userData) {
       throw new Error(errorData.message || "Tạo người dùng thất bại");
     }
 
-    return await response.json(); // Trả về thông tin người dùng đã tạo
+    const newUser = await response.json();
+    newUser.avatar = newUser.avatar || "/assets/images/default-user.jpg";
+    return newUser;
   } catch (error) {
+    console.error("Lỗi trong createUser:", error.message);
     throw error;
   }
 }

@@ -13,19 +13,19 @@ const Sidebar = () => {
   const [avatarSrc, setAvatarSrc] = useState(avatarDefault);
 
   useEffect(() => {
-    try {
-      const user = fetchUser();
-      user.then((data) => {
+    const fetchData = async () => { // Sửa để xử lý async/await đúng cách
+      try {
+        const data = await fetchUser();
         setUser(data);
         if (data.avatar) {
           setAvatarSrc(data.avatar);
         }
-      });
-    } catch (error) {
-      console.error("Error fetching user data:", error);
-    }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+    fetchData();
   }, []);
-  //console.log("User:", user);
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
@@ -132,12 +132,18 @@ const Sidebar = () => {
           </div>
 
           {/* User Info */}
-          <a className="user-ava-name flex items-center mt-6">
+          <div
+            className="user-ava-name flex items-center mt-6 cursor-pointer"
+            onClick={() => navigate("/profile")} // Đảm bảo điều hướng tới /profile
+            tabIndex={0}
+            role="button"
+            aria-label="Go to profile"
+          >
             <img src={avatarSrc} alt="User Avatar" className="avatar mr-3" />
             <span className="user-name text-gray-700">
               {user?.username || "Your name"}
             </span>
-          </a>
+          </div>
 
           <div className="line"></div>
 

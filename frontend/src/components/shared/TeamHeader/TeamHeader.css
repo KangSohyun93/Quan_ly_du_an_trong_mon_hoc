@@ -260,3 +260,112 @@
 .rate-icon {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%231e293b'%3E%3Cpath d='M8 1l2.5 5.5h5L11 9l1.5 5L8 11.5 3.5 14 5 9 1.5 6.5h5L8 1z'/%3E%3C/svg%3E");
 }
+
+/* Responsive styles */
+@media (max-width: 900px) {
+  .team-header {
+    padding: 14px 8px;
+    gap: 16px;
+  }
+  .team-header-top,
+  .team-header-tabs {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 14px 10px;
+    gap: 12px;
+  }
+  .tabs {
+    margin-left: 0;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .tabs .tab {
+    font-size: 14px;
+    padding: 7px 10px;
+  }
+  .team-info p:first-child {
+    font-size: 20px;
+  }
+  .team-info p:last-child {
+    font-size: 13px;
+  }
+  .team-member,
+  .more-members {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+  }
+  .tab .icon {
+    width: 15px;
+    height: 15px;
+    margin-right: 6px;
+  }
+  .teamheader-actions {
+    margin-right: 0;
+    width: 100%;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .teamheader-actions .team-search-bar {
+    width: 100%;
+    padding: 0 8px;
+  }
+  .teamheader-actions .team-search-bar input {
+    font-size: 13px;
+    margin-left: 30px;
+  }
+  .filter-btn {
+    width: 100%;
+    padding: 8px 0;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 600px) {
+  .team-header {
+    padding: 8px 2px;
+    gap: 10px;
+  }
+  .team-header-top,
+  .team-header-tabs {
+    padding: 8px 4px;
+    border-radius: 8px;
+    gap: 8px;
+  }
+  .tabs {
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .tabs .tab {
+    font-size: 12px;
+    padding: 5px 6px;
+  }
+  .team-info p:first-child {
+    font-size: 16px;
+  }
+  .team-info p:last-child {
+    font-size: 11px;
+  }
+  .team-member,
+  .more-members {
+    width: 22px;
+    height: 22px;
+    font-size: 10px;
+  }
+  .tab .icon {
+    width: 12px;
+    height: 12px;
+    margin-right: 4px;
+  }
+  .teamheader-actions {
+    gap: 6px;
+  }
+  .teamheader-actions .team-search-bar input {
+    font-size: 11px;
+    margin-left: 18px;
+  }
+  .filter-btn {
+    font-size: 12px;
+    padding: 6px 0;
+  }
+}

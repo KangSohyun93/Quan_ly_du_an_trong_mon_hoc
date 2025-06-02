@@ -125,7 +125,8 @@ function SV_TeamDetail({ currentUserId }) {
               isTeamLead,
               currentUserId, // 👈 cái này thay cho userId
               projectId: project.id,
-              groupId: group.id,
+              // groupId: group.id, // Code cũ
+              groupId: group.group_id,
               selectedSprintId,
               selectedUserId,
               projectData: project,

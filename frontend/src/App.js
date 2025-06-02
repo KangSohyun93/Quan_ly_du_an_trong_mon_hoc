@@ -16,6 +16,7 @@ import UserManager from "./pages/Ad_UserManager.js";
 import SV_TeamClass from "./pages/SV_Teamclass.js";
 import SV_TeamDetail from "./pages/SV_TeamDetail.js";
 import GV_TeamClass from "./pages/GV_Teamclass.js";
+import Profile from "./pages/Profile/Profile.js";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
         <Routes>
           <Route path="/register" element={<RegisterForm />} />
           <Route path="/login" element={<LoginForm />} />
+          <Route path="/profile" element={<Profile />} />
           <Route
             path="/admin"
             element={
