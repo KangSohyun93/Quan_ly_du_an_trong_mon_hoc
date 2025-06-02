@@ -60,11 +60,6 @@ export const generateTaskChartConfig = (taskSummary) => {
                     },
                 },
             },
-            // datalabels plugin config (nếu bạn dùng ChartDataLabels trực tiếp)
-            // Nếu bạn đăng ký ChartDataLabels globally, config này có thể không cần ở đây.
-            // Nếu không, bạn cần import và register ChartDataLabels
-            // import ChartDataLabels from 'chartjs-plugin-datalabels';
-            // ChartJS.register(ChartDataLabels);
             datalabels: {
                 display: (context) => context.dataset.data[context.dataIndex] > 0 && totalTasks > 0,
                 formatter: (value) => {

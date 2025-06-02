@@ -1,8 +1,5 @@
-// src/utils/generateLateTasksChartConfig.js
-
 export const generateLateTasksChartConfig = (members, sprintData) => {
     if (!members || members.length === 0) {
-        // Trả về config rỗng hoặc mặc định nếu không có dữ liệu members
         return {
             data: { labels: [], datasets: [] },
             options: { responsive: true, maintainAspectRatio: false, plugins: { title: { display: true, text: 'Late Tasks by Member' } } }
@@ -11,7 +8,6 @@ export const generateLateTasksChartConfig = (members, sprintData) => {
 
     const lateTasks = members.map(member =>
         sprintData[member.name]?.reduce((sum, sprint) => sum + (sprint.late || 0), 0) || 0
-        // Thêm (sprint.late || 0) để tránh NaN nếu sprint.late là undefined
     );
 
     const data = {

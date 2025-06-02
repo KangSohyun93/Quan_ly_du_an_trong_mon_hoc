@@ -1,7 +1,5 @@
 // src/utils/generateCommitChartConfig.js
 export const generateCommitChartConfig = (weeklyActivity, selectedUser, projectUsers) => {
-    // ... (Copy toàn bộ logic từ hàm chartDataOptionsUnchanged của bạn vào đây)
-    // ... (Hàm này sẽ nhận weeklyActivity, selectedUser, projectUsers và trả về { chartData, chartOptions })
     const currentSelectedUserIdNum = selectedUser === 'all' ? null : parseInt(selectedUser, 10);
     const datasetLabel = selectedUser === 'all'
         ? 'Total Commits per Week'

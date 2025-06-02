@@ -1,7 +1,5 @@
 // src/utils/generateLOCGrowthChartConfig.js
 export const generateLOCGrowthChartConfig = (weeklyLOCActivity, selectedUser, projectUsers) => {
-    // ... (Copy toàn bộ logic từ hàm chartDataOptionsUnchanged của LOCGrowthChart.jsx vào đây)
-    // ... (Hàm này sẽ nhận weeklyLOCActivity, selectedUser, projectUsers và trả về { chartData, chartOptions })
     const currentSelectedUserIdNum = selectedUser === 'all' ? null : parseInt(selectedUser, 10);
     const selectedUserName = projectUsers.find(u => u.user_id === currentSelectedUserIdNum)?.username;
 

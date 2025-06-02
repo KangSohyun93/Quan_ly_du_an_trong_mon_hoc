@@ -1,5 +1,4 @@
-// src/utils/generateSprintPerformanceChartConfig.js
-export const generateSprintPerformanceChartConfig = (sprints) => { // sprints ở đây là processedSprints
+export const generateSprintPerformanceChartConfig = (sprints) => { 
     if (!sprints || sprints.length === 0) {
         return {
             data: { labels: [], datasets: [] },

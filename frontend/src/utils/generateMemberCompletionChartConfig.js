@@ -1,4 +1,3 @@
-// src/utils/generateMemberCompletionChartConfig.js
 export const generateMemberCompletionChartConfig = (members) => {
     if (!members || members.length === 0) {
         return {

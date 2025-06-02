@@ -1,4 +1,3 @@
-// src/hooks/useLOCGrowthData.js
 import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { format, getISOWeek, startOfWeek, endOfWeek, eachWeekOfInterval, parseISO, isAfter } from 'date-fns';
