@@ -38,6 +38,10 @@ const Project = sequelize.define('Project', {
   created_at: {
     type: DataTypes.DATE,
     defaultValue: DataTypes.NOW
+  },
+  end_date: {
+    type: DataTypes.DATEONLY,
+    allowNull: true
   }
 }, {
   tableName: 'Projects',

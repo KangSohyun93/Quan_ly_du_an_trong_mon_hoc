@@ -52,7 +52,7 @@ module.exports = (sequelize, DataTypes) => { // Thay đổi để nhận sequeli
         allowNull: true,
         validate: { min: 0, max: 5 }
       },
-      note: {
+      comment: {
         type: DataTypes.TEXT,
         allowNull: true,
       }
