@@ -29,17 +29,19 @@ const Sidebar = () => {
   const [avatarSrc, setAvatarSrc] = useState(avatarDefault);
 
   useEffect(() => {
-    try {
-      const userPromise = fetchUser();
-      userPromise.then((data) => {
+    const fetchData = async () => {
+      try {
+        const data = await fetchUser();
         setUser(data);
         if (data && data.avatar) {
           setAvatarSrc(data.avatar);
         }
-      });
-    } catch (error) {
-      console.error("Error fetching user data:", error);
-    }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchData();
   }, []);
 
   useLayoutEffect(() => {

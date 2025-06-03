@@ -11,7 +11,7 @@ import { faCircle as farCircle } from "@fortawesome/free-regular-svg-icons";
 import {
   fetchTasks,
   updateChecklistItem,
-  updateTaskStatus,
+  updateTask,
 } from "../../../services/api-client";
 import CreateTask from "./CreateTask";
 import TaskCommentPage from "./TaskCommentPage";
@@ -165,14 +165,19 @@ const KanbanView = (sprints) => {
       const sub = task.subTasks.find((s) => s.id === subTaskId);
       if (!sub) return;
 
-      await updateChecklistItem(subTaskId, !sub.completed);
+      // Toggle trạng thái subtask
+      const newCompleted = !sub.completed;
+      await updateChecklistItem(subTaskId, newCompleted);
 
+      // Cập nhật lại danh sách subtask đã chỉnh sửa
       const updatedSubTasks = task.subTasks.map((s) =>
-        s.id === subTaskId ? { ...s, completed: !s.completed } : s
+        s.id === subTaskId ? { ...s, completed: newCompleted } : s
       );
 
+      // Tính toán lại progress và trạng thái
       const total = updatedSubTasks.length;
       const completed = updatedSubTasks.filter((s) => s.completed).length;
+      const progress = Math.round((completed / total) * 100);
 
       let newStatus = task.status;
       if (completed === total) {
@@ -183,7 +188,13 @@ const KanbanView = (sprints) => {
         newStatus = "To-Do";
       }
 
-      if (newStatus !== task.status) await updateTaskStatus(taskId, newStatus);
+      // Gọi API cập nhật status và progress cùng lúc
+      await updateTask(taskId, {
+        status: newStatus,
+        progress_percentage: progress,
+      });
+
+      // Tải lại danh sách task
       await loadTasks();
     } catch (err) {
       console.error("Toggle error:", err);
