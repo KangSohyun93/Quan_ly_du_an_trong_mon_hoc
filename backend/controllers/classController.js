@@ -35,6 +35,7 @@ exports.importClass = async (req, res) => {
       const projectName = row.__EMPTY_4;
       const description = row.__EMPTY_5;
       const toolsUsed = row.__EMPTY_6;
+      const linkGit = row.__EMPTY_7;
 
       if (!email) continue;
 
@@ -110,6 +111,14 @@ exports.importClass = async (req, res) => {
       const existingProject = await Project.findOne({
         where: { group_id: group.group_id },
       });
+      if (isLeader && projectName && existingProject) {
+        await existingProject.update({
+          project_name: projectName,
+          description: description || null,
+          tools_used: toolsUsed || null,
+          github_repo_url: linkGit || null,
+        });
+      }
 
       if (isLeader && projectName && !existingProject) {
         await Project.create({
@@ -117,6 +126,7 @@ exports.importClass = async (req, res) => {
           group_id: group.group_id,
           description: description || null,
           tools_used: toolsUsed || null,
+          github_repo_url: linkGit || null,
         });
       }
     }
