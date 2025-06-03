@@ -144,6 +144,8 @@ function App() {
             >
               <Route path="introduce" element={<ProjectInfo />} />
               <Route path="dashboard" element={<Dashboard />} />
+              <Route path="rate" element={<ProjectRate />} />
+
             </Route>
 
             <Route

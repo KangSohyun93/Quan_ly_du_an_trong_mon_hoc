@@ -54,7 +54,7 @@ const ClassCard = ({
         className="classcard-avatar"
         style={{ backgroundColor: avatarColor }}
       >
-        <div className="classcard-avatar-number">{avatarNumber}</div>
+        <div className="classcard-avatar-number">{avatarNumber+1}</div>
       </div>
       <div className="classcard-content">
         <div className="classcard-name-description">
