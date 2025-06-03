@@ -19,7 +19,7 @@ const TeamHeader = ({
   onUserChange,
 }) => {
   const [showAddSprint, setShowAddSprint] = useState(false);
-
+  //console.log("Sprints:", sprints);
   const tabsStudent = [
     "Introduce",
     "Dashboard",
@@ -139,26 +139,35 @@ const TeamHeader = ({
       >
         <div className="tabs-container">
           {/* Sprint Selector (student only) */}
-          {role !== "Instructor" &&
-            tabsWithSprint.includes(activeTabSlug) &&
-            sprints?.length > 0 && (
-              <div className="sprint-select">
-                <select
-                  value={selectedSprintId ?? ""}
-                  onChange={handleSprintChange}
-                >
-                  <option value="" disabled>
-                    Select Sprint
-                  </option>
-                  {sprints.map((sprint) => (
-                    <option key={sprint.sprint_id} value={sprint.sprint_id}>
-                      {sprint.sprint_name || `Sprint ${sprint.sprint_number}`}
+          {role !== "Instructor" && tabsWithSprint.includes(activeTabSlug) && (
+            <>
+              {sprints?.length > 0 ? (
+                <div className="sprint-select">
+                  <select
+                    value={selectedSprintId ?? ""}
+                    onChange={handleSprintChange}
+                  >
+                    <option value="" disabled>
+                      Select Sprint
                     </option>
-                  ))}
-                  <option value="-1">+ Add Sprint</option>
-                </select>
-              </div>
-            )}
+                    {sprints.map((sprint) => (
+                      <option key={sprint.sprint_id} value={sprint.sprint_id}>
+                        {sprint.sprint_name || `Sprint ${sprint.sprint_number}`}
+                      </option>
+                    ))}
+                    <option value="-1">+ Add Sprint</option>
+                  </select>
+                </div>
+              ) : (
+                <button
+                  className="btn btn-primary"
+                  onClick={() => setShowAddSprint(true)}
+                >
+                  + Add Sprint
+                </button>
+              )}
+            </>
+          )}
 
           {/* Dynamic Tabs */}
           {renderTabs()}

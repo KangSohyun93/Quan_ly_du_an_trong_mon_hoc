@@ -241,37 +241,29 @@ exports.searchClass = async (req, res) => {
           avatar: cm.User.avatar,
         })) || [];
 
-      // Kiểm tra xem user có trong class không
-      const hasJoined = c.ClassMembers.some((cm) => cm.user_id === +userId);
-
-      // Tìm group user đang ở (nếu có)
+      const hasJoined = c.ClassMembers.some((cm) => cm.user_id === userId);
       const userGroup = c.Groups?.find((g) =>
-        g.groupMembers?.some((gm) => gm.user_id === +userId)
+        g.groupMembers?.some((gm) => gm.user_id === userId)
       );
-      // Nếu không có group, trả về null
-      if (!userGroup) {
-        return {
-          instructorId: c.instructor_id,
-          classId: c.class_id,
-          className: c.class_name,
-          semester: c.semester,
-          memberCount: members.length,
-          members,
-          avatarNumber: index,
-          avatarColor: getRandomAvatarColor(),
-        };
-      }
-      // Nếu có group, trả về thông tin group
 
-      return {
+      const groupCount = c.Groups?.length || 0;
+
+      const baseResult = {
         instructorId: c.instructor_id,
         classId: c.class_id,
         className: c.class_name,
         semester: c.semester,
         memberCount: members.length,
+        groupCount, // 👈 thêm dòng này
         members,
         avatarNumber: index,
         avatarColor: getRandomAvatarColor(),
+      };
+
+      if (!userGroup) return baseResult;
+
+      return {
+        ...baseResult,
         ...(hasJoined
           ? {
               groupName: userGroup.group_name,
