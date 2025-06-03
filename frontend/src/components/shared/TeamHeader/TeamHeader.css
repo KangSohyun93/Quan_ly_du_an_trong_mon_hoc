@@ -186,19 +186,29 @@
   align-items: center;
   gap: 8px;
   /* Reduced gap between tabs for a tighter group */
-  /* If sprint select exists, tabs are pushed by it. If not, they start left. */
-  /* If instructor, tabs are centered using .instructor specific style */
 }
 
+/* THAY ĐỔI BẮT ĐẦU TỪ ĐÂY */
 .team-header-tabs.instructor .tabs-container {
-  justify-content: center;
-  /* Center tabs for instructor view */
+  /* justify-content: center;  XÓA HOẶC COMMENT DÒNG NÀY */
+  /* Để .tabs (con của nó) có thể chiếm toàn bộ chiều rộng */
 }
 
 .team-header-tabs.instructor .tabs {
   margin-left: 0;
   /* Reset any margin if tabs are centered */
+  width: 100%;
+  /* Làm cho .tabs (container của các nút tab) chiếm toàn bộ chiều rộng của .tabs-container */
 }
+
+.team-header-tabs.instructor .tabs .tab {
+  flex: 1;
+  /* Mỗi nút tab sẽ chiếm không gian bằng nhau */
+  justify-content: center;
+  /* Căn giữa text bên trong mỗi nút tab */
+}
+
+/* KẾT THÚC THAY ĐỔI */
 
 
 .tab {
