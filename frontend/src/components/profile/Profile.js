@@ -421,6 +421,7 @@ const Profile = () => {
                 <input
                   type="password"
                   name="oldPassword"
+                  className="profile-modal-label"
                   value={passwordData.oldPassword}
                   onChange={handlePasswordChange}
                   placeholder="Enter current password"
@@ -434,6 +435,7 @@ const Profile = () => {
                 <input
                   type="password"
                   name="newPassword"
+                  className="profile-modal-label"
                   value={passwordData.newPassword}
                   onChange={handlePasswordChange}
                   placeholder="Enter new password"
@@ -447,6 +449,7 @@ const Profile = () => {
                 <input
                   type="password"
                   name="confirmPassword"
+                  className="profile-modal-label"
                   value={passwordData.confirmPassword}
                   onChange={handlePasswordChange}
                   placeholder="Confirm new password"
@@ -459,16 +462,16 @@ const Profile = () => {
               </div>
               <div className="profile-modal-actions">
                 <button
-                  className="profile-set-password-button"
-                  onClick={handlePasswordSubmit}
-                >
-                  Set Password
-                </button>
-                <button
                   className="profile-cancel-modal-button"
                   onClick={() => setShowPasswordModal(false)}
                 >
                   Cancel
+                </button>
+                <button
+                  className="profile-set-password-button"
+                  onClick={handlePasswordSubmit}
+                >
+                  Set Password
                 </button>
               </div>
             </div>

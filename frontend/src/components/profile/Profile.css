@@ -189,7 +189,10 @@ html, body {
 }
 
 .profile-modal-section {
-  margin-bottom: 15px;
+    display: flex;
+    grid-gap: 10px;
+    margin-bottom: 15px;
+    align-items: center;
 }
 
 .profile-modal-section h3 {
@@ -199,10 +202,21 @@ html, body {
   margin-bottom: 15px;
 }
 
+.profile-modal-label {
+}
+
+.profile-modal-actions {
+  grid-gap: 10px;
+    display: flex;
+    /* margin-bottom: 15px; */
+    align-items: center;
+}
+
 .profile-error-message {
-  color: #dc3545;
-  font-size: 12px;
-  margin-top: 5px;
+    color: #dc3545;
+    font-size: 12px;
+    /* margin-top: 5px; */
+    margin: 0;
 }
 
 .profile-loading {
