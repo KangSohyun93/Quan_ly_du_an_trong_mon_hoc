@@ -148,10 +148,10 @@ exports.updateChecklistItem = async (req, res) => {
   }
 };
 
-// Update task status
-exports.updateTaskStatus = async (req, res) => {
+// Update task status và progress_percentage
+exports.updateTask = async (req, res) => {
   const { taskId } = req.params;
-  const { status } = req.body;
+  const { status, progress_percentage } = req.body;
   const userId = req.userId;
 
   try {
@@ -160,11 +160,15 @@ exports.updateTaskStatus = async (req, res) => {
     if (task.assigned_to !== userId)
       return res.status(403).json({ message: "Unauthorized" });
 
-    task.status = status;
+    // Cập nhật đồng thời status và progress_percentage nếu có
+    if (status !== undefined) task.status = status;
+    if (progress_percentage !== undefined)
+      task.progress_percentage = progress_percentage;
+
     await task.save();
-    res.status(200).json({ message: "Task status updated" });
+    res.status(200).json({ message: "Task updated successfully" });
   } catch (error) {
-    console.error("Error updating task status:", error);
+    console.error("Error updating task:", error);
     res.status(500).json({ message: "Server error" });
   }
 };

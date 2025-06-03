@@ -31,7 +31,7 @@ const ClassManagerPage = () => {
       setLoading(true);
       try {
         const data = await AdFetchClass(); // API gọi danh sách lớp học
-        console.log("Fetched classes:", data);
+        //console.log("Fetched classes:", data);
         setClasses(data);
         setTotalClasses(data.length);
         setTotalPages(Math.ceil(data.length / rowsPerPage));

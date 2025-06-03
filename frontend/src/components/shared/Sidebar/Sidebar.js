@@ -13,19 +13,20 @@ const Sidebar = () => {
   const [avatarSrc, setAvatarSrc] = useState(avatarDefault);
 
   useEffect(() => {
-    try {
-      const user = fetchUser();
-      user.then((data) => {
+    const fetchData = async () => {
+      try {
+        const data = await fetchUser();
         setUser(data);
-        if (data & data.avatar) {
+        if (data && data.avatar) {
           setAvatarSrc(data.avatar);
         }
-      });
-    } catch (error) {
-      console.error("Error fetching user data:", error);
-    }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchData();
   }, []);
-  //console.log("User:", user);
 
   useEffect(() => {
     // Thêm/xóa class trên body để main content có thể dựa vào đó

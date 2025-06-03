@@ -89,19 +89,19 @@ export const updateChecklistItem = async (checklistId, isCompleted) => {
   return response.json();
 };
 
-// Update task status
-export const updateTaskStatus = async (taskId, status) => {
+// Update task (status và progress)
+export const updateTask = async (taskId, data) => {
   const token = sessionStorage.getItem("token");
-  const response = await fetch(`${API_BASE_URL}/api/tasks/${taskId}/status`, {
+  const response = await fetch(`${API_BASE_URL}/api/tasks/${taskId}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify({ status }),
+    body: JSON.stringify(data),
   });
   if (!response.ok)
-    throw new Error(`Failed to update task status: ${response.status}`);
+    throw new Error(`Failed to update task: ${response.status}`);
   return response.json();
 };
 
