@@ -7,17 +7,23 @@
   min-height: calc(100vh - 60px);
   align-content: start;
 }
+
 .report-grid .status-block {
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  padding: 12px; /* Giảm padding để gọn hơn */
-  height: fit-content; /* Chiều cao chính xác theo nội dung */
-  min-height: 80px; /* Nhỏ hơn để tránh khoảng trống thừa khi không có report-card */
+  padding: 12px;
+  /* Giảm padding để gọn hơn */
+  height: fit-content;
+  /* Chiều cao chính xác theo nội dung */
+  min-height: 80px;
+  /* Nhỏ hơn để tránh khoảng trống thừa khi không có report-card */
   display: flex;
   flex-direction: column;
-  gap: 8px; /* Khoảng cách giữa column-header và report-card */
+  gap: 8px;
+  /* Khoảng cách giữa column-header và report-card */
 }
+
 .column-header {
   display: flex;
   justify-content: space-between;
@@ -26,34 +32,41 @@
   border-bottom: 1px solid #e0e0e0;
   margin-bottom: 25px;
 }
+
 .column-header h3 {
   margin: 0;
   font-size: 1.3em;
   color: #000;
   font-family: 'Roboto', sans-serif;
 }
+
 .count-text {
   color: #6AD2FF;
   font-weight: normal;
   font-family: 'Roboto', sans-serif;
   font-size: 0.9rem;
 }
+
 .status-circle {
   width: 24px;
   height: 24px;
   border-radius: 50%;
   display: inline-block;
 }
+
 .circle-to-do {
-  background-color: #d1d5db; /* Gray for To-Do */
+  background-color: #d1d5db;
+  /* Gray for To-Do */
 }
 
 .circle-in-progress {
-  background-color: #facc15; /* Yellow for In-progress */
+  background-color: #facc15;
+  /* Yellow for In-progress */
 }
 
 .circle-completed {
-  background-color: #4ade80; /* Green for Completed */
+  background-color: #4ade80;
+  /* Green for Completed */
 }
 
 
@@ -66,7 +79,8 @@
   border: 1px solid #ddd;
   transition: box-shadow 0.2s;
   position: relative;
-  min-width: 0; /* Ngăn overflow khi trong grid/flex */
+  min-width: 0;
+  /* Ngăn overflow khi trong grid/flex */
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -78,10 +92,12 @@
 
 .report-card-header {
   display: flex;
-  justify-content: space-between; /* tách nội dung và status bar */
+  justify-content: space-between;
+  /* tách nội dung và status bar */
   align-items: center;
   position: relative;
 }
+
 .header-left {
   display: flex;
   flex-direction: column;
@@ -93,15 +109,21 @@
   flex-direction: column;
   gap: 4px;
 }
+
 .report-card::before {
-  content: ""; /* Required for ::before to render */
+  content: "";
+  /* Required for ::before to render */
   position: absolute;
   left: 0;
   top: 11px;
-  width: 6px; /* Width of the vertical bar */
-  height: 39px; /* Full height of the card */
-  border-radius: 12px 12px 12px 12px; /* Rounded corners on the left side */
+  width: 6px;
+  /* Width of the vertical bar */
+  height: 39px;
+  /* Full height of the card */
+  border-radius: 12px 12px 12px 12px;
+  /* Rounded corners on the left side */
 }
+
 .report-status-to-do::before {
   background-color: #d1d5db;
 }
@@ -119,11 +141,16 @@
 }
 
 .task-meta {
-  color: #666; /* Darker gray for better contrast */
-  font-size: 12px; /* Slightly larger for readability */
-  font-family: "Roboto", sans-serif; /* Match the font of "Name task" */
-  font-weight: 500; /* Slightly bolder */
+  color: #666;
+  font-size: 12px;
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
 }
+
 .task-tags {
   display: flex;
   gap: 6px;
@@ -159,8 +186,16 @@
   margin-top: 8px;
   margin-bottom: 8px;
   justify-content: space-between;
-  flex-wrap: nowrap; /* Không cho xuống dòng */
+  flex-wrap: nowrap;
+  /* Không cho xuống dòng */
   min-width: 0;
+}
+
+.task-details {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
 }
 
 .task-subtasks {
@@ -178,6 +213,7 @@
   color: #999;
   padding: 3px 0;
 }
+
 .divider {
   width: 75%;
   height: 1px;
@@ -186,6 +222,7 @@
   margin: 2px auto;
   margin-bottom: 0%;
 }
+
 .subtask-count {
   color: #999;
   font-size: 15px;
@@ -198,12 +235,14 @@
   flex: 1;
   font-size: 15px;
 }
+
 .subtask-icon {
   width: 10px;
   height: 10px;
   position: relative;
   display: inline-block;
 }
+
 .subtask-status {
   font-size: 20px;
   cursor: pointer;
@@ -234,6 +273,7 @@
 .task-action-item {
   transition: color 0.2s ease, opacity 0.2s ease;
 }
+
 /* 
 .status-block {
   background: #fff;
@@ -266,32 +306,45 @@
 .status-bar-right.overdue {
   background-color: #ff4d4f;
 }
+
 /* Add styles for the "Name task" text */
 h4.body_1 {
-  font-family: "Roboto", sans-serif; /* Modern font family */
-  font-size: 16px; /* Typical body text size */
-  margin: 0; /* Remove default margin for consistency */
-  line-height: 1.25; /* Ensure consistent height for alignment */
+  font-family: "Roboto", sans-serif;
+  /* Modern font family */
+  font-size: 16px;
+  /* Typical body text size */
+  margin: 0;
+  /* Remove default margin for consistency */
+  line-height: 1.25;
+  /* Ensure consistent height for alignment */
   font-weight: bold;
 }
+
 .completed-label {
-  color: #333; /* Green to match the "completed" status */
+  color: #333;
+  /* Green to match the "completed" status */
 }
+
 .date-time-space {
   display: inline-block;
-  width: 8px; /* Adjust this value to control the space between date and time */
+  width: 8px;
+  /* Adjust this value to control the space between date and time */
 }
 
 .time-with-clock {
   display: inline-flex;
   align-items: center;
-  gap: 4px; /* Space between the clock icon and the time */
+  gap: 4px;
+  /* Space between the clock icon and the time */
 }
 
 .clock-icon {
-  font-size: 12px; /* Match the font size of the task-meta text */
-  color: #666; /* Match the color of the task-meta text */
+  font-size: 12px;
+  /* Match the font size of the task-meta text */
+  color: #666;
+  /* Match the color of the task-meta text */
 }
+
 .subtask-icon::before,
 .subtask-icon::after,
 .subtask-icon span::before,
@@ -335,6 +388,7 @@ h4.body_1 {
   top: 8px;
   left: 4px;
 }
+
 /* frontend/src/components/task/KanbanView.css */
 /* Existing styles remain unchanged, append the following at the end */
 
@@ -363,12 +417,14 @@ h4.body_1 {
 .add-task-btn:hover {
   background-color: #d0d0d0;
 }
+
 /* Add to frontend/src/components/task/KanbanView.css */
 .progress-text {
   font-size: 14px;
   color: #666;
   margin-left: 10px;
 }
+
 .no-subtask-message {
   padding: 10px;
   text-align: center;

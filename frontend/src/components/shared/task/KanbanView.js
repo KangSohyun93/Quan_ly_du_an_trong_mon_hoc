@@ -225,7 +225,7 @@ const KanbanView = (sprints) => {
                           </span>
                         )}
                         <span className="progress-text">
-                          - Progress: {task.progress_percentage}%
+                          Progress: {task.progress_percentage}%
                         </span>
                       </div>
                     </div>
@@ -237,7 +237,7 @@ const KanbanView = (sprints) => {
                       alt="avatar"
                       className="task-avatar"
                     />
-                    <div>
+                    <div className="task-details">
                       <span
                         onClick={() =>
                           setOpenTaskId(openTaskId === task.id ? null : task.id)
