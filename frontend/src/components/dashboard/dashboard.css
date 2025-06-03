@@ -57,11 +57,11 @@
 
 .member-avatar {
     border-radius: 50%;
-    width: 30px;
-    height: 30px;
+    /* width: 30px;
+    height: 30px; */
     /* border: #fff solid 0.68px; */
     position: relative;
-    margin-left: -11px;
+    margin-left: 0px;
 }
 
 .dashboard-controls {

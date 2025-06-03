@@ -85,7 +85,7 @@
   margin-left: -12px;
   /* Create overlap */
   border-radius: var(--border-radius-full);
-  border: 3px solid var(--background-white);
+  /* border: 3px solid var(--background-white); */
   box-shadow: var(--shadow-sm);
   transition: transform 0.2s ease-in-out;
 }
