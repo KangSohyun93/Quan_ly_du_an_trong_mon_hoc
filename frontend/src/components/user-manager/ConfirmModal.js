@@ -1,6 +1,5 @@
-// frontend/src/components/shared/ConfirmModal.js
+
 import React from "react";
-// Sử dụng CSS của ConfirmDeleteModal nếu tương tự, hoặc tạo CSS riêng
 
 const ConfirmModal = ({
   isOpen,
@@ -10,7 +9,7 @@ const ConfirmModal = ({
   message = "Are you sure you want to proceed?",
   confirmText = "Yes, Proceed",
   cancelText = "No, Cancel",
-  confirmButtonClass = "button-primary", // 'button-danger', 'button-success', etc.
+  confirmButtonClass = "button-primary", 
   errorMessage,
 }) => {
   if (!isOpen) return null;

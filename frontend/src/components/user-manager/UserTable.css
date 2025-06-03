@@ -1,4 +1,4 @@
-/* frontend/src/components/user_manager/UserTable.css */
+
 .user-table-container {
   background-color: #fff;
   border-radius: 14px;
@@ -10,10 +10,10 @@
 
 .user-table-container table {
   width: 100%;
-  min-width: 900px; /* Đảm bảo table không bị co lại quá nhỏ */
+  min-width: 900px; 
   border-collapse: separate;
   border-spacing: 0;
-  table-layout: fixed; /* Các cột sẽ chia đều */
+  table-layout: fixed; 
 }
 
 th,
@@ -105,7 +105,7 @@ tr:hover {
   font-size: 15px;
 }
 
-/* Responsive cho mobile/tablet */
+/* Responsive */
 @media (max-width: 900px) {
   table {
     min-width: 600px;

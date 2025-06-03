@@ -77,7 +77,7 @@ const UserManagerPage = () => {
   const formatDisplayDate = (dateStr) =>
     dateStr ? new Date(dateStr).toLocaleDateString("en-US") : "N/A";
 
-  // ✅ Lọc dữ liệu theo điều kiện
+  // Lọc dữ liệu theo điều kiện
   const filteredUsers = useMemo(() => {
     return users.filter((user) => {
       const matchesSearch =

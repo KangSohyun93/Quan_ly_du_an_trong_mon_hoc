@@ -1,6 +1,6 @@
-import "./UserTable.css"; // Import CSS styles for the table
+import "./UserTable.css"; 
 const UserTable = ({
-  users = [], // Đảm bảo luôn có mảng mặc định
+  users = [], 
   onEditUser,
   onDeleteUser,
   formatDate,
@@ -48,7 +48,7 @@ const UserTable = ({
         </thead>
         <tbody>
           {loading &&
-            hasUsers && ( // Hiển thị khi đang load nhưng đã có data cũ
+            hasUsers && ( // Hiển thị khi đang load nhưng đã có dữ liệu cũ
               <tr>
                 <td colSpan="7" className="loading-text table-feedback">
                   Đang cập nhật...

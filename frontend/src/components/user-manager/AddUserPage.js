@@ -9,7 +9,7 @@ const LOGGED_IN_ADMIN = {
   username: "AdminUser",
 };
 
-const AVAILABLE_ROLES = ["Student", "Instructor"]; // ✨ Danh sách role cố định
+const AVAILABLE_ROLES = ["Student", "Instructor"]; // Danh sách role cố định
 
 const AddUserPage = () => {
   const navigate = useNavigate();
@@ -19,7 +19,7 @@ const AddUserPage = () => {
     email: "",
     password: "",
     confirmPassword: "",
-    role: "Student", // ✅ Mặc định là Student
+    role: "Student", // Mặc định là Student
   });
 
   const [errors, setErrors] = useState({});
