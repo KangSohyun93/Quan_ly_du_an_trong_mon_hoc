@@ -32,7 +32,7 @@ const TeamHeader = ({
   const tabsWithSprint = ["dashboard", "team-task", "my-task"];
   const tabsWithUserFilter = ["team-task", "rate"];
 
-  const activeTabSlug = activeTab.toLowerCase();
+  const activeTabSlug = activeTab.toLowerCase().replace(/\s+/g, "-");
 
   const handleSprintChange = (e) => {
     const sprintId = parseInt(e.target.value, 10);
@@ -46,6 +46,23 @@ const TeamHeader = ({
   const handleUserChange = (e) => {
     const userId = parseInt(e.target.value, 10);
     onUserChange(userId === 0 ? null : userId);
+  };
+
+  const getIconForTab = (slug) => {
+    switch (slug) {
+      case "introduce":
+        return "fas fa-chalkboard-teacher";
+      case "dashboard":
+        return "fas fa-th-large";
+      case "team-task":
+        return "fas fa-users";
+      case "my-task":
+        return "fas fa-user-check";
+      case "rate":
+        return "fas fa-star";
+      default:
+        return "fas fa-question-circle"; // Fallback icon
+    }
   };
 
   const renderTabs = () => {
@@ -65,7 +82,7 @@ const TeamHeader = ({
                 tab
               ) : (
                 <>
-                  <span className={`icon ${slug}-icon`} /> {tab}
+                  <i className={`${getIconForTab(slug)} tab-icon`}></i> {tab}
                 </>
               )}
             </button>
@@ -80,23 +97,23 @@ const TeamHeader = ({
       {/* Common Header Top */}
       <div className="team-header-top">
         <div className="team-info">
-          <p>
+          <p className="team-info-title">
             {teamName} : {projectName}
           </p>
-          <p>
+          <p className="team-info-subtitle">
             {className} || {classCode}
           </p>
         </div>
 
-        {/* Only show member avatars for student */}
-        {members && (
+        {/* Only show member avatars for student role, ensure members is an array */}
+        {role !== "Instructor" && Array.isArray(members) && (
           <div className="team-members">
-            {members && members.length > 0 ? (
+            {members.length > 0 ? (
               members.slice(0, 3).map((member, index) => (
-                <div key={index} className="team-member">
+                <div key={member.id || index} className="team-member">
                   <img
                     src={member.avatarUrl || placeholderMember}
-                    alt={`Member ${index + 1}`}
+                    alt={member.name || `Member ${index + 1}`}
                     className="member-avatar"
                     onError={(e) => {
                       e.target.src = placeholderMember;
@@ -105,7 +122,7 @@ const TeamHeader = ({
                 </div>
               ))
             ) : (
-              <p>No members</p>
+              <p className="no-members-text">No members</p>
             )}
             {members.length > 3 && (
               <div className="more-members">+{members.length - 3}</div>
@@ -116,9 +133,8 @@ const TeamHeader = ({
 
       {/* Tab Area */}
       <div
-        className={`team-header-tabs ${
-          role === "Instructor" ? "instructor" : ""
-        }`}
+        className={`team-header-tabs ${role === "Instructor" ? "instructor" : ""
+          }`}
       >
         <div className="tabs-container">
           {/* Sprint Selector (student only) */}
@@ -131,14 +147,14 @@ const TeamHeader = ({
                   onChange={handleSprintChange}
                 >
                   <option value="" disabled>
-                    Chọn Sprint
+                    Select Sprint
                   </option>
                   {sprints.map((sprint) => (
                     <option key={sprint.sprint_id} value={sprint.sprint_id}>
                       {sprint.sprint_name || `Sprint ${sprint.sprint_number}`}
                     </option>
                   ))}
-                  <option value="-1">+ Thêm Sprint</option>
+                  <option value="-1">+ Add Sprint</option>
                 </select>
               </div>
             )}
@@ -149,11 +165,12 @@ const TeamHeader = ({
 
         {/* User Filter (student only) */}
         {role !== "Instructor" &&
+          Array.isArray(members) && members.length > 0 &&
           tabsWithUserFilter.includes(activeTabSlug) && (
             <div className="teamheader-actions">
               <select
                 onChange={handleUserChange}
-                className="filter-btn"
+                className="filter-select" // Changed class name for clarity
                 defaultValue="0"
               >
                 <option value="0">All Users</option>

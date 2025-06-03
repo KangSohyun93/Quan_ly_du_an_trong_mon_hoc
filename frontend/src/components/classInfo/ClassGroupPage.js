@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import Sidebar from "../shared/Sidebar/Sidebar";
 import GroupInClass from "../shared/GroupInClass/GroupInClass";
 import ImportHeader from "../import/import";
-import { getClassByGv } from "../../services/class-service"; // API gọi getClassforGV
+import { getClassByGv } from "../../services/class-service";
 import "./ClassGroupPage.css";
 
 const ClassGroupsPage = () => {
@@ -25,10 +24,8 @@ const ClassGroupsPage = () => {
           throw new Error("userId hoặc classId không hợp lệ");
         }
 
-        // Gọi API lấy danh sách lớp cho giảng viên
         const classes = await getClassByGv();
 
-        // Tìm lớp tương ứng với classId
         const selectedClass = classes.find(
           (c) => String(c.classId) === String(classId)
         );
@@ -45,7 +42,6 @@ const ClassGroupsPage = () => {
           semester: selectedClass.semester,
         });
 
-        // Lấy danh sách nhóm trong lớp
         setGroups(selectedClass.groups || []);
       } catch (err) {
         setError(err.message || "Không thể tải dữ liệu. Vui lòng thử lại sau.");
@@ -61,7 +57,6 @@ const ClassGroupsPage = () => {
   if (error) {
     return (
       <div className="class-groups-page">
-        <Sidebar userId={userId} />
         <div className="class-groups-content">
           <div className="error-message">{error}</div>
         </div>
@@ -71,7 +66,6 @@ const ClassGroupsPage = () => {
 
   return (
     <div className="class-groups-page">
-      <Sidebar userId={userId} />
       <div className="class-groups-content">
         <div className="class-groups-header">
           <div className="class-info">

@@ -18,7 +18,7 @@
 
 .member-details {
   display: flex; /* Sử dụng Flexbox cho tên và vai trò */
-  flex-direction: column; /* Sắp xếp tên và vai trò theo cột */
+  flex-direction: row; /* Sắp xếp tên và vai trò theo cột */
 }
 
 .member-name {

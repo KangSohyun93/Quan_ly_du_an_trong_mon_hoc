@@ -37,7 +37,7 @@
     color: #1F2937;
     cursor: pointer;
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    min-width: 160px;
+    min-width: 150px;
     /* Ensure select has some width */
 }
 

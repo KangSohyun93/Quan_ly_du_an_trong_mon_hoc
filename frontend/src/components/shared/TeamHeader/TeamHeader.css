@@ -1,262 +1,359 @@
-.team-header {
-  background-color: #f9fafb; /* Màu nền nhẹ nhàng hơn */
-  padding: 20px 25px; /* Tăng padding để thoáng hơn */
-  border-bottom: 1px solid #e5e7eb; /* Viền nhẹ hơn */
-  color: #2d3748; /* Màu chữ đậm hơn */
-  font-family: "Roboto", sans-serif;
-  display: flex;
-  flex-direction: column;
-  gap: 25px; /* Tăng khoảng cách giữa các phần */
+@import '~@fortawesome/fontawesome-free/css/all.min.css';
+
+:root {
+  --primary-color: #458ae3;
+  /* Indigo */
+  --primary-color-darker: #6ba8f8;
+  --primary-color-lighter: #eef2ff;
+  --text-primary: #111827;
+  /* Dark Gray */
+  --text-secondary: #4b5563;
+  /* Medium Gray */
+  --text-tertiary: #6b7280;
+  /* Light Gray */
+  --border-color: #d1d5db;
+  /* Lighter Gray for borders */
+  --border-color-soft: #e5e7eb;
+  --background-light: #f9fafb;
+  --background-white: #ffffff;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --font-family-main: "Roboto", sans-serif;
+  --border-radius-sm: 0.375rem;
+  /* 6px */
+  --border-radius-md: 0.5rem;
+  /* 8px */
+  --border-radius-lg: 0.75rem;
+  /* 12px */
+  --border-radius-xl: 1rem;
+  /* 16px */
+  --border-radius-full: 9999px;
 }
 
-/* Thanh phía trên */
+.team-header {
+  font-family: var(--font-family-main);
+  color: var(--text-primary);
+  padding: 10px 20px;
+  /* Adjusted padding */
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  /* Increased gap */
+  /* background-color: var(--background-light); */
+  /* Light background for the whole header area */
+}
+
+/* Top section: Team Info & Members */
 .team-header-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: linear-gradient(to right, #edf2ff, #e9ecef); /* Gradient nhẹ */
-  border-radius: 15px; /* Bo góc hơn */
-  padding: 20px; /* Tăng padding */
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.05); /* Bóng nhẹ hơn */
-  border: 1px solid #dfe4ea; /* Viền nhẹ */
+  background: var(--background-white);
+  border-radius: var(--border-radius-xl);
+  padding: 10px 20px;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-color-soft);
 }
 
 .team-info {
   flex: 1;
 }
 
-.team-info p:first-child {
-  font-size: 28px; /* Tăng kích thước chữ */
-  font-weight: 700; /* Đậm hơn */
-  color: #1e293b; /* Màu đậm hơn */
-  margin: 5px 0;
+.team-info-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 4px 0;
 }
 
-.team-info p:last-child {
-  font-size: 15px; /* Tăng kích thước chữ */
-  color: #64748b; /* Màu xám đậm hơn */
-  margin: 5px 0;
+.team-info-subtitle {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin: 0;
 }
 
 .team-members {
   display: flex;
   align-items: center;
-  gap: 12px; /* Tăng khoảng cách giữa các thành viên */
 }
 
 .team-member {
-  width: 36px; /* Tăng kích thước avatar */
-  height: 36px;
-  margin-left: -14px;
+  width: 40px;
+  height: 40px;
+  margin-left: -12px;
+  /* Create overlap */
+  border-radius: var(--border-radius-full);
+  border: 3px solid var(--background-white);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s ease-in-out;
 }
 
 .team-member:first-child {
   margin-left: 0;
 }
 
+.team-member:hover {
+  transform: translateY(-2px) scale(1.05);
+  z-index: 1;
+}
+
 .member-avatar {
-  border-radius: 50%;
+  border-radius: var(--border-radius-full);
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border: 2px solid #ffffff;
-  transition: transform 0.3s ease; /* Thêm hiệu ứng hover */
 }
 
-.member-avatar:hover {
-  transform: scale(1.1); /* Phóng to nhẹ khi hover */
+.no-members-text {
+  font-size: 13px;
+  color: var(--text-tertiary);
+  margin-left: 10px;
 }
 
 .more-members {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background-color: #e5e7eb; /* Màu nền nhẹ hơn */
-  color: #1e293b; /* Màu chữ đậm hơn */
+  width: 40px;
+  height: 40px;
+  border-radius: var(--border-radius-full);
+  background-color: var(--border-color-soft);
+  color: var(--text-secondary);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-left: -14px;
-  border: 2px solid #ffffff;
-  font-size: 14px;
-  font-weight: 500;
+  margin-left: -12px;
+  border: 3px solid var(--background-white);
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: var(--shadow-sm);
 }
 
-/* Thanh tab phía dưới */
+/* Bottom section: Tabs & Actions */
 .team-header-tabs {
-  background: linear-gradient(to right, #edf2ff, #e9ecef); /* Gradient nhẹ */
-  border-radius: 15px; /* Bo góc hơn */
-  padding: 10px 20px; /* Tăng padding */
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.05); /* Bóng nhẹ hơn */
-  border: 1px solid #dfe4ea; /* Viền nhẹ */
+  background: var(--background-white);
+  border-radius: var(--border-radius-xl);
+  padding: 12px 20px;
+  /* Adjusted padding */
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-color-soft);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px; /* Tăng khoảng cách */
+  gap: 20px;
+  overflow-x: auto;
 }
 
 .tabs-container {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   flex: 1;
+  /* Allow it to take available space */
+  gap: 20px;
+  /* Gap between sprint select and tabs block */
 }
 
 .sprint-select {
-  margin-right: auto;
-  display: flex;
-  align-items: center;
-  gap: 10px; /* Thêm khoảng cách giữa dropdown và nút Add Sprint */
+  /* No margin-right: auto, relies on tabs-container gap */
 }
 
 .sprint-select select {
-  border: 1px solid #d1d5db; /* Viền nhẹ hơn */
-  border-radius: 8px; /* Bo góc hơn */
-  padding: 8px 12px; /* Tăng padding */
-  font-size: 15px; /* Tăng kích thước chữ */
-  background-color: #ffffff;
-  font-family: "Roboto", sans-serif;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  padding: 9px 14px;
+  /* Slightly adjusted padding */
+  font-size: 14px;
+  background-color: var(--background-white);
+  font-family: var(--font-family-main);
+  color: var(--text-secondary);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
   cursor: pointer;
+  min-width: 180px;
+  /* Ensure it has decent width */
 }
 
 .sprint-select select:hover {
-  border-color: #3b82f6; /* Màu xanh đậm hơn khi hover */
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); /* Thêm bóng nhẹ */
+  border-color: var(--primary-color);
+}
+
+.sprint-select select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+  /* Using primary color for focus ring */
 }
 
 .tabs {
   display: flex;
   align-items: center;
-  justify-content: space-evenly;
-  margin-left: 25px; /* Tăng khoảng cách bên trái */
-  gap: 25px; /* Tăng khoảng cách giữa các tab */
-  flex: 1;
+  gap: 8px;
+  /* Reduced gap between tabs for a tighter group */
+  /* If sprint select exists, tabs are pushed by it. If not, they start left. */
+  /* If instructor, tabs are centered using .instructor specific style */
 }
 
-.tabs .tab {
-  font-family: "Roboto", sans-serif;
-  font-size: 15px; /* Tăng kích thước chữ */
-  color: #1e293b; /* Màu đậm hơn */
+.team-header-tabs.instructor .tabs-container {
+  justify-content: center;
+  /* Center tabs for instructor view */
+}
+
+.team-header-tabs.instructor .tabs {
+  margin-left: 0;
+  /* Reset any margin if tabs are centered */
+}
+
+
+.tab {
+  font-family: var(--font-family-main);
+  font-size: 15px;
+  color: var(--text-secondary);
   background: none;
   border: none;
   cursor: pointer;
-  padding: 8px 14px; /* Tăng padding */
-  border-radius: 8px; /* Bo góc hơn */
-  transition: background-color 0.3s ease, color 0.3s ease;
+  padding: 9px 16px;
+  /* Adjusted padding */
+  border-radius: var(--border-radius-md);
+  transition: background-color 0.2s ease, color 0.2s ease;
   display: flex;
   align-items: center;
-  justify-content: center;
-  flex: 1;
-  text-align: center;
+  font-weight: 500;
 }
 
-.tabs .tab:hover {
-  background-color: #dbeafe; /* Màu xanh nhạt khi hover */
-  color: #3b82f6; /* Màu chữ xanh */
+.tab:hover {
+  background-color: var(--primary-color-lighter);
+  color: var(--primary-color);
 }
 
-.tabs .tab.active {
-  background-color: #bfdbfe; /* Màu xanh nhạt đậm hơn khi active */
-  border-radius: 8px;
-  color: #1e40af; /* Màu chữ đậm hơn */
+.tab.active {
+  background-color: var(--primary-color);
+  color: var(--background-white);
 }
 
-.tab .icon {
-  width: 18px; /* Tăng kích thước icon */
-  height: 18px;
-  margin-right: 10px; /* Tăng khoảng cách */
-  display: inline-block;
+.tab.active:hover {
+  background-color: var(--primary-color-darker);
+}
+
+.tab-icon {
+  margin-right: 8px;
+  font-size: 16px;
+  /* Ensure icon size is appropriate */
+  line-height: 1;
+  /* Helps with vertical alignment */
+  width: 1.1em;
+  /* Give icon a bit of space */
+}
+
+.tab.active .tab-icon {
+  color: var(--background-white);
+  /* Ensures icon color matches text in active tab */
 }
 
 .teamheader-actions {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  margin-right: 20px;
 }
 
-.filter-btn {
-  background-color: #3b82f6; /* Màu xanh đậm hơn */
-  color: #ffffff;
-  border: none;
-  border-radius: 25px; /* Bo góc hơn */
-  padding: 10px 20px; /* Tăng padding */
-  font-size: 15px; /* Tăng kích thước chữ */
-  font-weight: 600; /* Đậm hơn */
+.filter-select {
+  /* Updated class name from filter-btn */
+  background-color: var(--background-white);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  padding: 9px 14px;
+  padding-right: 35px;
+  /* Space for dropdown arrow */
+  font-size: 14px;
+  font-weight: 500;
+  font-family: var(--font-family-main);
   cursor: pointer;
-  font-family: "Roboto", sans-serif;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%236b7280'%3E%3Cpath fill-rule='evenodd' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' clip-rule='evenodd'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  min-width: 150px;
 }
 
-.filter-btn:hover {
-  background-color: #2563eb; /* Màu đậm hơn khi hover */
-  transform: translateY(-2px); /* Nâng nhẹ khi hover */
+.filter-select:hover {
+  border-color: var(--primary-color);
 }
 
+.filter-select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+}
+
+/* Styles for the search bar (kept from original, refined) */
 .teamheader-actions .team-search-bar {
   position: relative;
   display: flex;
   align-items: center;
-  border: 1px solid #d1d5db; /* Viền nhẹ hơn */
-  border-radius: 25px; /* Bo góc hơn */
-  background-color: #ffffff;
-  padding: 0 14px; /* Tăng khoảng cách bên trong */
-  transition: box-shadow 0.3s ease;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  background-color: var(--background-white);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  margin-left: 15px;
+  /* If both filter and search are present */
 }
 
-.teamheader-actions .team-search-bar:hover {
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); /* Bóng nhẹ khi hover */
+.teamheader-actions .team-search-bar:hover,
+.teamheader-actions .team-search-bar:focus-within {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+}
+
+.teamheader-actions .team-search-bar .team-search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%236b7280'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  z-index: 1;
+  /* Ensure icon is above input background */
 }
 
 .teamheader-actions .team-search-bar input {
   flex: 1;
   border: none;
   outline: none;
-  font-size: 15px; /* Tăng kích thước chữ */
-  padding: 10px 0; /* Tăng padding */
-  margin-left: 50px;
-  color: #1e293b; /* Màu chữ đậm hơn */
+  font-size: 14px;
+  padding: 9px 12px 9px 38px;
+  /* Left padding for icon */
+  color: var(--text-primary);
   background-color: transparent;
-  font-family: "Roboto", sans-serif;
+  font-family: var(--font-family-main);
+  margin-left: 0;
+  /* Remove original margin */
 }
 
 .teamheader-actions .team-search-bar input::placeholder {
-  color: #9ca3af; /* Màu placeholder nhẹ hơn */
-  font-family: "Roboto", sans-serif;
+  color: var(--text-tertiary);
+  font-family: var(--font-family-main);
 }
 
-.teamheader-actions .team-search-bar .team-search-icon {
-  width: 18px; /* Tăng kích thước icon */
-  height: 18px;
-  margin-left: 10px; /* Tăng khoảng cách */
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%239ca3af'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'/%3E%3C/svg%3E");
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-}
-
-/* Icon styles */
-.introduce-icon {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%231e293b'%3E%3Cpath d='M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm0 12a5 5 5 0 1 1 0-10 5 5 0 0 1 0 10z'/%3E%3C/svg%3E");
-}
-
-.dashboard-icon {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%231e293b'%3E%3Cpath d='M2 2h5v5H2V2zm7 0h5v5H9V2zm-7 7h5v5H2V9zm7 0h5v5H9V9z'/%3E%3C/svg%3E");
-}
-
-.team-task-icon {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%231e293b'%3E%3Cpath d='M2 2h12v2H2V2zm0 4h12v2H2V6zm0 4h12v2H2V-2z'/%3E%3C/svg%3E");
-}
-
-.my-task-icon {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%231e293b'%3E%3Cpath d='M2 2h12v12H2V2zm2 2v8h8V4H4z'/%3E%3C/svg%3E");
-}
-
-.roadmap-icon {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%231e293b'%3E%3Cpath d='M2 2h12v2H2V2zm0 4h12v2H2V6zm0 4h12v2H2V-2z'/%3E%3C/svg%3E");
-}
-
+/* Remove old icon styles that used background images or specific content properties */
+.introduce-icon,
+.dashboard-icon,
+.team-task-icon,
+.my-task-icon,
+.roadmap-icon,
 .rate-icon {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%231e293b'%3E%3Cpath d='M8 1l2.5 5.5h5L11 9l1.5 5L8 11.5 3.5 14 5 9 1.5 6.5h5L8 1z'/%3E%3C/svg%3E");
+  background-image: none;
+  /* Remove old background images */
+  content: none;
+  /* Remove old content properties */
+  width: auto;
+  /* Reset width */
+  height: auto;
+  /* Reset height */
+  display: inline-flex;
+  /* Ensure it behaves well with FA */
+  align-items: center;
+  justify-content: center;
 }

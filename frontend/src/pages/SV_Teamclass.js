@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Sidebar from "../components/shared/Sidebar/Sidebar.js";
+// import Sidebar from "../components/shared/Sidebar/Sidebar.js";
 import JoinClassBar from "../components/classHeader/classHeader.js";
 import ClassCardList from "../components/shared/ClassCard/classList.js";
 import { SearchClass, getInfoClass } from "../services/class-service.js";
@@ -50,11 +50,12 @@ function SV_TeamClass() {
           onJoinSuccess={fetchClasses} // reload khi join thành công
         />
         <div
-          className="page-content p-4"
+          className="page-content"
           style={{
             flexGrow: 1,
             overflowY: "auto", // Cho phép phần nội dung cuộn
             height: "100%",
+            padding: "5px 16px 0px 24px",
           }}
         >
           <ClassCardList data={classCards} loading={loading} />

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Sidebar from "../components/shared/Sidebar/Sidebar.js";
+// import Sidebar from "../components/shared/Sidebar/Sidebar.js";
 import JoinClassBar from "../components/classHeader/classHeader.js";
 import ClassCardList from "../components/shared/InstructorClassCard/instructorClassList.js";
 import EditClassPopup from "../components/shared/EditClassPopup/EditClassPopup.js";
@@ -60,11 +60,12 @@ function GV_TeamClass() {
           onCreateSuccess={fetchClasses}
         />
         <div
-          className="page-content p-4"
+          className="page-content"
           style={{
             flexGrow: 1,
             overflowY: "auto",
             height: "100%",
+            padding: "5px 16px 0px 24px",
           }}
         >
           <ClassCardList

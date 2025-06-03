@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import Sidebar from "../shared/Sidebar/Sidebar";
 import { getClassByGv } from "../../services/class-service";
 import "./ClassMembersPage.css";
 
@@ -80,7 +79,6 @@ const ClassMembersPage = () => {
   if (error) {
     return (
       <div className="class-members-page">
-        <Sidebar userId={userId} />
         <div className="class-members-content">
           <div className="error-message">{error}</div>
         </div>
@@ -90,7 +88,6 @@ const ClassMembersPage = () => {
 
   return (
     <div className="class-members-page">
-      <Sidebar userId={userId} />
       <div className="class-members-content">
         <div className="class-members-header">
           <div className="class-info">

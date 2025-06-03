@@ -23,3 +23,10 @@
     margin-top: 15px;
     font-size: 14px;
 }
+
+.no-data {
+    font-family: 'Inter', sans-serif;
+    color: #6b7280;
+    text-align: center;
+    width: 100%;
+}

@@ -10,5 +10,8 @@
 }
 
 body.sidebar-expanded .main-content-area {
-  margin-left: 16rem; 
+  margin-left: 16rem; /* 256px for w-64 */
+}
+body.sidebar-collapsed .main-content-area {
+  margin-left: 5rem; /* 80px for w-20 */
 }

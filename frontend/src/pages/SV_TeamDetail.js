@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import Sidebar from "../components/shared/Sidebar/Sidebar.js";
+// import Sidebar from "../components/shared/Sidebar/Sidebar.js";
 import TeamHeader from "../components/shared/TeamHeader/TeamHeader.js";
 import { useLocation, useNavigate, useParams, Outlet } from "react-router-dom";
 import { fetchGroupData } from "../services/group-service.js";
@@ -109,11 +109,12 @@ function SV_TeamDetail({ currentUserId }) {
           onUserChange={setSelectedUserId} // thêm nếu cần user filter
         />
         <div
-          className="page-content p-4"
+          className="page-content"
           style={{
             flexGrow: 2,
             overflowY: "auto", // Cho phép phần nội dung cuộn
             height: "100%",
+            padding: "5px 16px 0px 24px",
           }}
         >
           <Outlet

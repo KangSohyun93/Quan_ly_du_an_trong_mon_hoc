@@ -10,7 +10,7 @@
 
 .dashboard-content {
     /* flex: 1; */
-    padding: 0 30px;
+    /* padding: 0 30px; */
     /* width: 100%; */
 }
 
@@ -81,10 +81,10 @@
 .sprint-select {
     outline: none;
     border: none;
-    background-color: #dbeafe;
+    /* background-color: #dbeafe; */
     color: #3b82f6;
     border-radius: 0.5rem;
-    padding: 0.5rem 1rem;
+    padding: 10px 0;
 }
 
 .sprint-select,
@@ -136,6 +136,7 @@
     display: flex;
     flex-direction: column;
     gap: 28px;
+    border-radius: 15px
 }
 
 .dashboard-stats {

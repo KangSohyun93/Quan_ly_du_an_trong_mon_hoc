@@ -1,6 +1,6 @@
 // components/layout/HomeLayout.js
 import React from "react";
-import Sidebar from "../components/shared/Sidebar/Sidebar.js";
+// import Sidebar from "../components/shared/Sidebar/Sidebar.js";
 import { Outlet } from "react-router-dom";
 import UserTable from "../components/user-manager/UserTable.js";
 
