@@ -11,7 +11,7 @@ const GroupMember = require("./MemberGroupModel");
 const { Task, TaskChecklist, Sprint, TaskComment } = require("./TaskModel");
 const PeerAssessment = require("./PeerAssessmentModel");
 const GitContribution = require("./GitContributionModel");
-// Define associations
+// Code cũ (giữ nguyên)
 User.hasMany(PeerAssessment, {
   foreignKey: "assessor_id",
   as: "assessmentsGiven",
@@ -27,6 +27,16 @@ User.hasMany(PeerAssessment, {
 PeerAssessment.belongsTo(User, {
   foreignKey: "assessee_id",
   as: "assessee",
+});
+
+// Thêm mối quan hệ với Group
+Group.hasMany(PeerAssessment, {
+  foreignKey: "group_id",
+  as: "assessments",
+});
+PeerAssessment.belongsTo(Group, {
+  foreignKey: "group_id",
+  as: "group",
 });
 
 User.belongsToMany(Class, {
@@ -95,21 +105,21 @@ Task.belongsTo(User, { foreignKey: "assigned_to", as: "assignedUser" });
 TaskComment.belongsTo(User, { foreignKey: "user_id", as: "author" });
 
 Project.hasMany(GitContribution, {
-  foreignKey: 'project_id',
-  as: 'gitContributions'
+  foreignKey: "project_id",
+  as: "gitContributions",
 });
 GitContribution.belongsTo(Project, {
-  foreignKey: 'project_id',
-  as: 'project'
+  foreignKey: "project_id",
+  as: "project",
 });
 
 User.hasMany(GitContribution, {
-  foreignKey: 'user_id',
-  as: 'contributions' 
+  foreignKey: "user_id",
+  as: "contributions",
 });
 GitContribution.belongsTo(User, {
-  foreignKey: 'user_id',
-  as: 'user' // Or 'contributor'
+  foreignKey: "user_id",
+  as: "user", // Or 'contributor'
 });
 
 // Export models & sequelize
@@ -127,5 +137,5 @@ module.exports = {
   Sprint,
   TaskComment,
   PeerAssessment,
-  GitContribution
+  GitContribution,
 };

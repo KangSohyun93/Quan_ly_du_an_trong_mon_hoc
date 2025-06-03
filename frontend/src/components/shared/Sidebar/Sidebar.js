@@ -67,7 +67,9 @@ const Sidebar = () => {
     if (!user || !user.role) {
       // Nếu không có user hoặc role, không có item nào active
       // Sử dụng callback để đảm bảo chỉ set nếu giá trị thực sự thay đổi
-      setSelectedItem(currentSelectedItem => currentSelectedItem !== null ? null : currentSelectedItem);
+      setSelectedItem((currentSelectedItem) =>
+        currentSelectedItem !== null ? null : currentSelectedItem
+      );
       return;
     }
 
@@ -78,7 +80,10 @@ const Sidebar = () => {
       // Nếu URL là của Student/Instructor, "Teams" sẽ là active mặc định.
       // Khi người dùng click "Thông báo", `handleItemClick` sẽ set nó.
       // Khi điều hướng đi, useEffect này sẽ chạy lại và set "Teams" nếu path vẫn là của Student/Instructor.
-      if (currentPath.startsWith("/home") || currentPath.startsWith("/instructor/home")) {
+      if (
+        currentPath.startsWith("/home") ||
+        currentPath.startsWith("/instructor/home")
+      ) {
         newActiveItem = "Teams";
       }
     } else if (user.role === "Admin") {
@@ -92,22 +97,21 @@ const Sidebar = () => {
 
     // Sử dụng callback form của setSelectedItem để chỉ cập nhật nếu giá trị mới khác giá trị hiện tại,
     // tránh vòng lặp render không cần thiết.
-    setSelectedItem(currentSelectedItem => {
+    setSelectedItem((currentSelectedItem) => {
       if (currentSelectedItem !== newActiveItem) {
         return newActiveItem;
       }
       return currentSelectedItem;
     });
-
   }, [location.pathname, user]); // Chạy lại khi URL hoặc user thay đổi
 
   const toggleSidebar = () => {
-    setIsOpen(prevIsOpen => !prevIsOpen);
+    setIsOpen((prevIsOpen) => !prevIsOpen);
   };
 
   const handleItemClick = (item, path) => {
     setSelectedItem(item); // Cho phép UI phản hồi ngay khi click
-    navigate(path);      // Điều hướng, sẽ kích hoạt useEffect ở trên để "sửa" lại active item nếu cần
+    navigate(path); // Điều hướng, sẽ kích hoạt useEffect ở trên để "sửa" lại active item nếu cần
   };
 
   const handleLogout = () => {
@@ -124,8 +128,9 @@ const Sidebar = () => {
     const collapsedItemClasses = !isOpen ? "justify-center p-2" : "p-2";
 
     const getItemClasses = (item) => {
-      return `${commonItemClasses} ${collapsedItemClasses} ${selectedItem === item ? "bg-blue-100" : ""
-        }`;
+      return `${commonItemClasses} ${collapsedItemClasses} ${
+        selectedItem === item ? "bg-blue-100" : ""
+      }`;
     };
 
     const iconClasses = `icon ${isOpen ? "mr-3" : ""}`;
@@ -194,27 +199,49 @@ const Sidebar = () => {
   return (
     <div className="sidebar">
       <div
-        className={`bg-white h-screen border-r transition-all ${isOpen ? "w-64" : "w-20"
-          } overflow-hidden`}
+        className={`bg-white h-screen border-r transition-all ${
+          isOpen ? "w-64" : "w-20"
+        } overflow-hidden`}
       >
-        <div className={`sidebar-all h-full flex flex-col ${isOpen ? "p-4" : "p-3"}`}>
+        <div
+          className={`sidebar-all h-full flex flex-col ${
+            isOpen ? "p-4" : "p-3"
+          }`}
+        >
           <div className="sidebar-top">
-            <div className={`flex ${isOpen ? "items-center justify-between" : "flex-col items-center space-y-3"}`}>
+            <div
+              className={`flex ${
+                isOpen
+                  ? "items-center justify-between"
+                  : "flex-col items-center space-y-3"
+              }`}
+            >
               <img
                 src={isOpen ? worktraceLogo : worktraceLogoSmall}
                 alt="WorkTrace Logo"
                 className={`logo ${isOpen ? "h-10" : "w-10 h-10"}`}
               />
               <button onClick={toggleSidebar} className="open_close_sidebar">
-                <i className={isOpen ? "fas fa-chevron-left" : "fas fa-chevron-right"}></i>
+                <i
+                  className={
+                    isOpen ? "fas fa-chevron-left" : "fas fa-chevron-right"
+                  }
+                ></i>
               </button>
             </div>
 
             <a
-              className={`flex items-center mt-6 ${isOpen ? "user-ava-name" : "justify-center py-2"}`}
-              style={!isOpen ? { padding: '0.5rem 0' } : {}}
+              href="/profile"
+              className={`flex items-center mt-6 ${
+                isOpen ? "user-ava-name" : "justify-center py-2"
+              }`}
+              style={!isOpen ? { padding: "0.5rem 0" } : {}}
             >
-              <img src={avatarSrc} alt="User Avatar" className={`avatar ${isOpen ? "mr-3" : ""}`} />
+              <img
+                src={avatarSrc}
+                alt="User Avatar"
+                className={`avatar ${isOpen ? "mr-3" : ""}`}
+              />
               {isOpen && (
                 <span className="user-name text-gray-700">
                   {user?.username || "Your name"}
@@ -224,7 +251,11 @@ const Sidebar = () => {
 
             {isOpen && <div className="line mt-3 mb-3"></div>}
 
-            <div className={`sidebar-content flex-grow ${isOpen ? "mt-6" : "mt-3"}`}>
+            <div
+              className={`sidebar-content flex-grow ${
+                isOpen ? "mt-6" : "mt-3"
+              }`}
+            >
               {renderMenuItems()}
             </div>
           </div>
@@ -235,9 +266,15 @@ const Sidebar = () => {
           >
             <a
               href="#"
-              className={`flex items-center text-gray-700 rounded ${isOpen ? "p-2" : "p-3"}`}
+              className={`flex items-center text-gray-700 rounded ${
+                isOpen ? "p-2" : "p-3"
+              }`}
             >
-              <i className={`icon ${isOpen ? "mr-3" : ""} fa-solid fa-right-from-bracket`}></i>
+              <i
+                className={`icon ${
+                  isOpen ? "mr-3" : ""
+                } fa-solid fa-right-from-bracket`}
+              ></i>
               {isOpen && <p>Log out</p>}
             </a>
           </div>

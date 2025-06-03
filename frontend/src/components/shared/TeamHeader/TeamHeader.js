@@ -133,8 +133,9 @@ const TeamHeader = ({
 
       {/* Tab Area */}
       <div
-        className={`team-header-tabs ${role === "Instructor" ? "instructor" : ""
-          }`}
+        className={`team-header-tabs ${
+          role === "Instructor" ? "instructor" : ""
+        }`}
       >
         <div className="tabs-container">
           {/* Sprint Selector (student only) */}
@@ -165,7 +166,8 @@ const TeamHeader = ({
 
         {/* User Filter (student only) */}
         {role !== "Instructor" &&
-          Array.isArray(members) && members.length > 0 &&
+          Array.isArray(members) &&
+          members.length > 0 &&
           tabsWithUserFilter.includes(activeTabSlug) && (
             <div className="teamheader-actions">
               <select

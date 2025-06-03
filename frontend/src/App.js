@@ -1,10 +1,15 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./assets/styles/global.css";
-import './App.css';
+import "./App.css";
 
-import { BrowserRouter as Router, Routes, Route, Outlet } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Outlet,
+} from "react-router-dom";
 
-import Sidebar from './components/shared/Sidebar/Sidebar';
+import Sidebar from "./components/shared/Sidebar/Sidebar";
 
 import RegisterForm from "./components/auth/Register/RegisterForm.js";
 import LoginForm from "./components/auth/Login/LoginForm.js";
@@ -24,7 +29,8 @@ import GV_TeamClass from "./pages/GV_Teamclass.js";
 import ClassGroupsPage from "./components/classInfo/ClassGroupPage.js";
 import ClassMembersPage from "./components/classInfo/ClassMembersPage.js";
 import GV_GroupDetailOfClass from "./pages/GV_GroupDetailOfClass.js";
-import Dashboard from './components/dashboard/Dashboard.js';
+import Dashboard from "./components/dashboard/Dashboard.js";
+import Profile from "./components/profile/Profile.js";
 
 const LayoutWithSidebar = () => {
   return (
@@ -32,7 +38,10 @@ const LayoutWithSidebar = () => {
     <div className="layout-with-sidebar" style={{ minHeight: "100vh" }}>
       <Sidebar />
       {/* Thêm class "main-content-area" cho thẻ main */}
-      <main className="main-content-area" style={{ overflowY: "auto", padding: "0px" }}>
+      <main
+        className="main-content-area"
+        style={{ overflowY: "auto", padding: "0px" }}
+      >
         <Outlet />
       </main>
     </div>
@@ -48,6 +57,14 @@ function App() {
           <Route path="/" element={<LoginForm />} />
           <Route path="/register" element={<RegisterForm />} />
           <Route path="/login" element={<LoginForm />} />
+          <Route
+            path="/profile"
+            element={
+              <RequireAuth>
+                <Profile />
+              </RequireAuth>
+            }
+          />
 
           {/* Routes có Sidebar */}
           <Route element={<LayoutWithSidebar />}>

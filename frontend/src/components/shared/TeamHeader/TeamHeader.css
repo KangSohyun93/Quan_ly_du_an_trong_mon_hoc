@@ -1,4 +1,4 @@
-@import '~@fortawesome/fontawesome-free/css/all.min.css';
+@import "~@fortawesome/fontawesome-free/css/all.min.css";
 
 :root {
   --primary-color: #458ae3;
@@ -18,7 +18,8 @@
   --background-white: #ffffff;
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1),
+    0 4px 6px -4px rgb(0 0 0 / 0.1);
   --font-family-main: "Roboto", sans-serif;
   --border-radius-sm: 0.375rem;
   /* 6px */
@@ -209,7 +210,6 @@
 }
 
 /* KẾT THÚC THAY ĐỔI */
-
 
 .tab {
   font-family: var(--font-family-main);

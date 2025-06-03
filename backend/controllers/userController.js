@@ -114,3 +114,135 @@ exports.createUser = async (req, res) => {
     res.status(500).json({ error: "Lỗi server" });
   }
 };
+exports.getUserProfile = async (req, res) => {
+  try {
+    const userId = parseInt(req.params.userId, 10);
+    const authUserId = req.userId; // Lấy từ middleware verifyToken
+    if (isNaN(userId) || userId <= 0) {
+      return res
+        .status(400)
+        .json({ message: "userId phải là số nguyên dương" });
+    }
+    if (userId !== authUserId && req.userRole !== "Admin") {
+      return res
+        .status(403)
+        .json({ message: "Không có quyền truy cập hồ sơ này" });
+    }
+
+    const user = await User.findOne({
+      where: { user_id: userId },
+      attributes: [
+        "user_id",
+        "email",
+        "username",
+        "role",
+        "avatar",
+        "github_email",
+        "github_username",
+      ], // Thêm github_email và github_username
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: "Người dùng không tồn tại" });
+    }
+
+    res.status(200).json(user);
+  } catch (error) {
+    console.error("Lỗi trong getUserProfile:", error.message, error.stack);
+    res.status(500).json({ message: "Lỗi server", error: error.message });
+  }
+};
+
+exports.updateUserProfile = async (req, res) => {
+  try {
+    const userId = parseInt(req.params.userId, 10);
+    const authUserId = req.userId;
+    const { username, github_email, github_username } = req.body;
+    const avatar = req.file ? `/uploads/${req.file.filename}` : undefined; // Lấy đường dẫn file từ multer
+
+    if (isNaN(userId) || userId <= 0) {
+      return res
+        .status(400)
+        .json({ message: "userId phải là số nguyên dương" });
+    }
+    if (userId !== authUserId) {
+      return res
+        .status(403)
+        .json({ message: "Không có quyền cập nhật hồ sơ này" });
+    }
+
+    const user = await User.findOne({ where: { user_id: userId } });
+    if (!user) {
+      return res.status(404).json({ message: "Người dùng không tồn tại" });
+    }
+
+    const updates = {};
+    if (username) updates.username = username;
+    if (github_email) updates.github_email = github_email;
+    if (github_username) updates.github_username = github_username;
+    if (avatar) updates.avatar = avatar; // Lưu đường dẫn avatar
+
+    // Kiểm tra nếu không có dữ liệu để cập nhật
+    if (Object.keys(updates).length === 0) {
+      return res.status(400).json({
+        message:
+          "Cần cung cấp ít nhất username, avatar, github_email hoặc github_username",
+      });
+    }
+
+    await user.update(updates);
+    res.status(200).json({
+      message: "Hồ sơ đã được cập nhật",
+      user: {
+        user_id: user.user_id,
+        username: user.username,
+        email: user.email,
+        role: user.role,
+        avatar: user.avatar,
+        github_email: user.github_email,
+        github_username: user.github_username,
+      },
+    });
+  } catch (error) {
+    console.error("Lỗi trong updateUserProfile:", error.message, error.stack);
+    res.status(500).json({ message: "Lỗi server", error: error.message });
+  }
+};
+
+exports.changePassword = async (req, res) => {
+  try {
+    const userId = parseInt(req.params.userId, 10);
+    const authUserId = req.userId;
+    const { oldPassword, newPassword } = req.body;
+
+    if (isNaN(userId) || userId <= 0 || !oldPassword || !newPassword) {
+      return res.status(400).json({ message: "Dữ liệu không hợp lệ" });
+    }
+    if (userId !== authUserId) {
+      return res
+        .status(403)
+        .json({ message: "Không có quyền thay đổi mật khẩu này" });
+    }
+
+    const user = await User.findOne({ where: { user_id: userId } });
+    if (!user) {
+      return res.status(404).json({ message: "Người dùng không tồn tại" });
+    }
+
+    //const isMatch = await user.comparePassword(oldPassword);
+    // so sánh truc tiếp mật khẩu người dùng nhập và mật khẩu trong cơ sở dữ liệu
+    const isMatch = oldPassword === user.password;
+    if (!isMatch) {
+      return res.status(400).json({ message: "Mật khẩu cũ không đúng" });
+    }
+
+    // const hashedPassword = await bcrypt.hash(newPassword, 10);
+    // await user.update({ password: hashedPassword });
+    await user.update({ password: newPassword });
+
+    res.status(200).json({ message: "Mật khẩu đã được thay đổi" });
+  } catch (error) {
+    console.error("Lỗi trong changePassword:", error.message, error.stack);
+    res.status(500).json({ message: "Lỗi server", error: error.message });
+  }
+};

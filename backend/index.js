@@ -3,8 +3,8 @@ const app = express();
 const cors = require("cors");
 const dotenv = require("dotenv");
 
-dotenv.config({ path: './.env' }); // File .env database
-dotenv.config({ path: './.github.env' }); // File .env cho GitHub
+dotenv.config({ path: "./.env" }); // File .env database
+dotenv.config({ path: "./.github.env" }); // File .env cho GitHub
 
 app.use(cors());
 app.use(express.json());
@@ -21,11 +21,11 @@ app.use("/api/tasks", taskRoutes);
 const userRoutes = require("./routes/user-routes");
 app.use("/api/user", userRoutes);
 const assessmentRoutes = require("./routes/assessment-routes");
-app.use("/api/assessment", assessmentRoutes);
-const groupApiRoutes = require('./routes/groups-routes.js'); 
-app.use('/api/groups', groupApiRoutes);
-const commitApiRoutes = require('./routes/github-routes.js'); 
-app.use('/api/projects', commitApiRoutes);
+app.use("/api/peerassessment", assessmentRoutes);
+const groupApiRoutes = require("./routes/groups-routes.js");
+app.use("/api/groups", groupApiRoutes);
+const commitApiRoutes = require("./routes/github-routes.js");
+app.use("/api/projects", commitApiRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () =>
