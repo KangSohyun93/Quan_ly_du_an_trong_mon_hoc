@@ -162,7 +162,7 @@ CREATE TABLE PeerAssessments (
     FOREIGN KEY (assessee_id) REFERENCES Users(user_id) ON DELETE CASCADE
 );
 
--- Bảng InstructorEvaluations: Lưu đánh giá từ giảng viên cho nhóm hoặc thành viên
+-- Bảng InstructorEvaluations: Lưu đánh giá từ giảng viên cho thành viên
 CREATE TABLE InstructorEvaluations (
     evaluation_id INT AUTO_INCREMENT PRIMARY KEY,
     group_id INT NOT NULL,

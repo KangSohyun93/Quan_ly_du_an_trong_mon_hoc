@@ -1,0 +1,45 @@
+.instructor-eval-button {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background-color: #458ae3;
+    /* SlateBlue, or your theme color */
+    color: white;
+    border: none;
+    border-radius: 50px;
+    /* More rounded for a floating action button feel */
+    padding: 12px 18px;
+    font-size: 14px;
+    font-family: 'Roboto', sans-serif;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 1000;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.instructor-eval-button:hover {
+    background-color: #6ba8f8;
+    /* Darker shade on hover */
+    transform: translateY(-2px);
+}
+
+.instructor-eval-button .icon-placeholder {
+    font-size: 18px;
+    /* Adjust if using a real icon */
+}
+
+/* Responsive: smaller button text on small screens if needed */
+@media (max-width: 768px) {
+    .instructor-eval-button .button-text {
+        /* display: none; */
+        /* Optionally hide text and only show icon */
+    }
+
+    .instructor-eval-button {
+        /* padding: 12px; */
+        /* Adjust padding if text is hidden */
+    }
+}

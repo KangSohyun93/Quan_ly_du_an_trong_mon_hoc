@@ -3,7 +3,7 @@ const { User } = require("../models");
 
 const createToken = (user) => {
   return jwt.sign(
-    { id: user.user_id, email: user.email },
+    { id: user.user_id, email: user.email, role: user.role },
     process.env.JWT_SECRET || "secret-key",
     { expiresIn: "1d" }
   );
@@ -12,6 +12,12 @@ const createToken = (user) => {
 exports.register = async (req, res) => {
   try {
     const { email, username, password, role } = req.body;
+
+    const validRoles = ['Student', 'Instructor', 'Admin'];
+    if (!role || !validRoles.includes(role)) {
+      return res.status(400).json({ message: "Vai trò không hợp lệ" });
+    }
+
     const existingUser = await User.findOne({ where: { email } });
 
     if (existingUser) {
@@ -26,7 +32,7 @@ exports.register = async (req, res) => {
     });
 
     res.status(201).json({
-      user: { email: newUser.email, name: newUser.username },
+      user: { id: newUser.user_id, email: newUser.email, name: newUser.username, role: newUser.role },
       message: "Đăng ký tài khoản thành công!",
     });
   } catch (error) {
@@ -59,6 +65,7 @@ exports.login = async (req, res) => {
       user: {
         id: user.user_id,
         name: user.username,
+        email: user.email,
         role: user.role,
       },
     });
