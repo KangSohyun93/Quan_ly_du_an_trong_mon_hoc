@@ -111,36 +111,36 @@ INSERT INTO Users (username, email, password, role, github_email, github_usernam
 
 -- Chèn dữ liệu vào bảng Classes
 INSERT INTO Classes (class_id, class_name, instructor_id, semester, secret_code) VALUES 
-(100001, 'ITSS', 31, '2025.1', 'SE2025'), -- ProfSmith
-(100002, 'Kỹ thuật phần mềm', 32, '2025.1', 'WEB2025'), -- ProfJones
-(100003, 'Cấu trúc dữ liệu', 33, '2025.2', 'DS2025'), -- ProfBrown
-(100004, 'Hệ điều hành', 31, '2025.2', 'OS2025'), -- ProfSmith
-(100005, 'Trí tuệ nhân tạo', 32, '2025.2', 'AI2025'), -- ProfJones
-(100006, 'Lập trình hướng đối tượng', 31, '2024.1', 'OOP2024'),
-(100007, 'Cơ sở dữ liệu', 32, '2024.1', 'DB2024'),
-(100008, 'Phát triển ứng dụng web', 33, '2024.2', 'WD2024'),
-(100009, 'An ninh mạng', 31, '2024.2', 'CS2024'),
-(100010, 'Học máy', 32, '2025.1', 'ML2025'),
-(100011, 'Lập trình di động', 33, '2025.1', 'MD2025'),
-(100012, 'Thiết kế giao diện người dùng', 31, '2023.2', 'UI2023'),
-(100013, 'Quản lý dự án phần mềm', 32, '2023.2', 'SPM2023'),
-(100014, 'Phân tích và thiết kế hệ thống', 33, '2024.1', 'SAD2024'),
-(100015, 'Lập trình web nâng cao', 31, '2024.2', 'AWD2024'),
-(100016, 'Xử lý dữ liệu lớn', 32, '2025.1', 'BD2025'),
-(100017, 'Mạng máy tính', 33, '2025.1', 'CN2025'),
-(100018, 'Kiểm thử phần mềm', 31, '2024.1', 'ST2024'),
-(100019, 'Phát triển ứng dụng di động', 32, '2024.2', 'MAD2024'),
-(100020, 'Tương tác người máy', 33, '2025.2', 'HCI2025'),
-(100021, 'Lập trình hệ thống', 31, '2023.1', 'SP2023'),
-(100022, 'Cơ sở dữ liệu phân tán', 32, '2023.2', 'DDB2023'),
-(100023, 'Phát triển game', 33, '2024.1', 'GD2024'),
-(100024, 'Tầm nhìn máy tính', 31, '2024.2', 'CV2024'),
-(100025, 'Xử lý ngôn ngữ tự nhiên', 32, '2025.1', 'NLP2025'),
-(100026, 'Lập trình ứng dụng doanh nghiệp', 33, '2025.2', 'EAD2025'),
-(100027, 'Điện toán đám mây', 31, '2024.1', 'CC2024'),
-(100028, 'Phân tích dữ liệu', 32, '2024.2', 'DA2024'),
-(100029, 'Blockchain và ứng dụng', 33, '2025.1', 'BC2025'),
-(100030, 'Internet vạn vật', 31, '2025.2', 'IOT2025');
+(100001, 'ITSS', 101, '2025.1', 'SE2025'), -- ProfSmith
+(100002, 'Kỹ thuật phần mềm', 102, '2025.1', 'WEB2025'), -- ProfJones
+(100003, 'Cấu trúc dữ liệu', 103, '2025.2', 'DS2025'), -- ProfBrown
+(100004, 'Hệ điều hành', 101, '2025.2', 'OS2025'), -- ProfSmith
+(100005, 'Trí tuệ nhân tạo', 102, '2025.2', 'AI2025'), -- ProfJones
+(100006, 'Lập trình hướng đối tượng', 101, '2024.1', 'OOP2024'),
+(100007, 'Cơ sở dữ liệu', 102, '2024.1', 'DB2024'),
+(100008, 'Phát triển ứng dụng web', 103, '2024.2', 'WD2024'),
+(100009, 'An ninh mạng', 101, '2024.2', 'CS2024'),
+(100010, 'Học máy', 102, '2025.1', 'ML2025'),
+(100011, 'Lập trình di động', 103, '2025.1', 'MD2025'),
+(100012, 'Thiết kế giao diện người dùng', 101, '2023.2', 'UI2023'),
+(100013, 'Quản lý dự án phần mềm', 102, '2023.2', 'SPM2023'),
+(100014, 'Phân tích và thiết kế hệ thống', 103, '2024.1', 'SAD2024'),
+(100015, 'Lập trình web nâng cao', 101, '2024.2', 'AWD2024'),
+(100016, 'Xử lý dữ liệu lớn', 102, '2025.1', 'BD2025'),
+(100017, 'Mạng máy tính', 103, '2025.1', 'CN2025'),
+(100018, 'Kiểm thử phần mềm', 101, '2024.1', 'ST2024'),
+(100019, 'Phát triển ứng dụng di động', 102, '2024.2', 'MAD2024'),
+(100020, 'Tương tác người máy', 103, '2025.2', 'HCI2025'),
+(100021, 'Lập trình hệ thống', 101, '2023.1', 'SP2023'),
+(100022, 'Cơ sở dữ liệu phân tán', 102, '2023.2', 'DDB2023'),
+(100023, 'Phát triển game', 103, '2024.1', 'GD2024'),
+(100024, 'Tầm nhìn máy tính', 101, '2024.2', 'CV2024'),
+(100025, 'Xử lý ngôn ngữ tự nhiên', 102, '2025.1', 'NLP2025'),
+(100026, 'Lập trình ứng dụng doanh nghiệp', 103, '2025.2', 'EAD2025'),
+(100027, 'Điện toán đám mây', 101, '2024.1', 'CC2024'),
+(100028, 'Phân tích dữ liệu', 102, '2024.2', 'DA2024'),
+(100029, 'Blockchain và ứng dụng', 103, '2025.1', 'BC2025'),
+(100030, 'Internet vạn vật', 101, '2025.2', 'IOT2025');
 
 -- Insert vào bảng Groups
 INSERT INTO `Groups` (group_name, class_id, leader_id) VALUES
@@ -591,7 +591,7 @@ INSERT INTO GroupMembers (group_id, user_id) VALUES
 (197, 75), (197, 76), (197, 77), (197, 78), (197, 79), (197, 80), -- Nhóm 6: 6 thành viên
 (198, 81), (198, 82), (198, 83), (198, 84), (198, 85), -- Nhóm 7
 (199, 86), (199, 87), (199, 88), (199, 89), (199, 90), -- Nhóm 8
-(200, 91), (200, 92), (200, 93), (200, 94), (200, 95), -- Nhóm 9
+(200, 91), (200, 92), (200, 93), (200, 94), (200, 95); -- Nhóm 9
 
 -- Chèn dữ liệu vào bảng Projects
 INSERT INTO Projects (project_name, group_id, description, tools_used, status, github_repo_url) VALUES
@@ -1257,7 +1257,7 @@ INSERT INTO Sprints (project_id, sprint_name, start_date, end_date) VALUES
 -- Project 96: DataVisualizer (Ongoing, Xử lý dữ liệu lớn, 2025.1)
 (96, 'Sprint 1 - Thu thập dữ liệu', '2025-02-01', '2025-02-15'),
 (96, 'Sprint 2 - Thiết kế giao diện', '2025-02-16', '2025-03-02'),
-(96, 'Sprint 3 - Tích hợp D3.js', '2025-03-03', '2025-03-17'),
+(96, 'Sprint 3 - Tích hợp D3.js', '2025-03-03', '2025-03-17');
 INSERT INTO Sprints (project_id, sprint_name, start_date, end_date) VALUES
 -- Project 97: ClusterManager (Ongoing, Xử lý dữ liệu lớn, 2025.1)
 (97, 'Sprint 1 - Thiết kế cụm', '2025-02-01', '2025-02-15'),
@@ -1715,19 +1715,55 @@ INSERT INTO Sprints (project_id, sprint_name, start_date, end_date) VALUES
 (200, 'Sprint 3 - Tích hợp Arduino', '2025-08-31', '2025-09-14');
 
 -- Chèn dữ liệu vào bảng Tasks
--- INSERT INTO Tasks (sprint_id, title, description, assigned_to, status, due_date, completed_at, progress_percentage) VALUES
--- Dự án 1: Hệ thống quản lý thư viện (Sprint 1: Done tasks, Sprint 2: In-Progress/To-Do)
-(1, 'Thiết kế giao diện', 'Thiết kế giao diện người dùng', 1, 'Completed', '2025-04-10 23:59:00', '2025-04-09 10:00:00', 100),
-(2, 'Xây dựng API', 'Xây dựng API cho hệ thống', 2, 'In-Progress', '2025-04-15 23:59:00', NULL, 50),
-(2, 'Kiểm thử hệ thống', 'Kiểm thử các chức năng', 3, 'To-Do', '2025-04-20 23:59:00', NULL, 0),
-(1, 'Tài liệu', 'Viết tài liệu', 4, 'Completed', '2025-04-10 23:59:00', '2025-04-09 10:00:00', 100),
-(1, 'Cải thiện hiệu suất', 'Tối ưu hiệu suất', 1, 'Completed', '2025-04-10 23:59:00', '2025-04-09 10:00:00', 100),
--- Dự án 2: Ứng dụng đặt vé xem phim (Sprint 3: Done tasks, Sprint 4: None)
-(3, 'Cơ sở dữ liệu', 'Thiết kế CSDL cho ứng dụng', 5, 'Completed', '2025-03-20 23:59:00', '2025-03-21 10:00:00', 100),
-(3, 'Giao diện đặt vé', 'Thiết kế giao diện đặt vé', 6, 'Completed', '2025-03-25 23:59:00', '2025-03-24 10:00:00', 100),
-(3, 'Tích hợp thanh toán', 'Tích hợp cổng thanh toán', 7, 'Completed', '2025-03-30 23:59:00', '2025-03-29 10:00:00', 100),
-(3, 'Kiểm thử', 'Kiểm thử ứng dụng', 8, 'Completed', '2025-03-30 23:59:00', '2025-03-29 10:00:00', 100),
-(3, 'Triển khai', 'Triển khai ứng dụng', 5, 'Completed', '2025-03-30 23:59:00', '2025-03-29 10:00:00', 100),
+INSERT INTO Tasks (sprint_id, title, description, assigned_to, status, due_date, completed_at, progress_percentage) VALUES
+-- Nhóm 1
+-- Sprint 1: Phân tích yêu cầu (2025-02-01 to 2025-02-15)
+(1, 'Thu thập yêu cầu người dùng', 'Phỏng vấn và ghi nhận yêu cầu từ khách hàng', 1, 'In-Progress', '2025-02-10 23:59:00', NULL, 0),
+(1, 'Phân tích chức năng hệ thống', 'Lập danh sách các chức năng chính của hệ thống', 1, 'In-Progress', '2025-02-12 23:59:00', NULL, 0),
+(1, 'Xây dựng tài liệu yêu cầu', 'Soạn thảo tài liệu yêu cầu phần mềm', 2, 'In-Progress', '2025-02-14 23:59:00', NULL, 0),
+(1, 'Phân tích rủi ro dự án', 'Đánh giá các rủi ro tiềm ẩn', 2, 'In-Progress', '2025-02-13 23:59:00', NULL, 0),
+(1, 'Xác định phạm vi dự án', 'Xác định các tính năng trong phạm vi dự án', 3, 'In-Progress', '2025-02-11 23:59:00', NULL, 0),
+(1, 'Lập kế hoạch phân tích', 'Lập kế hoạch chi tiết cho giai đoạn phân tích', 3, 'In-Progress', '2025-02-09 23:59:00', NULL, 0),
+(1, 'Thiết lập tiêu chí đánh giá', 'Xác định tiêu chí đánh giá yêu cầu', 4, 'In-Progress', '2025-02-14 23:59:00', NULL, 0),
+(1, 'Kiểm tra tính khả thi', 'Đánh giá tính khả thi của yêu cầu', 4, 'In-Progress', '2025-02-15 23:59:00', NULL, 0),
+(1, 'Tạo sơ đồ luồng dữ liệu', 'Vẽ sơ đồ luồng dữ liệu cơ bản', 5, 'In-Progress', '2025-02-12 23:59:00', NULL, 0),
+(1, 'Xây dựng danh sách use case', 'Lập danh sách các use case chính', 5, 'In-Progress', '2025-02-13 23:59:00', NULL, 0),
+
+-- Sprint 2: Thiết kế giao diện (2025-02-16 to 2025-03-02)
+(2, 'Thiết kế wireframe trang chủ', 'Tạo wireframe cho trang chủ', 1, 'In-Progress', '2025-02-20 23:59:00', NULL, 0),
+(2, 'Thiết kế giao diện người dùng', 'Thiết kế UI cho các trang chính', 1, 'In-Progress', '2025-02-25 23:59:00', NULL, 0),
+(2, 'Tạo mockup trang quản lý', 'Thiết kế mockup cho trang quản lý dự án', 2, 'In-Progress', '2025-02-22 23:59:00', NULL, 0),
+(2, 'Thiết kế giao diện responsive', 'Đảm bảo giao diện tương thích với mobile', 2, 'In-Progress', '2025-02-28 23:59:00', NULL, 0),
+(2, 'Tối ưu hóa trải nghiệm người dùng', 'Cải thiện UX dựa trên phản hồi', 3, 'In-Progress', '2025-03-01 23:59:00', NULL, 0),
+(2, 'Tạo style guide', 'Xây dựng hướng dẫn phong cách giao diện', 3, 'In-Progress', '2025-02-26 23:59:00', NULL, 0),
+(2, 'Thiết kế biểu tượng và logo', 'Tạo biểu tượng và logo cho dự án', 4, 'In-Progress', '2025-02-23 23:59:00', NULL, 0),
+(2, 'Kiểm tra giao diện người dùng', 'Kiểm tra tính nhất quán của giao diện', 4, 'In-Progress', '2025-03-02 23:59:00', NULL, 0),
+(2, 'Tích hợp giao diện với ReactJS', 'Chuẩn bị giao diện cho tích hợp ReactJS', 5, 'In-Progress', '2025-02-27 23:59:00', NULL, 0),
+(2, 'Thiết kế bảng màu giao diện', 'Lựa chọn và áp dụng bảng màu cho giao diện', 5, 'In-Progress', '2025-02-24 23:59:00', NULL, 0),
+
+-- Sprint 3: Phát triển backend (2025-03-03 to 2025-03-17)
+(3, 'Thiết kế cơ sở dữ liệu', 'Xây dựng lược đồ cơ sở dữ liệu MySQL', 1, 'In-Progress', '2025-03-07 23:59:00', NULL, 0),
+(3, 'Tạo API đăng nhập', 'Phát triển API cho chức năng đăng nhập', 1, 'In-Progress', '2025-03-10 23:59:00', NULL, 0),
+(3, 'Phát triển API quản lý dự án', 'Tạo API cho chức năng quản lý dự án', 2, 'In-Progress', '2025-03-12 23:59:00', NULL, 0),
+(3, 'Tối ưu hóa truy vấn cơ sở dữ liệu', 'Cải thiện hiệu suất truy vấn MySQL', 2, 'In-Progress', '2025-03-15 23:59:00', NULL, 0),
+(3, 'Xây dựng API quản lý task', 'Phát triển API cho quản lý công việc', 3, 'In-Progress', '2025-03-11 23:59:00', NULL, 0),
+(3, 'Tích hợp xác thực người dùng', 'Triển khai xác thực JWT cho API', 3, 'In-Progress', '2025-03-14 23:59:00', NULL, 0),
+(3, 'Thiết lập server NodeJS', 'Cấu hình server backend với NodeJS', 4, 'In-Progress', '2025-03-08 23:59:00', NULL, 0),
+(3, 'Kiểm tra API', 'Kiểm tra và sửa lỗi các API backend', 4, 'In-Progress', '2025-03-16 23:59:00', NULL, 0),
+(3, 'Tạo API báo cáo tiến độ', 'Phát triển API cho báo cáo tiến độ dự án', 5, 'In-Progress', '2025-03-13 23:59:00', NULL, 0),
+(3, 'Tích hợp cơ sở dữ liệu với backend', 'Kết nối backend với MySQL', 5, 'In-Progress', '2025-03-09 23:59:00', NULL, 0),
+
+-- (1, 'Thiết kế giao diện', 'Thiết kế giao diện người dùng', 1, 'Completed', '2025-04-10 23:59:00', '2025-04-09 10:00:00', 100),
+-- (2, 'Xây dựng API', 'Xây dựng API cho hệ thống', 2, 'In-Progress', '2025-04-15 23:59:00', NULL, 50),
+-- (2, 'Kiểm thử hệ thống', 'Kiểm thử các chức năng', 3, 'To-Do', '2025-04-20 23:59:00', NULL, 0),
+-- (1, 'Tài liệu', 'Viết tài liệu', 4, 'Completed', '2025-04-10 23:59:00', '2025-04-09 10:00:00', 100),
+-- (1, 'Cải thiện hiệu suất', 'Tối ưu hiệu suất', 1, 'Completed', '2025-04-10 23:59:00', '2025-04-09 10:00:00', 100),
+-- -- Dự án 2: Ứng dụng đặt vé xem phim (Sprint 3: Done tasks, Sprint 4: None)
+-- (3, 'Cơ sở dữ liệu', 'Thiết kế CSDL cho ứng dụng', 5, 'Completed', '2025-03-20 23:59:00', '2025-03-21 10:00:00', 100),
+-- (3, 'Giao diện đặt vé', 'Thiết kế giao diện đặt vé', 6, 'Completed', '2025-03-25 23:59:00', '2025-03-24 10:00:00', 100),
+-- (3, 'Tích hợp thanh toán', 'Tích hợp cổng thanh toán', 7, 'Completed', '2025-03-30 23:59:00', '2025-03-29 10:00:00', 100),
+-- (3, 'Kiểm thử', 'Kiểm thử ứng dụng', 8, 'Completed', '2025-03-30 23:59:00', '2025-03-29 10:00:00', 100),
+-- (3, 'Triển khai', 'Triển khai ứng dụng', 5, 'Completed', '2025-03-30 23:59:00', '2025-03-29 10:00:00', 100),
 -- Dự án 3: Website bán hàng (Sprint 5: None, Sprint 6: In-Progress/To-Do)
 (6, 'Trang chủ', 'Thiết kế trang chủ', 7, 'In-Progress', '2025-04-15 23:59:00', NULL, 33),
 (6, 'Giỏ hàng', 'Chức năng giỏ hàng', 8, 'To-Do', '2025-04-20 23:59:00', NULL, 0),
@@ -1779,21 +1815,74 @@ INSERT INTO Sprints (project_id, sprint_name, start_date, end_date) VALUES
 
 -- Chèn dữ liệu vào bảng TaskChecklists
 INSERT INTO TaskChecklists (task_id, item_description, is_completed) VALUES
--- Task 1 (Thiết kế giao diện, Done)
-(1, 'Thiết kế trang chủ', TRUE),
-(1, 'Thiết kế trang đăng nhập', TRUE),
-(1, 'Thiết kế trang quản lý', TRUE),
--- Task 2 (Xây dựng API, In-Progress)
-(2, 'API đăng nhập', TRUE),
-(2, 'API quản lý sách', FALSE),
-(2, 'API tìm kiếm', FALSE),
--- Task 11 (Trang chủ, In-Progress)
-(11, 'Header', TRUE),
-(11, 'Footer', FALSE),
-(11, 'Slider', FALSE),
--- Task 16 (Giao diện chính, Done)
-(16, 'Thiết kế giao diện chính', TRUE),
-(16, 'Thiết kế menu', TRUE);
+-- Sprint 1: Phân tích yêu cầu (task_id 1-10)
+(1, 'Lên lịch phỏng vấn khách hàng', TRUE),
+(1, 'Ghi nhận yêu cầu chức năng', FALSE),
+(1, 'Tổng hợp phản hồi từ khách hàng', FALSE),
+(2, 'Liệt kê các module chính', TRUE),
+(2, 'Xác định các tính năng ưu tiên', FALSE),
+(3, 'Soạn thảo tài liệu SRS', FALSE),
+(3, 'Kiểm tra tài liệu với nhóm', FALSE),
+(4, 'Xác định rủi ro kỹ thuật', TRUE),
+(4, 'Đánh giá rủi ro thời gian', FALSE),
+(5, 'Liệt kê các tính năng cốt lõi', TRUE),
+(6, 'Lập timeline phân tích', TRUE),
+(6, 'Phân bổ nhiệm vụ cho nhóm', FALSE),
+(6, 'Xác định các cột mốc quan trọng', FALSE),
+(7, 'Xây dựng tiêu chí chức năng', TRUE),
+(7, 'Xây dựng tiêu chí phi chức năng', FALSE),
+(8, 'Kiểm tra tính khả thi kỹ thuật', TRUE),
+(8, 'Đánh giá tính khả thi tài chính', FALSE),
+(9, 'Vẽ sơ đồ DFD cấp 0', TRUE),
+(9, 'Vẽ sơ đồ DFD cấp 1', FALSE),
+(10, 'Xác định các actor chính', TRUE),
+(10, 'Mô tả chi tiết use case', FALSE),
+
+-- Sprint 2: Thiết kế giao diện (task_id 11-20)
+(11, 'Tạo wireframe bằng Figma', FALSE),
+(11, 'Thiết kế bố cục trang chủ', TRUE),
+(11, 'Kiểm tra wireframe với nhóm', FALSE),
+(12, 'Thiết kế UI trang đăng nhập', TRUE),
+(12, 'Thiết kế UI trang danh sách dự án', FALSE),
+(13, 'Tạo mockup bằng Adobe XD', FALSE),
+(13, 'Điều chỉnh mockup theo phản hồi', FALSE),
+(14, 'Kiểm tra giao diện trên mobile', TRUE),
+(14, 'Tối ưu hóa kích thước giao diện', FALSE),
+(15, 'Thu thập phản hồi UX từ người dùng', FALSE),
+(15, 'Cải thiện luồng điều hướng', FALSE),
+(16, 'Xác định phông chữ và màu sắc', TRUE),
+(16, 'Tạo tài liệu style guide', FALSE),
+(17, 'Thiết kế logo chính', TRUE),
+(17, 'Tạo các biểu tượng phụ', FALSE),
+(18, 'Kiểm tra tính nhất quán màu sắc', TRUE),
+(18, 'Kiểm tra tính nhất quán phông chữ', FALSE),
+(19, 'Chuẩn bị component React cho trang chủ', FALSE),
+(19, 'Tích hợp giao diện với code', FALSE),
+(20, 'Chọn bảng màu chính', TRUE),
+(20, 'Kiểm tra tương phản màu', FALSE),
+
+-- Sprint 3: Phát triển backend (task_id 21-30)
+(21, 'Thiết kế bảng users', TRUE),
+(21, 'Thiết kế bảng projects', FALSE),
+(21, 'Thiết kế bảng tasks', FALSE),
+(22, 'Viết API endpoint đăng nhập', FALSE),
+(22, 'Kiểm tra API đăng nhập', FALSE),
+(23, 'Viết API tạo dự án', TRUE),
+(23, 'Viết API xóa dự án', FALSE),
+(24, 'Tối ưu hóa truy vấn SELECT', TRUE),
+(24, 'Tối ưu hóa truy vấn JOIN', FALSE),
+(25, 'Viết API thêm task', FALSE),
+(25, 'Viết API cập nhật task', FALSE),
+(26, 'Cấu hình JWT cho API', TRUE),
+(26, 'Kiểm tra xác thực token', FALSE),
+(27, 'Cài đặt Express cho server', TRUE),
+(27, 'Cấu hình môi trường server', FALSE),
+(28, 'Viết unit test cho API', FALSE),
+(28, 'Sửa lỗi API dựa trên test', FALSE),
+(29, 'Viết API báo cáo tiến độ', FALSE),
+(29, 'Kiểm tra API báo cáo', FALSE),
+(30, 'Kết nối MySQL với NodeJS', TRUE),
+(30, 'Kiểm tra kết nối database', FALSE);
 
 -- Chèn dữ liệu vào bảng TaskComments
 INSERT INTO TaskComments (task_id, user_id, comment_text) VALUES
@@ -2059,11 +2148,37 @@ INSERT INTO GitContributions (project_id, user_id, commit_hash, commit_message, 
 (1, 5, '97ecd3f7c0d95a510a4d57cec64941f0fd8805f6', 'Admin-class-manager', 495, 1, '2025-05-30 09:14:39', '2025-05-30 20:28:58');
 
 -- Chèn dữ liệu vào bảng PeerAssessments
-INSERT INTO PeerAssessments (group_id, assessor_id, assessee_id, deadline_score, friendly_score, quality_score, team_support_score, responsibility_score, note) VALUES
 -- Nhóm 1
-(1, 2, 1, 5, 5, 4, 4, 5, 'Hoàn thành công việc đúng hạn và hỗ trợ nhóm tốt.'),
-(1, 3, 1, 4, 5, 4, 5, 4, 'Cần cải thiện tốc độ hoàn thành nhiệm vụ.'),
-(1, 1, 2, 5, 4, 5, 4, 5, 'Chất lượng công việc tốt, cần thân thiện hơn.'),
+INSERT INTO PeerAssessments (group_id, assessor_id, assessee_id, deadline_score, friendly_score, quality_score, team_support_score, responsibility_score, note) VALUES
+-- Assessor 1 đánh giá các thành viên 2, 3, 4, 5
+(1, 1, 2, 4, 5, 4, 4, 4, 'Hoàn thành công việc đúng hạn, rất thân thiện và hỗ trợ nhóm tốt.'),
+(1, 1, 3, 3, 4, 3, 3, 3, 'Cần cải thiện tốc độ hoàn thành task, nhưng thái độ tích cực.'),
+(1, 1, 4, 5, 5, 5, 5, 5, 'Leader xuất sắc, luôn dẫn dắt nhóm và đảm bảo chất lượng.'),
+(1, 1, 5, 2, 3, 2, 3, 2, 'Hay trễ deadline, cần chủ động hơn trong công việc.'),
+
+-- Assessor 2 đánh giá các thành viên 1, 3, 4, 5
+(1, 2, 1, 4, 4, 4, 4, 4, 'Đóng góp tốt vào phân tích yêu cầu, làm việc nhóm hiệu quả.'),
+(1, 2, 3, 3, 3, 3, 4, 3, 'Chất lượng task ổn nhưng cần chú ý deadline hơn.'),
+(1, 2, 4, 5, 5, 4, 5, 5, 'Lãnh đạo tốt, luôn hỗ trợ và đảm bảo tiến độ dự án.'),
+(1, 2, 5, 3, 4, 3, 3, 3, 'Thân thiện, nhưng cần cải thiện chất lượng code.'),
+
+-- Assessor 3 đánh giá các thành viên 1, 2, 4, 5
+(1, 3, 1, 4, 4, 4, 3, 4, 'Làm việc chăm chỉ, nhưng cần phối hợp với nhóm nhiều hơn.'),
+(1, 3, 2, 4, 5, 4, 4, 4, 'Thân thiện, hoàn thành tốt các task thiết kế.'),
+(1, 3, 4, 5, 5, 5, 5, 5, 'Leader tuyệt vời, luôn đảm bảo chất lượng và tiến độ.'),
+(1, 3, 5, 2, 3, 2, 2, 2, 'Cần cải thiện trách nhiệm và chất lượng công việc.'),
+
+-- Assessor 4 đánh giá các thành viên 1, 2, 3, 5
+(1, 4, 1, 4, 4, 4, 4, 4, 'Đóng góp tích cực vào giai đoạn phân tích, rất đáng tin.'),
+(1, 4, 2, 5, 5, 4, 5, 4, 'Xuất sắc trong thiết kế giao diện, rất hợp tác.'),
+(1, 4, 3, 3, 4, 3, 3, 3, 'Cần tập trung hơn vào deadline và chất lượng task.'),
+(1, 4, 5, 3, 3, 2, 3, 2, 'Cần cải thiện sự chủ động và chất lượng công việc.'),
+
+-- Assessor 5 đánh giá các thành viên 1, 2, 3, 4
+(1, 5, 1, 3, 4, 3, 3, 3, 'Làm việc ổn, nhưng cần cải thiện tốc độ hoàn thành.'),
+(1, 5, 2, 4, 5, 4, 4, 4, 'Rất thân thiện, hoàn thành tốt các task được giao.'),
+(1, 5, 3, 3, 4, 3, 3, 3, 'Cần chú ý hơn đến chất lượng và deadline.'),
+(1, 5, 4, 5, 5, 5, 5, 5, 'Leader xuất sắc, luôn hỗ trợ nhóm và đảm bảo tiến độ.'),
 -- Nhóm 2
 (2, 6, 7, 5, 5, 5, 4, 5, 'Thành viên xuất sắc, hỗ trợ nhóm rất tốt.'),
 (2, 7, 6, 4, 5, 4, 5, 4, 'Cần chú ý hơn đến chất lượng công việc.'),
