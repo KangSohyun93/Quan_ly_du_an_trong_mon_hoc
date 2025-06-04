@@ -1,7 +1,5 @@
-// frontend/src/services/api-client.js
-const API_BASE_URL = "http://localhost:5000"; // Adjust based on your backend server
+const API_BASE_URL = "http://localhost:5000";
 
-// Fetch all tasks
 export const fetchTasks = async (
   mode,
   projectId,
@@ -16,7 +14,7 @@ export const fetchTasks = async (
   if (mode) params.append("mode", mode);
   if (projectId) params.append("projectId", projectId);
   if (sprintId != null) params.append("sprintId", sprintId);
-  if (selectedUserId != null) params.append("selectedUserId", selectedUserId); // 👈 THÊM
+  if (selectedUserId != null) params.append("selectedUserId", selectedUserId);
 
   url.search = params.toString();
 
@@ -35,7 +33,6 @@ export const fetchTasks = async (
   return response.json();
 };
 
-// Fetch task details with comments and subtasks
 export const fetchTaskDetails = async (taskId) => {
   const token = sessionStorage.getItem("token");
   const response = await fetch(`${API_BASE_URL}/api/tasks/${taskId}`, {
@@ -50,7 +47,6 @@ export const fetchTaskDetails = async (taskId) => {
   return response.json();
 };
 
-// Add a comment to a task
 export const addComment = async (taskId, userId, commentText) => {
   const token = sessionStorage.getItem("token");
   const response = await fetch(`${API_BASE_URL}/api/tasks/comments`, {
@@ -70,8 +66,7 @@ export const addComment = async (taskId, userId, commentText) => {
   return response.json();
 };
 
-// Update a checklist item
-export const updateChecklistItem = async (checklistId, isCompleted) => {
+export const updateChecklistItem = async (checklistId, isCompleted, itemDescription, isTeamLead) => {
   const token = sessionStorage.getItem("token");
   const response = await fetch(
     `${API_BASE_URL}/api/tasks/checklists/${checklistId}`,
@@ -80,8 +75,12 @@ export const updateChecklistItem = async (checklistId, isCompleted) => {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
+        "X-Is-Team-Lead": isTeamLead.toString(),
       },
-      body: JSON.stringify({ is_completed: isCompleted }),
+      body: JSON.stringify({ 
+        is_completed: isCompleted,
+        item_description: itemDescription
+      }),
     }
   );
   if (!response.ok)
@@ -89,14 +88,32 @@ export const updateChecklistItem = async (checklistId, isCompleted) => {
   return response.json();
 };
 
-// Update task (status và progress)
-export const updateTask = async (taskId, data) => {
+export const deleteChecklistItem = async (checklistId, isTeamLead) => {
+  const token = sessionStorage.getItem("token");
+  const response = await fetch(
+    `${API_BASE_URL}/api/tasks/checklists/${checklistId}`,
+    {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+        "X-Is-Team-Lead": isTeamLead.toString(),
+      },
+    }
+  );
+  if (!response.ok)
+    throw new Error(`Failed to delete checklist item: ${response.status}`);
+  return response.json();
+};
+
+export const updateTask = async (taskId, data, isTeamLead) => {
   const token = sessionStorage.getItem("token");
   const response = await fetch(`${API_BASE_URL}/api/tasks/${taskId}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
+      "X-Is-Team-Lead": isTeamLead.toString(),
     },
     body: JSON.stringify(data),
   });
@@ -105,7 +122,21 @@ export const updateTask = async (taskId, data) => {
   return response.json();
 };
 
-// Fetch all sprints
+export const deleteTask = async (taskId, isTeamLead) => {
+  const token = sessionStorage.getItem("token");
+  const response = await fetch(`${API_BASE_URL}/api/tasks/${taskId}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+      "X-Is-Team-Lead": isTeamLead.toString(),
+    },
+  });
+  if (!response.ok)
+    throw new Error(`Failed to delete task: ${response.status}`);
+  return response.json();
+};
+
 export const fetchSprints = async (projectId) => {
   const token = sessionStorage.getItem("token");
   const response = await fetch(
@@ -123,7 +154,6 @@ export const fetchSprints = async (projectId) => {
   return response.json();
 };
 
-// Create a new task with subtasks
 export const createTask = async (taskData) => {
   const token = sessionStorage.getItem("token");
   const response = await fetch(`${API_BASE_URL}/api/tasks`, {
@@ -139,7 +169,6 @@ export const createTask = async (taskData) => {
   return response.json();
 };
 
-// Create a new sprint
 export const createSprint = async (sprintData) => {
   const token = sessionStorage.getItem("token");
   const response = await fetch(`${API_BASE_URL}/api/tasks/sprints`, {
@@ -155,7 +184,6 @@ export const createSprint = async (sprintData) => {
   return response.json();
 };
 
-// Fetch group members by project
 export const fetchGroupMembersByProject = async () => {
   const token = sessionStorage.getItem("token");
   const response = await fetch(
@@ -174,16 +202,3 @@ export const fetchGroupMembersByProject = async () => {
   console.log("Group members fetched from API:", data);
   return data;
 };
-
-// export const fetchTeamDetails = async (projectId, userId) => {
-//   const response = await fetch(
-//     `${API_BASE_URL}/api/team-details?projectId=${projectId}&userId=${userId}`,
-//     {
-//       method: "GET",
-//       headers: { "Content-Type": "application/json" },
-//     }
-//   );
-//   if (!response.ok)
-//     throw new Error(`Failed to fetch team details: ${response.status}`);
-//   return response.json();
-// };
