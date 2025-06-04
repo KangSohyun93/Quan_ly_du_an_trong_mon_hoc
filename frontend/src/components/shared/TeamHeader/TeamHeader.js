@@ -27,7 +27,7 @@ const TeamHeader = ({
     "My task",
     "Rate",
   ];
-  const tabsInstructor = ["Introduce", "Dashboard"];
+  const tabsInstructor = ["Introduce", "Dashboard", "Rate"];
 
   const tabsWithSprint = ["dashboard", "team-task", "my-task"];
   const tabsWithUserFilter = ["team-task", "rate"];

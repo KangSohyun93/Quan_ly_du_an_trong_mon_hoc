@@ -1,5 +1,5 @@
 const Sequelize = require("sequelize");
-const sequelize = require("../config/db-connect"); // File config kết nối Sequelize
+const sequelize = require("../config/db-connect");
 
 // Import models
 const User = require("./UserModel");
@@ -11,6 +11,8 @@ const GroupMember = require("./MemberGroupModel");
 const { Task, TaskChecklist, Sprint, TaskComment } = require("./TaskModel");
 const PeerAssessment = require("./PeerAssessmentModel");
 const GitContribution = require("./GitContributionModel");
+// Thêm mới: Import model InstructorEvaluation
+const InstructorEvaluation = require("./InstructorEvaluationModel");
 // Code cũ (giữ nguyên)
 User.hasMany(PeerAssessment, {
   foreignKey: "assessor_id",
@@ -119,7 +121,35 @@ User.hasMany(GitContribution, {
 });
 GitContribution.belongsTo(User, {
   foreignKey: "user_id",
-  as: "user", // Or 'contributor'
+  as: "user",
+});
+
+// Thêm mới: Mối quan hệ cho InstructorEvaluation
+User.hasMany(InstructorEvaluation, {
+  foreignKey: "instructor_id",
+  as: "instructorEvaluationsGiven",
+});
+InstructorEvaluation.belongsTo(User, {
+  foreignKey: "instructor_id",
+  as: "instructor",
+});
+
+User.hasMany(InstructorEvaluation, {
+  foreignKey: "user_id",
+  as: "instructorEvaluationsReceived",
+});
+InstructorEvaluation.belongsTo(User, {
+  foreignKey: "user_id",
+  as: "user",
+});
+
+Group.hasMany(InstructorEvaluation, {
+  foreignKey: "group_id",
+  as: "instructorEvaluations",
+});
+InstructorEvaluation.belongsTo(Group, {
+  foreignKey: "group_id",
+  as: "group",
 });
 
 // Export models & sequelize
@@ -138,4 +168,5 @@ module.exports = {
   TaskComment,
   PeerAssessment,
   GitContribution,
+  InstructorEvaluation, // Thêm mới
 };

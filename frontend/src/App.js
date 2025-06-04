@@ -31,6 +31,7 @@ import ClassMembersPage from "./components/classInfo/ClassMembersPage.js";
 import GV_GroupDetailOfClass from "./pages/GV_GroupDetailOfClass.js";
 import Dashboard from "./components/dashboard/Dashboard.js";
 import Profile from "./components/profile/Profile.js";
+import InstructorProjectRate from "./components/shared/Rate/InstructorProjectRate.js"; // Thêm mới
 
 const LayoutWithSidebar = () => {
   return (
@@ -144,7 +145,7 @@ function App() {
             >
               <Route path="introduce" element={<ProjectInfo />} />
               <Route path="dashboard" element={<Dashboard />} />
-              <Route path="rate" element={<ProjectRate />} />
+              <Route path="rate" element={<InstructorProjectRate />} />
 
             </Route>
 

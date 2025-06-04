@@ -5,6 +5,9 @@ const {
   Task,
   Sprint,
   Project,
+  Group,
+  Class,
+  InstructorEvaluation, // Thêm mới
 } = require("../models");
 const { Op } = require("sequelize");
 
@@ -198,9 +201,9 @@ const getTaskStats = async (req, res) => {
 
     const stats = {
       total: tasks.length,
-      toDo: tasks.filter((t) => t.status === "To Do").length,
-      inProgress: tasks.filter((t) => t.status === "In Progress").length,
-      done: tasks.filter((t) => t.status === "Done").length,
+      toDo: tasks.filter((t) => t.status === "To-Do").length, // Sửa đổi: Đồng bộ với ENUM trong DB
+      inProgress: tasks.filter((t) => t.status === "In-Progress").length, // Sửa đổi
+      done: tasks.filter((t) => t.status === "Completed").length, // Sửa đổi
     };
 
     res.status(200).json(stats);
@@ -229,7 +232,6 @@ const getMemberTaskStats = async (req, res) => {
       return res.status(400).json({ message: "groupId không khớp với dự án" });
     }
 
-    // Lấy danh sách thành viên nhóm
     const members = await GroupMember.findAll({
       where: { group_id: project.group_id },
       include: [
@@ -240,14 +242,12 @@ const getMemberTaskStats = async (req, res) => {
       ],
     });
 
-    // Lấy tất cả sprint thuộc project
     const sprints = await Sprint.findAll({
       where: { project_id: projectId },
       attributes: ["sprint_id"],
     });
     const sprintIds = sprints.map((s) => s.sprint_id);
 
-    // Lấy tất cả task của các thành viên trong các sprint của project
     const tasks = await Task.findAll({
       where: {
         sprint_id: { [Op.in]: sprintIds },
@@ -255,7 +255,6 @@ const getMemberTaskStats = async (req, res) => {
       },
     });
 
-    // Tính thống kê cho từng thành viên
     const stats = members
       .filter((member) => member.User?.user_id)
       .map((member) => {
@@ -264,12 +263,11 @@ const getMemberTaskStats = async (req, res) => {
         );
 
         return {
-          id: member.User.user_id, // Khớp với members.id
+          id: member.User.user_id,
           total: userTasks.length,
-          toDo: userTasks.filter((t) => t.status === "To-Do").length,
-          inProgress: userTasks.filter((t) => t.status === "In-Progress")
-            .length,
-          done: userTasks.filter((t) => t.status === "Completed").length,
+          toDo: userTasks.filter((t) => t.status === "To-Do").length, // Sửa đổi
+          inProgress: userTasks.filter((t) => t.status === "In-Progress").length, // Sửa đổi
+          done: userTasks.filter((t) => t.status === "Completed").length, // Sửa đổi
           delayed: userTasks.filter((t) => {
             if (!t.due_date) return false;
             const dueDate = new Date(t.due_date);
@@ -282,7 +280,6 @@ const getMemberTaskStats = async (req, res) => {
         };
       });
 
-    //console.log("Member Task Stats:", stats);
     res.status(200).json(stats);
   } catch (error) {
     console.error("Lỗi trong getMemberTaskStats:", error.message, error.stack);
@@ -294,7 +291,7 @@ const updateAssessment = async (req, res) => {
   try {
     const projectId = parseInt(req.params.projectId, 10);
     const groupId = parseInt(req.params.groupId, 10);
-    const assessmentId = parseInt(req.params.assessmentId, 10); // ID của đánh giá cần chỉnh sửa
+    const assessmentId = parseInt(req.params.assessmentId, 10);
     const {
       assessor_id,
       assessee_id,
@@ -306,7 +303,6 @@ const updateAssessment = async (req, res) => {
       note,
     } = req.body;
 
-    // Kiểm tra dữ liệu đầu vào
     if (
       isNaN(projectId) ||
       projectId <= 0 ||
@@ -337,7 +333,6 @@ const updateAssessment = async (req, res) => {
       });
     }
 
-    // Kiểm tra dự án
     const project = await Project.findOne({ where: { project_id: projectId } });
     if (!project) {
       return res.status(404).json({ message: "Dự án không tồn tại" });
@@ -347,7 +342,6 @@ const updateAssessment = async (req, res) => {
       return res.status(400).json({ message: "groupId không khớp với dự án" });
     }
 
-    // Kiểm tra thành viên
     const [assessorMember, assesseeMember] = await Promise.all([
       GroupMember.findOne({
         where: { group_id: project.group_id, user_id: assessor_id },
@@ -368,7 +362,6 @@ const updateAssessment = async (req, res) => {
         .json({ message: "Không thể tự đánh giá bản thân" });
     }
 
-    // Tìm đánh giá cần chỉnh sửa
     const assessment = await PeerAssessment.findOne({
       where: {
         assessment_id: assessmentId,
@@ -383,7 +376,6 @@ const updateAssessment = async (req, res) => {
       });
     }
 
-    // Cập nhật đánh giá
     await assessment.update({
       deadline_score,
       friendly_score,
@@ -400,10 +392,233 @@ const updateAssessment = async (req, res) => {
   }
 };
 
+// Sửa đổi: Hàm getInstructorEvaluations để cho phép sinh viên truy cập
+const getInstructorEvaluations = async (req, res) => {
+  try {
+    const projectId = parseInt(req.params.projectId, 10);
+    const groupId = parseInt(req.params.groupId, 10);
+
+    if (isNaN(projectId) || projectId <= 0 || isNaN(groupId) || groupId <= 0) {
+      return res.status(400).json({
+        message: "projectId và groupId phải là số nguyên dương",
+      });
+    }
+
+    const project = await Project.findOne({ where: { project_id: projectId } });
+    if (!project) {
+      return res.status(404).json({ message: "Dự án không tồn tại" });
+    }
+
+    if (project.group_id !== groupId) {
+      return res.status(400).json({ message: "groupId không khớp với dự án" });
+    }
+
+    // Kiểm tra xem người dùng có phải là thành viên của nhóm không
+    const isMember = await GroupMember.findOne({
+      where: {
+        group_id: groupId,
+        user_id: req.user.user_id, // Giả định middleware verifyToken cung cấp req.user.user_id
+      },
+    });
+    if (!isMember) {
+      return res
+        .status(403)
+        .json({ message: "Người dùng không thuộc nhóm này" });
+    }
+
+    // Lấy tất cả đánh giá từ giảng viên cho nhóm
+    const evaluations = await InstructorEvaluation.findAll({
+      where: {
+        group_id: groupId,
+      },
+      include: [
+        {
+          model: User,
+          as: "user",
+          attributes: ["username"],
+        },
+        {
+          model: User,
+          as: "instructor",
+          attributes: ["username"],
+        },
+      ],
+    });
+
+    res.status(200).json(evaluations);
+  } catch (error) {
+    console.error("Lỗi trong getInstructorEvaluations:", error.message, error.stack);
+    res.status(500).json({ message: "Lỗi server" });
+  }
+};
+
+// Thêm mới: Hàm lưu đánh giá từ giảng viên
+const saveInstructorEvaluation = async (req, res) => {
+  try {
+    const projectId = parseInt(req.params.projectId, 10);
+    const groupId = parseInt(req.params.groupId, 10);
+    const { instructor_id, user_id, score, comments } = req.body;
+
+    if (
+      isNaN(projectId) ||
+      projectId <= 0 ||
+      isNaN(groupId) ||
+      groupId <= 0 ||
+      !Number.isInteger(instructor_id) ||
+      !Number.isInteger(user_id) ||
+      !Number.isInteger(score) ||
+      score < 0 ||
+      score > 100
+    ) {
+      return res.status(400).json({
+        message: "Dữ liệu không hợp lệ: Điểm số phải là số nguyên từ 0 đến 100",
+      });
+    }
+
+    const project = await Project.findOne({ where: { project_id: projectId } });
+    if (!project) {
+      return res.status(404).json({ message: "Dự án không tồn tại" });
+    }
+
+    if (project.group_id !== groupId) {
+      return res.status(400).json({ message: "groupId không khớp với dự án" });
+    }
+
+    const group = await Group.findOne({
+      where: { group_id: groupId },
+      include: [
+        {
+          model: Class,
+          where: { instructor_id },
+        },
+      ],
+    });
+    if (!group) {
+      return res
+        .status(403)
+        .json({ message: "Người dùng không phải là giảng viên của lớp này" });
+    }
+
+    const groupMember = await GroupMember.findOne({
+      where: { group_id: groupId, user_id },
+    });
+    if (!groupMember) {
+      return res
+        .status(403)
+        .json({ message: "Người được đánh giá không thuộc nhóm" });
+    }
+
+    const existingEvaluation = await InstructorEvaluation.findOne({
+      where: {
+        group_id: groupId,
+        instructor_id,
+        user_id,
+      },
+    });
+    if (existingEvaluation) {
+      return res
+        .status(400)
+        .json({ message: "Đánh giá đã tồn tại cho thành viên này" });
+    }
+
+    await InstructorEvaluation.create({
+      group_id: groupId,
+      instructor_id,
+      user_id,
+      score,
+      comments,
+    });
+
+    res.status(200).json({ message: "Đánh giá đã được lưu" });
+  } catch (error) {
+    console.error("Lỗi trong saveInstructorEvaluation:", error.message, error.stack);
+    res.status(500).json({ message: "Lỗi server" });
+  }
+};
+
+// Thêm mới: Hàm cập nhật đánh giá từ giảng viên
+const updateInstructorEvaluation = async (req, res) => {
+  try {
+    const projectId = parseInt(req.params.projectId, 10);
+    const groupId = parseInt(req.params.groupId, 10);
+    const evaluationId = parseInt(req.params.evaluationId, 10);
+    const { instructor_id, user_id, score, comments } = req.body;
+
+    if (
+      isNaN(projectId) ||
+      projectId <= 0 ||
+      isNaN(groupId) ||
+      groupId <= 0 ||
+      isNaN(evaluationId) ||
+      evaluationId <= 0 ||
+      !Number.isInteger(instructor_id) ||
+      !Number.isInteger(user_id) ||
+      !Number.isInteger(score) ||
+      score < 0 ||
+      score > 100
+    ) {
+      return res.status(400).json({
+        message: "Dữ liệu không hợp lệ: Điểm số phải là số nguyên từ 0 đến 100",
+      });
+    }
+
+    const project = await Project.findOne({ where: { project_id: projectId } });
+    if (!project) {
+      return res.status(404).json({ message: "Dự án không tồn tại" });
+    }
+
+    if (project.group_id !== groupId) {
+      return res.status(400).json({ message: "groupId không khớp với dự án" });
+    }
+
+    const group = await Group.findOne({
+      where: { group_id: groupId },
+      include: [
+        {
+          model: Class,
+          where: { instructor_id },
+        },
+      ],
+    });
+    if (!group) {
+      return res
+        .status(403)
+        .json({ message: "Người dùng không phải là giảng viên của lớp này" });
+    }
+
+    const evaluation = await InstructorEvaluation.findOne({
+      where: {
+        evaluation_id: evaluationId,
+        group_id: groupId,
+        instructor_id,
+        user_id,
+      },
+    });
+    if (!evaluation) {
+      return res.status(404).json({
+        message: "Đánh giá không tồn tại hoặc bạn không có quyền chỉnh sửa",
+      });
+    }
+
+    await evaluation.update({
+      score,
+      comments,
+    });
+
+    res.status(200).json({ message: "Đánh giá đã được cập nhật" });
+  } catch (error) {
+    console.error("Lỗi trong updateInstructorEvaluation:", error.message, error.stack);
+    res.status(500).json({ message: "Lỗi server" });
+  }
+};
+
 module.exports = {
   getPeerAssessments,
   saveAssessment,
   getTaskStats,
   getMemberTaskStats,
-  updateAssessment, // Thêm hàm mới vào exports
+  updateAssessment,
+  getInstructorEvaluations, // Thêm mới
+  saveInstructorEvaluation, // Thêm mới
+  updateInstructorEvaluation, // Thêm mới
 };
