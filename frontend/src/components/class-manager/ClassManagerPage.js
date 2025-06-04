@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-import ClassTable from "./ClassTable"; // Đảm bảo bạn đã đổi tên file
+import ClassTable from "./ClassTable";
 import Pagination from "../shared/Pagination/Pagination";
 import ConfirmDeleteModal from "../shared/ConfirmDeleteModal/ConfirmDeleteModal";
+import EditClassPopup from "../shared/EditClassPopup/EditClassPopup"; // Import popup
 
 import "./ClassManagerPage.css";
 import "../../assets/styles/global.css";
 
-import { AdFetchClass } from "../../services/user-service"; // Đổi đúng path service API
+import { AdFetchClass } from "../../services/user-service";
 
 const ClassManagerPage = () => {
   const navigate = useNavigate();
@@ -26,12 +27,15 @@ const ClassManagerPage = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [classToDelete, setClassToDelete] = useState(null);
 
+  // Thêm state cho popup chỉnh sửa
+  const [showEditPopup, setShowEditPopup] = useState(false);
+  const [classToEdit, setClassToEdit] = useState(null);
+
   useEffect(() => {
     const fetchClasses = async () => {
       setLoading(true);
       try {
-        const data = await AdFetchClass(); // API gọi danh sách lớp học
-        //console.log("Fetched classes:", data);
+        const data = await AdFetchClass();
         setClasses(data);
         setTotalClasses(data.length);
         setTotalPages(Math.ceil(data.length / rowsPerPage));
@@ -58,8 +62,25 @@ const ClassManagerPage = () => {
   const handleSearchChange = (e) => setSearchTerm(e.target.value);
 
   const handleAddClass = () => navigate("/admin/class-manager/add");
-  const handleEditClass = (classId) =>
-    navigate(`/admin/class-manager/edit/${classId}`);
+
+  // Sửa handleEditClass để mở popup thay vì điều hướng
+  const handleEditClass = (cls) => {
+    setClassToEdit(cls); // Lưu dữ liệu lớp học cần chỉnh sửa
+    setShowEditPopup(true); // Hiển thị popup
+  };
+
+  const handleUpdateClass = (updatedData) => {
+    // Cập nhật dữ liệu lớp học trong danh sách
+    setClasses((prev) =>
+      prev.map((cls) =>
+        cls.classId === classToEdit.classId
+          ? { ...cls, ...updatedData }
+          : cls
+      )
+    );
+    setShowEditPopup(false); // Đóng popup sau khi cập nhật
+    setClassToEdit(null); // Xóa dữ liệu lớp học đang chỉnh sửa
+  };
 
   const openDeleteModal = (cls) => {
     setClassToDelete(cls);
@@ -77,7 +98,6 @@ const ClassManagerPage = () => {
   const formatDisplayDate = (dateStr) =>
     dateStr ? new Date(dateStr).toLocaleDateString("en-US") : "N/A";
 
-  // Lọc theo search term, nhớ kiểm tra tránh lỗi undefined
   const filteredClasses = classes.filter((cls) =>
     (cls.className ?? "").toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -96,9 +116,6 @@ const ClassManagerPage = () => {
           value={searchTerm}
           onChange={handleSearchChange}
         />
-        <button onClick={handleAddClass} className="add-user-button">
-          + Add Class
-        </button>
       </div>
 
       <ClassTable
@@ -126,6 +143,24 @@ const ClassManagerPage = () => {
         itemType="class"
         errorMessage={deleteError}
       />
+
+      {/* Hiển thị popup chỉnh sửa */}
+      {showEditPopup && classToEdit && (
+        <EditClassPopup
+          classId={classToEdit.classId}
+          initialData={{
+            class_name: classToEdit.className,
+            semester: classToEdit.semester,
+            secret_code: classToEdit.secretCode || "",
+            instructor_id: classToEdit.instructorId || "",
+          }}
+          onClose={() => {
+            setShowEditPopup(false);
+            setClassToEdit(null);
+          }}
+          onUpdate={handleUpdateClass}
+        />
+      )}
     </div>
   );
 };
