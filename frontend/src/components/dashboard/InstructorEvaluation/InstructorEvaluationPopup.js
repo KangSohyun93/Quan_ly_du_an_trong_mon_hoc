@@ -51,14 +51,6 @@ const InstructorEvaluationPopup = ({ isOpen, onClose, groupId, projectId, userRo
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
                 setEvaluations(response.data || []);
-
-                // If instructor, and we need to show names for all members even if no evaluation yet,
-                // we might need another call to get group members.
-                // For now, we rely on the 'user' object within each evaluation.
-                // If displaying all members is a strict requirement for instructors, even those without evaluations,
-                // this part would need expansion (e.g., fetch group members separately and map).
-                // The current backend response provides evaluated students' info.
-
             } catch (err) {
                 console.error('Error fetching instructor evaluations:', err);
                 if (err.response) {
