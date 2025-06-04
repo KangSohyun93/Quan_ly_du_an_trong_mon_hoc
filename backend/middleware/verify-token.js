@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const { Group } = require("../models");
 
-const verifyToken = (req, res, next) => {
+const verifyToken = async (req, res, next) => {
   const authHeader = req.headers.authorization;
   console.log("Auth Header received:", authHeader); 
 
@@ -41,10 +41,23 @@ const verifyToken = (req, res, next) => {
     req.userId = decoded.id;
     req.user = decoded;
 
+    const group = await Group.findOne({ where: { leader_id: req.userId } });
+    req.isTeamLead = !!group || (decoded.role && decoded.role.toLowerCase() === "admin"); // Sửa lại kiểm tra role admin
+
+    // LOG QUAN TRỌNG ĐỂ DEBUG
+    console.log("\n--- SERVER LOG: Inside verifyToken middleware ---");
+    console.log("Timestamp:", new Date().toISOString());
+    console.log("User ID from token:", req.userId);
+    console.log("User role from token:", decoded.role);
+    console.log("Group found for leader_id:", group ? JSON.stringify(group.toJSON()) : null);
+    console.log("req.isTeamLead determined as:", req.isTeamLead);
+    // KẾT THÚC LOG QUAN TRỌNG
+
     next();
   } catch (error) {
     console.error("Lỗi xác thực token (jwt.verify failed):", error.name, "-", error.message);
     console.error("Token that caused verify error:", token);
+    console.error("Token verification error:", error);
 
     if (error.name === 'TokenExpiredError') {
       return res.status(403).json({ message: "Token đã hết hạn." });
