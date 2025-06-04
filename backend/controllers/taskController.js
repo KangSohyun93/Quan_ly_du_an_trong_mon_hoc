@@ -11,27 +11,25 @@ const {
   GroupMember,
 } = require("../models");
 
-// Get all tasks
 exports.getTasks = async (req, res) => {
   try {
     const projectId = req.query.projectId ? Number(req.query.projectId) : null;
     const sprintId = req.query.sprintId ? Number(req.query.sprintId) : null;
-    const mode = req.query.mode; // "user" | "team"
+    const mode = req.query.mode;
     const selectedUserId = req.query.selectedUserId
       ? Number(req.query.selectedUserId)
       : req.userId;
 
+    console.log("Fetching tasks:", { projectId, sprintId, mode, selectedUserId });
+
     const where = {};
 
-    // Nếu là chế độ user thì lọc theo user
     if (mode === "user") {
       where.assigned_to = selectedUserId;
     }
-    // Ưu tiên lọc theo sprint
     if (sprintId !== null && !isNaN(sprintId)) {
       where.sprint_id = sprintId;
     } else if (projectId) {
-      // Nếu không có sprintId, lọc theo project
       where["$sprint.project_id$"] = projectId;
     }
 
@@ -57,7 +55,7 @@ exports.getTasks = async (req, res) => {
         {
           model: TaskComment,
           as: "comments",
-          attributes: [], // chỉ dùng để đếm
+          attributes: [],
         },
       ],
       attributes: {
@@ -74,17 +72,19 @@ exports.getTasks = async (req, res) => {
       distinct: true,
     });
 
+    console.log("Tasks fetched:", tasks.length);
     res.status(200).json(tasks);
   } catch (error) {
     console.error("Error fetching tasks:", error);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Server error: " + error.message });
   }
 };
 
-// Get task details
 exports.getTaskDetails = async (req, res) => {
   try {
     const { taskId } = req.params;
+    console.log("Fetching task details for taskId:", taskId);
+
     const task = await Task.findByPk(taskId, {
       include: [
         {
@@ -103,101 +103,224 @@ exports.getTaskDetails = async (req, res) => {
       ],
     });
 
-    if (!task) return res.status(404).json({ message: "Task not found" });
+    if (!task) {
+      console.log("Task not found for taskId:", taskId);
+      return res.status(404).json({ message: "Task not found" });
+    }
+    console.log("Task details fetched:", { task_id: task.task_id, title: task.title, assigned_to: task.assigned_to });
     res.status(200).json(task);
   } catch (error) {
     console.error("Error fetching task details:", error);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Server error: " + error.message });
   }
 };
 
-// Add comment
 exports.addComment = async (req, res) => {
   const { task_id, comment_text, user_id } = req.body;
+  console.log("Adding comment:", { task_id, user_id });
+
   try {
-    await TaskComment.create({ task_id, user_id, comment_text });
-    res.status(201).json({ message: "Comment added successfully" });
+    const task = await Task.findByPk(task_id);
+    if (!task) {
+      console.log("Task not found:", task_id);
+      return res.status(404).json({ message: "Task not found" });
+    }
+
+    const comment = await TaskComment.create({ task_id, user_id, comment_text });
+    console.log("Comment added:", comment.comment_id);
+    res.status(201).json({ message: "Comment added successfully", comment });
   } catch (error) {
     console.error("Error adding comment:", error);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Server error: " + error.message });
   }
 };
 
-// Update checklist item
+// taskController.js
 exports.updateChecklistItem = async (req, res) => {
   const { checklistId } = req.params;
-  const { is_completed } = req.body;
+  // Lấy is_completed và item_description từ req.body một cách cẩn thận
+  const is_completed = req.body.hasOwnProperty('is_completed') ? req.body.is_completed : undefined;
+  const item_description = req.body.hasOwnProperty('item_description') ? req.body.item_description : undefined;
   const userId = req.userId;
+  const isUserTeamLead = req.isTeamLead; // Được set bởi verifyToken middleware
+
+  // LOG QUAN TRỌNG ĐỂ DEBUG
+  console.log("\n--- SERVER LOG: Inside updateChecklistItem ---");
+  console.log("Timestamp:", new Date().toISOString());
+  console.log("Request received for checklistId:", checklistId);
+  console.log("Request body received:", JSON.stringify(req.body));
+  console.log("Parsed is_completed:", is_completed, "(type:", typeof is_completed, ")");
+  console.log("Parsed item_description:", item_description, "(type:", typeof item_description, ")");
+  console.log("User ID from token:", userId);
+  console.log("Is User Team Lead (from verifyToken middleware):", isUserTeamLead);
+  // KẾT THÚC LOG QUAN TRỌNG
 
   try {
     const checklist = await TaskChecklist.findByPk(checklistId, {
-      include: { model: Task, as: "task" },
+      include: [{ model: Task, as: "task" }],
     });
 
-    if (!checklist)
+    if (!checklist) {
+      console.log("SERVER LOG: Checklist item not found for ID:", checklistId);
       return res.status(404).json({ message: "Checklist item not found" });
-    if (checklist.task.assigned_to !== userId)
-      return res.status(403).json({ message: "Unauthorized" });
+    }
+    console.log("SERVER LOG: Found checklist item. Task assigned to:", checklist.task.assigned_to);
 
-    checklist.is_completed = is_completed;
+    let needsSave = false;
+
+    // Trường hợp 1: Cập nhật item_description (chỉ team lead)
+    if (item_description !== undefined) { // Chỉ xử lý nếu item_description được cung cấp
+      console.log("SERVER LOG: Attempting to update item_description to:", item_description);
+      if (!isUserTeamLead) {
+        console.log(`SERVER LOG: User ${userId} is NOT a team lead. Denying update for item_description.`);
+        return res.status(403).json({ message: "Only team leads can edit subtask descriptions." });
+      }
+      console.log(`SERVER LOG: User ${userId} IS a team lead. Allowing update for item_description.`);
+      checklist.item_description = item_description;
+      needsSave = true;
+    }
+
+    // Trường hợp 2: Cập nhật is_completed (chỉ người được giao)
+    if (is_completed !== undefined) { // Chỉ xử lý nếu is_completed được cung cấp
+      console.log("SERVER LOG: Attempting to update is_completed to:", is_completed);
+      if (typeof is_completed !== 'boolean') {
+         console.log("SERVER LOG: Invalid is_completed value provided. Must be boolean. Received:", is_completed);
+         return res.status(400).json({ message: "Invalid is_completed value. Must be boolean."});
+      }
+      if (checklist.task.assigned_to !== userId) {
+        // Nếu muốn team lead cũng có thể tick:
+        // if (checklist.task.assigned_to !== userId && !isUserTeamLead) {
+        console.log(`SERVER LOG: User ${userId} is NOT assigned to this task (assigned to ${checklist.task.assigned_to}). Denying update for is_completed.`);
+        return res.status(403).json({ message: "Only the assigned user can update subtask completion status." });
+      }
+      console.log(`SERVER LOG: User ${userId} IS assigned to this task. Allowing update for is_completed.`);
+      checklist.is_completed = is_completed;
+      needsSave = true;
+    }
+
+    if (!needsSave) {
+      // Điều này xảy ra nếu client gửi body rỗng hoặc body không chứa is_completed hoặc item_description
+      console.log("SERVER LOG: No valid data provided for update (neither is_completed nor item_description was present or valid).");
+      return res.status(400).json({ message: "No valid data for update. Provide 'is_completed' or 'item_description'." });
+    }
+
     await checklist.save();
-    res.status(200).json({ message: "Checklist item updated" });
+    console.log("SERVER LOG: Checklist item updated successfully for ID:", checklistId);
+    res.status(200).json({ message: "Checklist item updated successfully." });
+
   } catch (error) {
-    console.error("Error updating checklist item:", error);
-    res.status(500).json({ message: "Server error" });
+    console.error("SERVER LOG: Error updating checklist item:", error);
+    res.status(500).json({ message: "Server error: " + error.message });
+  }
+};
+exports.deleteChecklistItem = async (req, res) => {
+  const { checklistId } = req.params;
+  const isTeamLead = req.isTeamLead;
+
+  console.log("Deleting checklist item:", { checklistId, isTeamLead });
+
+  try {
+    const checklist = await TaskChecklist.findByPk(checklistId);
+    if (!checklist) {
+      console.log("Checklist item not found:", checklistId);
+      return res.status(404).json({ message: "Checklist item not found" });
+    }
+    if (!isTeamLead) {
+      console.log("Unauthorized: Not a team lead");
+      return res.status(403).json({ message: "Only team leads can delete subtasks" });
+    }
+
+    await checklist.destroy();
+    console.log("Checklist item deleted:", checklistId);
+    res.status(200).json({ message: "Checklist item deleted" });
+  } catch (error) {
+    console.error("Error deleting checklist item:", error);
+    res.status(500).json({ message: "Server error: " + error.message });
   }
 };
 
-// Update task status và progress_percentage
 exports.updateTask = async (req, res) => {
   const { taskId } = req.params;
   const { status, progress_percentage } = req.body;
   const userId = req.userId;
 
+  console.log("Updating task:", { taskId, status, progress_percentage, userId });
+
   try {
     const task = await Task.findByPk(taskId);
-    if (!task) return res.status(404).json({ message: "Task not found" });
-    if (task.assigned_to !== userId)
-      return res.status(403).json({ message: "Unauthorized" });
+    if (!task) {
+      console.log("Task not found:", taskId);
+      return res.status(404).json({ message: "Task not found" });
+    }
+    if (task.assigned_to !== userId) {
+      console.log("Unauthorized: User is not assigned to task", { userId, assignedTo: task.assigned_to });
+      return res.status(403).json({ message: "Only assigned users can update tasks" });
+    }
 
-    // Cập nhật đồng thời status và progress_percentage nếu có
     if (status !== undefined) task.status = status;
-    if (progress_percentage !== undefined)
-      task.progress_percentage = progress_percentage;
+    if (progress_percentage !== undefined) task.progress_percentage = progress_percentage;
 
     await task.save();
+    console.log("Task updated:", taskId);
     res.status(200).json({ message: "Task updated successfully" });
   } catch (error) {
     console.error("Error updating task:", error);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Server error: " + error.message });
   }
 };
 
-// Get sprints
+exports.deleteTask = async (req, res) => {
+  const { taskId } = req.params;
+  const isTeamLead = req.isTeamLead;
+
+  console.log("Deleting task:", { taskId, isTeamLead });
+
+  try {
+    const task = await Task.findByPk(taskId);
+    if (!task) {
+      console.log("Task not found:", taskId);
+      return res.status(404).json({ message: "Task not found" });
+    }
+    if (!isTeamLead) {
+      console.log("Unauthorized: Not a team lead");
+      return res.status(403).json({ message: "Only team leads can delete tasks" });
+    }
+
+    await task.destroy();
+    console.log("Task deleted:", taskId);
+    res.status(200).json({ message: "Task deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting task:", error);
+    res.status(500).json({ message: "Server error: " + error.message });
+  }
+};
+
 exports.getSprints = async (req, res) => {
   try {
     const { projectId } = req.query;
-    //console.log("projectID: >>>>>>>>:", projectId);
+    console.log("Fetching sprints for projectId:", projectId);
+
     const sprints = await Sprint.findAll({ where: { project_id: projectId } });
+    console.log("Sprints fetched:", sprints.length);
     res.status(200).json(sprints);
   } catch (error) {
     console.error("Error fetching sprints:", error);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Server error: " + error.message });
   }
 };
 
-// Create sprint
 exports.createSprint = async (req, res) => {
   const { project_id, sprint_name, start_date, end_date } = req.body;
-  console.log("projectID: >>>>>>>>:", project_id);
+  console.log("Creating sprint:", { project_id, sprint_name });
 
   try {
     const project = await Project.findByPk(project_id);
-    if (!project) return res.status(404).json({ message: "Project not found" });
+    if (!project) {
+      console.log("Project not found:", project_id);
+      return res.status(404).json({ message: "Project not found" });
+    }
 
-    const sprintCount = await Sprint.count({
-      where: { project_id },
-    });
+    const sprintCount = await Sprint.count({ where: { project_id } });
     const sprint_number = sprintCount + 1;
 
     const sprint = await Sprint.create({
@@ -208,30 +331,24 @@ exports.createSprint = async (req, res) => {
       end_date,
     });
 
-    res
-      .status(201)
-      .json({ message: "Sprint created", sprintId: sprint.sprint_id });
+    console.log("Sprint created:", sprint.sprint_id);
+    res.status(201).json({ message: "Sprint created", sprintId: sprint.sprint_id });
   } catch (error) {
     console.error("Error creating sprint:", error);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Server error: " + error.message });
   }
 };
 
-// Create task
 exports.createTask = async (req, res) => {
-  const {
-    title,
-    description,
-    sprint_id,
-    due_date,
-    status,
-    subtasks,
-    assigned_to,
-  } = req.body;
+  const { title, description, sprint_id, due_date, status, subtasks, assigned_to } = req.body;
+  console.log("Creating task:", { title, sprint_id, assigned_to });
 
   try {
     const sprint = await Sprint.findByPk(sprint_id);
-    if (!sprint) return res.status(404).json({ message: "Sprint not found" });
+    if (!sprint) {
+      console.log("Sprint not found:", sprint_id);
+      return res.status(404).json({ message: "Sprint not found" });
+    }
 
     const task = await Task.create({
       title,
@@ -253,17 +370,18 @@ exports.createTask = async (req, res) => {
       );
     }
 
+    console.log("Task created:", task.task_id);
     res.status(201).json({ message: "Task created", taskId: task.task_id });
   } catch (error) {
     console.error("Error creating task:", error);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Server error: " + error.message });
   }
 };
 
-// Get group members by project
 exports.getGroupMembersByProject = async (req, res) => {
   try {
-    const { projectId } = req;
+    const { projectId } = req.query;
+    console.log("Fetching group members for projectId:", projectId);
 
     const project = await Project.findByPk(projectId, {
       include: {
@@ -275,57 +393,16 @@ exports.getGroupMembersByProject = async (req, res) => {
       },
     });
 
-    if (!project || !project.Group?.GroupMembers?.length)
+    if (!project || !project.Group?.GroupMembers?.length) {
+      console.log("No group members found for projectId:", projectId);
       return res.status(404).json({ message: "No group members found" });
+    }
 
     const members = project.Group.GroupMembers.map((gm) => gm.User);
+    console.log("Group members fetched:", members.length);
     res.status(200).json(members);
   } catch (error) {
     console.error("Error fetching group members:", error);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Server error: " + error.message });
   }
 };
-
-// // Get team details
-// exports.getTeamDetails = async (req, res) => {
-//   const { projectId } = req;
-//   const userId = req.user?.user_id;
-
-//   try {
-//     const project = await Project.findByPk(projectId, {
-//       include: {
-//         model: Group,
-//         include: { model: Class },
-//       },
-//     });
-
-//     if (!project) return res.status(404).json({ message: "Project not found" });
-
-//     const group = project.Group;
-//     const classInfo = group.Class;
-
-//     const members = await User.findAll({
-//       include: {
-//         model: GroupMember,
-//         where: { group_id: group.group_id },
-//       },
-//     });
-
-//     const isTeamLead = group.leader_id === userId || req.user?.role === "Admin";
-
-//     res.status(200).json({
-//       className: classInfo.class_name,
-//       classCode: classInfo.secret_code,
-//       teamName: group.group_name,
-//       projectName: project.project_name,
-//       members: members.map((m) => ({
-//         user_id: m.user_id,
-//         username: m.username,
-//       })),
-//       isTeamLead,
-//     });
-//   } catch (error) {
-//     console.error("Error fetching team details:", error);
-//     res.status(500).json({ message: "Server error" });
-//   }
-// };
