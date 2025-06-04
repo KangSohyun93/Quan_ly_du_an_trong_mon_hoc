@@ -4,8 +4,35 @@
   padding: 30px;
   border-radius: 10px;
   box-shadow: 0 4px 40px rgba(0, 0, 0, 0.1);
-  max-width: 450px;
+  max-width: 550px;
   width: 100%;
+  max-height: calc(100vh - 60px); /* Trừ padding 30px x 2 */
+  overflow-y: auto; /* Bật thanh cuộn cho nội dung */
+}
+
+/* Tùy chỉnh thanh cuộn cho create-task-container */
+.create-task-container::-webkit-scrollbar {
+  width: 8px; /* Độ rộng thanh cuộn */
+}
+
+.create-task-container::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Màu nền thanh cuộn */
+  border-radius: 10px;
+}
+
+.create-task-container::-webkit-scrollbar-thumb {
+  background: #888; /* Màu thanh cuộn */
+  border-radius: 10px;
+}
+
+.create-task-container::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Màu khi hover */
+}
+
+/* Hỗ trợ Firefox */
+.create-task-container {
+  scrollbar-width: thin; /* Thanh cuộn mỏng */
+  scrollbar-color: #888 #f1f1f1; /* Màu thanh cuộn và nền */
 }
 
 .create-task-container h2 {
@@ -137,14 +164,7 @@
 
 .modal-content {
   max-width: 90%;
-  width: 800px;
-  max-height: 80vh;
-  overflow-y: auto;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-  border-radius: 10px 10px 10px 10px;
-}
-
-.modal-content::-webkit-scrollbar{
-  display: none;
+  width: 450px; /* Đồng bộ với create-task-container */
+  border-radius: 10px;
+  background: #ffffff;
 }

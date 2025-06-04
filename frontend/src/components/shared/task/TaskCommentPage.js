@@ -1,52 +1,66 @@
-// frontend/src/components/task/TaskCommentPage.js
 import React, { useState, useEffect, useCallback } from "react";
+import { useOutletContext } from "react-router-dom";
 import "./TaskCommentPage.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckCircle as fasCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import { faCircle as farCircle } from "@fortawesome/free-regular-svg-icons";
 import { fetchTaskDetails, addComment } from "../../../services/api-client";
 import placeholderMember from "../../../assets/images/placeholders/placeholder-member.jpg";
+
 const TaskCommentPage = ({ currentUserId, taskId, onClose }) => {
-  console.log("Rendering TaskCommentPage with currentUserId:", currentUserId);
+  const { members = [] } = useOutletContext(); // Lấy members từ context
+  console.log("Members array:", members); // Log toàn bộ mảng members
+  console.log("Members details:", JSON.stringify(members, null, 2)); // Log dạng chuỗi định dạng
+  console.log("Rendering TaskCommentPage with props:", { currentUserId, taskId, members });
+
   const [task, setTask] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [newComment, setNewComment] = useState("");
-  // Fetch task details, subtasks, and comments
+
   const loadTaskDetails = useCallback(async () => {
     console.log("Fetching task details for taskId:", taskId);
     setIsLoading(true);
-    setError(null);
     try {
       const data = await fetchTaskDetails(taskId);
-      console.log("Fetched task data:", data);
+      console.log("Fetched task data:", {
+        task_id: data.task_id,
+        title: data.title,
+        assigned_to: data.assigned_to,
+        comments: data.comments?.map(c => ({
+          comment_id: c.comment_id,
+          user_id: c.user_id,
+          username: c.username,
+        })),
+      });
+      const assignedUser = members.find((m) => m.id === data.assigned_to) || {};
       setTask({
         id: data.task_id,
         title: data.title,
         description: data.description || "No description",
-        subTasks: data.checklists.map((checklist) => ({
+        subTasks: (data.checklists || []).map((checklist) => ({
           id: checklist.checklist_id,
           text: checklist.item_description,
           completed: checklist.is_completed,
         })),
         assigned_to: {
           user_id: data.assigned_to,
-          username: data.assigned_username,
-          avatar: data.assigned_username
-            ? `/avatars/${data.assigned_username.toLowerCase()}.jpg`
-            : placeholderMember,
+          username: assignedUser.name,
+          avatar: assignedUser.avatarUrl || placeholderMember,
         },
-        comments: data.comments.map((comment) => ({
-          comment_id: comment.comment_id,
-          user_id: comment.user_id,
-          username: comment.username,
-          avatar: comment.username
-            ? `/avatars/${comment.username.toLowerCase()}.jpg`
-            : placeholderMember,
-          comment_text: comment.comment_text,
-          created_at: new Date(comment.created_at).toLocaleString(),
-        })),
+        comments: (data.comments || []).map((comment) => {
+          const commentUser = members.find((m) => m.id === comment.user_id) || {};
+          return {
+            comment_id: comment.comment_id,
+            user_id: comment.user_id,
+            username: commentUser.name,
+            avatar: commentUser.avatarUrl || placeholderMember,
+            comment_text: comment.comment_text,
+            created_at: new Date(comment.created_at).toLocaleString(),
+          };
+        }),
       });
+      setError(null);
     } catch (error) {
       console.error("Failed to load task details:", error.message);
       setError(error.message);
@@ -54,29 +68,23 @@ const TaskCommentPage = ({ currentUserId, taskId, onClose }) => {
     } finally {
       setIsLoading(false);
     }
-  }, [taskId]);
+  }, [taskId, members]);
 
   useEffect(() => {
     loadTaskDetails();
   }, [loadTaskDetails]);
 
-  useEffect(() => {
-    console.log("Task state updated to:", task);
-  }, [task]);
-
-  // Handle adding a new comment
   const handleSaveComment = async () => {
     if (!newComment.trim()) return;
     try {
       await addComment(taskId, currentUserId, newComment);
       setNewComment("");
-      await loadTaskDetails(); // Refresh comments
+      await loadTaskDetails();
     } catch (error) {
       console.error("Error saving comment:", error);
     }
   };
 
-  // Handle cancel (close the comment page)
   const handleCancel = () => {
     onClose();
   };
@@ -84,8 +92,9 @@ const TaskCommentPage = ({ currentUserId, taskId, onClose }) => {
   if (isLoading) {
     return (
       <div className="modal-backdrop">
-        <div className="modal-content comment-page">
-          <p>Loading...</p>
+        <div className="modal-content comment-page skeleton">
+          <div className="skeleton-header"></div>
+          <div className="skeleton-content"></div>
         </div>
       </div>
     );
@@ -107,7 +116,6 @@ const TaskCommentPage = ({ currentUserId, taskId, onClose }) => {
   return (
     <div className="modal-backdrop">
       <div className="modal-content comment-page">
-        {/* Task Info */}
         <div className="task-info">
           <div className="task-tags">
             <span className="tag backend">Backend</span>
@@ -117,10 +125,8 @@ const TaskCommentPage = ({ currentUserId, taskId, onClose }) => {
           <p className="task-description">{task.description}</p>
         </div>
 
-        {/* Divider */}
         <div className="divider active"></div>
 
-        {/* Subtasks */}
         <div className="task-subtasks active">
           {task.subTasks.length === 0 ? (
             <div className="no-subtask-message">No subtask</div>
@@ -135,9 +141,7 @@ const TaskCommentPage = ({ currentUserId, taskId, onClose }) => {
                   <span className="subtask-count">{index + 1}.</span>
                   <span className="subtask-text">{subTask.text}</span>
                   <span
-                    className={`subtask-status ${
-                      subTask.completed ? "completed" : ""
-                    }`}
+                    className={`subtask-status ${subTask.completed ? "completed" : ""}`}
                   >
                     <FontAwesomeIcon
                       icon={subTask.completed ? fasCheckCircle : farCircle}
@@ -151,9 +155,9 @@ const TaskCommentPage = ({ currentUserId, taskId, onClose }) => {
             ))
           )}
         </div>
-        {/* Divider */}
+
         <div className="divider active"></div>
-        {/* Assigned User */}
+
         <div className="assigned-user">
           <img
             src={task.assigned_to.avatar}
@@ -166,11 +170,10 @@ const TaskCommentPage = ({ currentUserId, taskId, onClose }) => {
             }
           />
           <span className="assigned-username">
-            {task.assigned_to.username || "Unassigned"}
+            {task.assigned_to.username}
           </span>
         </div>
 
-        {/* Comments Section */}
         <div className="comments-section">
           {task.comments.length === 0 ? (
             <p>No comments yet.</p>
@@ -197,7 +200,6 @@ const TaskCommentPage = ({ currentUserId, taskId, onClose }) => {
           )}
         </div>
 
-        {/* Add Comment Block */}
         <div className="add-comment-block">
           <textarea
             value={newComment}
