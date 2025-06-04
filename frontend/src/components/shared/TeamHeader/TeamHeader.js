@@ -30,7 +30,7 @@ const TeamHeader = ({
   const tabsInstructor = ["Introduce", "Dashboard", "Rate"];
 
   const tabsWithSprint = ["dashboard", "team-task", "my-task"];
-  const tabsWithUserFilter = ["team-task", "rate"];
+  const tabsWithUserFilter = ["team-task"];
 
   const activeTabSlug = activeTab.toLowerCase().replace(/\s+/g, "-");
 
