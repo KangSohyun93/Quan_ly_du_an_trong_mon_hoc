@@ -8,10 +8,8 @@ import { fetchTaskDetails, addComment } from "../../../services/api-client";
 import placeholderMember from "../../../assets/images/placeholders/placeholder-member.jpg";
 
 const TaskCommentPage = ({ currentUserId, taskId, onClose }) => {
-  const { members = [] } = useOutletContext(); // Lấy members từ context
-  console.log("Members array:", members); // Log toàn bộ mảng members
-  console.log("Members details:", JSON.stringify(members, null, 2)); // Log dạng chuỗi định dạng
-  console.log("Rendering TaskCommentPage with props:", { currentUserId, taskId, members });
+  const { members = [] } = useOutletContext();
+  console.log("TaskCommentPage props:", { currentUserId, taskId, membersLength: members.length });
 
   const [task, setTask] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -19,7 +17,14 @@ const TaskCommentPage = ({ currentUserId, taskId, onClose }) => {
   const [newComment, setNewComment] = useState("");
 
   const loadTaskDetails = useCallback(async () => {
-    console.log("Fetching task details for taskId:", taskId);
+    if (!taskId || isNaN(taskId)) {
+      console.error("Invalid or missing taskId:", taskId);
+      setError("Task ID không hợp lệ");
+      setIsLoading(false);
+      return;
+    }
+
+    console.log(`Fetching task details for taskId: ${taskId}`);
     setIsLoading(true);
     try {
       const data = await fetchTaskDetails(taskId);
@@ -27,12 +32,9 @@ const TaskCommentPage = ({ currentUserId, taskId, onClose }) => {
         task_id: data.task_id,
         title: data.title,
         assigned_to: data.assigned_to,
-        comments: data.comments?.map(c => ({
-          comment_id: c.comment_id,
-          user_id: c.user_id,
-          username: c.username,
-        })),
+        comment_count: data.comments?.length || 0,
       });
+
       const assignedUser = members.find((m) => m.id === data.assigned_to) || {};
       setTask({
         id: data.task_id,
@@ -45,7 +47,7 @@ const TaskCommentPage = ({ currentUserId, taskId, onClose }) => {
         })),
         assigned_to: {
           user_id: data.assigned_to,
-          username: assignedUser.name,
+          username: assignedUser.name || "Người dùng không xác định",
           avatar: assignedUser.avatarUrl || placeholderMember,
         },
         comments: (data.comments || []).map((comment) => {
@@ -53,7 +55,7 @@ const TaskCommentPage = ({ currentUserId, taskId, onClose }) => {
           return {
             comment_id: comment.comment_id,
             user_id: comment.user_id,
-            username: commentUser.name,
+            username: commentUser.name || "Người dùng không xác định",
             avatar: commentUser.avatarUrl || placeholderMember,
             comment_text: comment.comment_text,
             created_at: new Date(comment.created_at).toLocaleString(),
@@ -62,8 +64,8 @@ const TaskCommentPage = ({ currentUserId, taskId, onClose }) => {
       });
       setError(null);
     } catch (error) {
-      console.error("Failed to load task details:", error.message);
-      setError(error.message);
+      console.error("Failed to fetch task details:", error);
+      setError(`Lỗi khi tải chi tiết task: ${error.message}`);
       setTask(null);
     } finally {
       setIsLoading(false);
@@ -75,13 +77,18 @@ const TaskCommentPage = ({ currentUserId, taskId, onClose }) => {
   }, [loadTaskDetails]);
 
   const handleSaveComment = async () => {
-    if (!newComment.trim()) return;
+    if (!newComment.trim()) {
+      alert("Bình luận không được để trống.");
+      return;
+    }
     try {
+      console.log("Saving comment for taskId:", taskId, "by user:", currentUserId);
       await addComment(taskId, currentUserId, newComment);
       setNewComment("");
       await loadTaskDetails();
     } catch (error) {
       console.error("Error saving comment:", error);
+      alert(`Lỗi khi lưu bình luận: ${error.message}`);
     }
   };
 
@@ -104,9 +111,9 @@ const TaskCommentPage = ({ currentUserId, taskId, onClose }) => {
     return (
       <div className="modal-backdrop">
         <div className="modal-content comment-page">
-          <p>Error loading task details: {error}</p>
+          <p>Lỗi: {error}</p>
           <button onClick={handleCancel} className="cancel-btn">
-            Close
+            Đóng
           </button>
         </div>
       </div>
@@ -129,15 +136,11 @@ const TaskCommentPage = ({ currentUserId, taskId, onClose }) => {
 
         <div className="task-subtasks active">
           {task.subTasks.length === 0 ? (
-            <div className="no-subtask-message">No subtask</div>
+            <div className="no-subtask-message">Không có subtask</div>
           ) : (
             task.subTasks.map((subTask, index) => (
               <div key={subTask.id}>
                 <div className="subtask">
-                  <span className="subtask-icon">
-                    <span></span>
-                    <div></div>
-                  </span>
                   <span className="subtask-count">{index + 1}.</span>
                   <span className="subtask-text">{subTask.text}</span>
                   <span
@@ -163,20 +166,17 @@ const TaskCommentPage = ({ currentUserId, taskId, onClose }) => {
             src={task.assigned_to.avatar}
             alt="avatar"
             className="task-avatar"
-            onError={() =>
-              console.log(
-                `Failed to load avatar for assigned user ${task.assigned_to.username}: ${task.assigned_to.avatar}`
-              )
-            }
+            onError={(e) => {
+              console.log(`Failed to load avatar for user ${task.assigned_to.username}`);
+              e.target.src = placeholderMember;
+            }}
           />
-          <span className="assigned-username">
-            {task.assigned_to.username}
-          </span>
+          <span className="assigned-username">{task.assigned_to.username}</span>
         </div>
 
         <div className="comments-section">
           {task.comments.length === 0 ? (
-            <p>No comments yet.</p>
+            <p>Chưa có bình luận.</p>
           ) : (
             task.comments.map((comment) => (
               <div key={comment.comment_id} className="comment-block">
@@ -185,11 +185,10 @@ const TaskCommentPage = ({ currentUserId, taskId, onClose }) => {
                     src={comment.avatar}
                     alt="avatar"
                     className="comment-avatar"
-                    onError={() =>
-                      console.log(
-                        `Failed to load avatar for comment by ${comment.username}: ${comment.avatar}`
-                      )
-                    }
+                    onError={(e) => {
+                      console.log(`Failed to load avatar for user ${comment.username}`);
+                      e.target.src = placeholderMember;
+                    }}
                   />
                   <span className="comment-username">{comment.username}</span>
                 </div>
@@ -204,15 +203,15 @@ const TaskCommentPage = ({ currentUserId, taskId, onClose }) => {
           <textarea
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
-            placeholder="Write your comment..."
+            placeholder="Viết bình luận..."
             className="comment-input"
           />
           <div className="comment-actions">
             <button onClick={handleCancel} className="cancel-btn">
-              Cancel
+              Hủy
             </button>
             <button onClick={handleSaveComment} className="save-btn">
-              Save
+              Lưu
             </button>
           </div>
         </div>

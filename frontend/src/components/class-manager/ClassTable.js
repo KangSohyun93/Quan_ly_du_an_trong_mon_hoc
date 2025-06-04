@@ -1,7 +1,7 @@
-import "./ClassTable.css"; // Đảm bảo bạn có file CSS tương ứng
+import "./ClassTable.css";
 
 const ClassTable = ({
-  classes = [], // Mảng mặc định cho lớp học
+  classes = [],
   onEditClass,
   onDeleteClass,
   formatDate,
@@ -60,7 +60,7 @@ const ClassTable = ({
               <td>{cls.createdBy}</td>
               <td>
                 <button
-                  onClick={() => onEditClass(cls.class_id)}
+                  onClick={() => onEditClass(cls)} // Truyền toàn bộ object cls thay vì chỉ classId
                   className="action-icon edit-icon"
                   title="Edit Class"
                 >

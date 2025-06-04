@@ -6,12 +6,17 @@ import {
   faComment,
   faClock,
   faPlus,
+  faEdit,
+  faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import { faCircle as farCircle } from "@fortawesome/free-regular-svg-icons";
 import {
   fetchTasks,
   updateChecklistItem,
   updateTask,
+  deleteChecklistItem,
+  deleteTask,
+  fetchTaskDetails,
 } from "../../../services/api-client";
 import CreateTask from "./CreateTask";
 import TaskCommentPage from "./TaskCommentPage";
@@ -19,7 +24,7 @@ import { filterTasksByUser } from "./UserFilter";
 import { useOutletContext } from "react-router-dom";
 import "./KanbanView.css";
 
-const KanbanView = (sprints) => {
+const KanbanView = ({ sprints }) => {
   const {
     activeTab,
     members,
@@ -31,7 +36,7 @@ const KanbanView = (sprints) => {
   } = useOutletContext();
 
   const user = JSON.parse(localStorage.getItem("user"));
-  const userId = user.id;
+  const userId = user?.id;
   const [tasks, setTasks] = useState([]);
   const [filteredTasks, setFilteredTasks] = useState([]);
   const [reportData, setReportData] = useState([]);
@@ -61,12 +66,14 @@ const KanbanView = (sprints) => {
           ? "all"
           : "user"
         : "user";
+      console.log("Loading tasks with params:", { mode, projectId, selectedSprintId, selectedUserIdToUse, userId, currentUserId });
       const data = await fetchTasks(
         mode,
         projectId,
         selectedSprintId,
         selectedUserIdToUse
       );
+      console.log("Fetched tasks:", data.map(t => ({ task_id: t.task_id, title: t.title, assigned_to: t.assigned_to })));
       const currentDate = new Date();
 
       const mapped = data.map((task) => {
@@ -86,8 +93,8 @@ const KanbanView = (sprints) => {
                 minute: "2-digit",
               })
             : "",
-          tags: ["SQL", "Backend"], // tùy chỉnh nếu dynamic
-          avatar: user.avatarUrl,
+          tags: ["SQL", "Backend"],
+          avatar: user.avatarUrl || "/default-avatar.png",
           comments: task.comment_count || 0,
           subTasks: (task.checklists || []).map((c) => ({
             id: c.checklist_id,
@@ -106,11 +113,11 @@ const KanbanView = (sprints) => {
         };
       });
 
-      const sorted = mapped.sort(
-        (a, b) =>
-          (a.due_date ? a.due_date.getTime() : 0) -
-          (b.due_date ? b.due_date.getTime() : 0)
-      );
+      const sorted = mapped.sort((a, b) => {
+        const dateA = a.due_date ? a.due_date.getTime() : Infinity;
+        const dateB = b.due_date ? b.due_date.getTime() : Infinity;
+        return dateA - dateB;
+      });
 
       setTasks(sorted);
       const filteredByUser = filterTasksByUser(sorted, selectedUserId);
@@ -118,6 +125,7 @@ const KanbanView = (sprints) => {
       updateReportData(filteredByUser);
     } catch (err) {
       console.error("Error loading tasks:", err);
+      alert("Không thể tải danh sách task. Vui lòng thử lại.");
     }
   };
 
@@ -159,28 +167,37 @@ const KanbanView = (sprints) => {
   }, [activeTab, selectedSprintId, selectedUserId, members, projectId]);
 
   const toggleSubTask = async (taskId, subTaskId) => {
+    const task = tasks.find((t) => t.id === taskId);
+    if (!task) {
+      alert("Task không tồn tại.");
+      return;
+    }
+    if (task.assigned_to !== currentUserId) {
+      alert("Chỉ người được giao task mới có thể tick subtask.");
+      return;
+    }
+
     try {
-      const task = tasks.find((t) => t.id === taskId);
-      if (!task) return;
       const sub = task.subTasks.find((s) => s.id === subTaskId);
-      if (!sub) return;
+      if (!sub) {
+        alert("Subtask không tồn tại.");
+        return;
+      }
 
-      // Toggle trạng thái subtask
       const newCompleted = !sub.completed;
-      await updateChecklistItem(subTaskId, newCompleted);
+      console.log("Toggling subtask:", { taskId, subTaskId, newCompleted, userId: currentUserId, assignedTo: task.assigned_to, isTeamLead });
+      await updateChecklistItem(subTaskId, newCompleted, sub.text, isTeamLead);
 
-      // Cập nhật lại danh sách subtask đã chỉnh sửa
       const updatedSubTasks = task.subTasks.map((s) =>
         s.id === subTaskId ? { ...s, completed: newCompleted } : s
       );
 
-      // Tính toán lại progress và trạng thái
       const total = updatedSubTasks.length;
       const completed = updatedSubTasks.filter((s) => s.completed).length;
-      const progress = Math.round((completed / total) * 100);
+      const progress = total > 0 ? Math.round((completed / total) * 100) : 0;
 
       let newStatus = task.status;
-      if (completed === total) {
+      if (completed === total && total > 0) {
         newStatus = "Completed";
       } else if (completed > 0) {
         newStatus = "In-Progress";
@@ -188,16 +205,71 @@ const KanbanView = (sprints) => {
         newStatus = "To-Do";
       }
 
-      // Gọi API cập nhật status và progress cùng lúc
-      await updateTask(taskId, {
-        status: newStatus,
-        progress_percentage: progress,
-      });
+      console.log("Updating task:", { taskId, newStatus, progress });
+      await updateTask(taskId, { status: newStatus, progress_percentage: progress }, isTeamLead);
 
-      // Tải lại danh sách task
       await loadTasks();
     } catch (err) {
-      console.error("Toggle error:", err);
+      console.error("Toggle subtask error:", err);
+      alert(`Lỗi khi cập nhật subtask: ${err.message}`);
+    }
+  };
+
+  const editSubTask = async (taskId, subTaskId, currentText) => {
+    if (!isTeamLead) {
+      alert("Chỉ team lead mới có thể chỉnh sửa subtask.");
+      return;
+    }
+
+    const newText = prompt("Chỉnh sửa mô tả subtask:", currentText);
+    if (newText === null || newText.trim() === "") {
+      alert("Mô tả subtask không được để trống.");
+      return;
+    }
+
+    try {
+      console.log("Editing subtask:", { taskId, subTaskId, newText });
+      await updateChecklistItem(subTaskId, undefined, newText, isTeamLead);
+      await loadTasks();
+    } catch (err) {
+      console.error("Edit subtask error:", err);
+      alert(`Lỗi khi chỉnh sửa subtask: ${err.message}`);
+    }
+  };
+
+  const deleteSubTask = async (taskId, subTaskId) => {
+    if (!isTeamLead) {
+      alert("Chỉ team lead mới có thể xóa subtask.");
+      return;
+    }
+
+    if (window.confirm("Bạn có chắc muốn xóa subtask này không?")) {
+      try {
+        console.log("Deleting subtask:", { taskId, subTaskId });
+        await deleteChecklistItem(subTaskId, isTeamLead);
+        await loadTasks();
+      } catch (err) {
+        console.error("Delete subtask error:", err);
+        alert(`Lỗi khi xóa subtask: ${err.message}`);
+      }
+    }
+  };
+
+  const deleteTaskHandler = async (taskId) => {
+    if (!isTeamLead) {
+      alert("Chỉ team lead mới có thể xóa task.");
+      return;
+    }
+
+    if (window.confirm("Bạn có chắc muốn xóa task này không?")) {
+      try {
+        console.log("Deleting task:", { taskId });
+        await deleteTask(taskId, isTeamLead);
+        await loadTasks();
+      } catch (err) {
+        console.error("Delete task error:", err);
+        alert(`Lỗi khi xóa task: ${err.message}`);
+      }
     }
   };
 
@@ -240,6 +312,15 @@ const KanbanView = (sprints) => {
                         </span>
                       </div>
                     </div>
+                    {isTeamLead && (
+                      <button
+                        onClick={() => deleteTaskHandler(task.id)}
+                        className="delete-task-btn"
+                        style={{ color: "red", marginLeft: "auto" }}
+                      >
+                        <FontAwesomeIcon icon={faTrash} />
+                      </button>
+                    )}
                   </div>
 
                   <div className="task-info">
@@ -257,7 +338,9 @@ const KanbanView = (sprints) => {
                         {task.subTasks.length}{" "}
                         <FontAwesomeIcon icon={faClipboard} />
                       </span>
-                      <span onClick={() => setShowCommentPage(task.id)}>
+                      <span
+                        onClick={() => setShowCommentPage(task.id)}
+                      >
                         {task.comments} <FontAwesomeIcon icon={faComment} />
                       </span>
                     </div>
@@ -273,19 +356,38 @@ const KanbanView = (sprints) => {
                             className={`subtask-status ${
                               s.completed ? "completed" : ""
                             }`}
-                            onClick={() => {
-                              if (task.assigned_to === currentUserId) {
-                                toggleSubTask(task.id, s.id);
-                              }
-                            }}
+                            onClick={() => task.assigned_to === currentUserId && toggleSubTask(task.id, s.id)}
                             style={{
-                              cursor: isTeamLead ? "pointer" : "not-allowed",
+                              cursor:
+                                task.assigned_to === currentUserId
+                                  ? "pointer"
+                                  : "not-allowed",
                             }}
                           >
                             <FontAwesomeIcon
                               icon={s.completed ? fasCheckCircle : farCircle}
                             />
                           </span>
+                          {isTeamLead && (
+                            <>
+                              <span
+                                onClick={() => editSubTask(task.id, s.id, s.text)}
+                                style={{ cursor: "pointer", marginLeft: "10px" }}
+                              >
+                                <FontAwesomeIcon icon={faEdit} />
+                              </span>
+                              <span
+                                onClick={() => deleteSubTask(task.id, s.id)}
+                                style={{
+                                  cursor: "pointer",
+                                  marginLeft: "10px",
+                                  color: "red",
+                                }}
+                              >
+                                <FontAwesomeIcon icon={faTrash} />
+                              </span>
+                            </>
+                          )}
                         </div>
                       ))}
                     </div>

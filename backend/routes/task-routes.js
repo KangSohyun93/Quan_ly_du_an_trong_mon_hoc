@@ -1,4 +1,5 @@
-// backend/routes/taskRoutes.js
+// --- START OF FILE task-routes.js ---
+
 const express = require("express");
 const router = express.Router();
 const taskController = require("../controllers/taskController");
@@ -11,11 +12,15 @@ router.post("/comments", verifyToken, taskController.addComment);
 router.patch(
   "/checklists/:checklistId",
   verifyToken,
-  taskController.updateChecklistItem
+  taskController.updateChecklistItem // Dùng cho chỉnh sửa subtask
+);
+router.delete(
+  "/checklists/:checklistId", // Thêm route này để xóa subtask
+  verifyToken,
+  taskController.deleteChecklistItem
 );
 
-// Routes for projects and sprints
-// router.get("/projects", taskController.getProjects);
+// Routes for sprints (đã gộp và loại bỏ trùng lặp)
 router.get("/sprints", verifyToken, taskController.getSprints);
 router.post("/sprints", verifyToken, taskController.createSprint);
 
@@ -25,19 +30,13 @@ router.get(
   verifyToken,
   taskController.getGroupMembersByProject
 );
-// Routes for tasks
-router.get("/", verifyToken, taskController.getTasks);
-router.get("/:taskId", verifyToken, taskController.getTaskDetails);
-router.post("/", verifyToken, taskController.createTask);
 
-router.patch(
-  "/checklists/:checklistId",
-  verifyToken,
-  taskController.updateChecklistItem
-);
-router.post("/sprints", verifyToken, taskController.createSprint);
-router.patch("/:taskId", verifyToken, taskController.updateTask);
-// Route for team details
-// router.get("/team-details", taskController.getTeamDetails);
+// Routes for tasks (đã gộp và loại bỏ trùng lặp, thêm route delete)
+router.get("/", verifyToken, taskController.getTasks); // Lấy danh sách tasks
+router.post("/", verifyToken, taskController.createTask); // Tạo task mới
+router.get("/:taskId", verifyToken, taskController.getTaskDetails); // Lấy chi tiết task
+router.patch("/:taskId", verifyToken, taskController.updateTask); // Cập nhật task
+router.delete("/:taskId", verifyToken, taskController.deleteTask); // Thêm route này để xóa task
 
 module.exports = router;
+// --- END OF FILE task-routes.js ---

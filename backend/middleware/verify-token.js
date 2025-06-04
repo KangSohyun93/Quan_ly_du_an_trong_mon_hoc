@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const { Group } = require("../models");
 
 const verifyToken = (req, res, next) => {
   const authHeader = req.headers.authorization;
