@@ -9,12 +9,11 @@ import placeholderMember from "../../../assets/images/placeholders/placeholder-m
 
 const TaskCommentPage = ({ currentUserId, taskId, onClose }) => {
   const { members = [] } = useOutletContext();
-  console.log("TaskCommentPage props:", { currentUserId, taskId, membersLength: members.length });
-
   const [task, setTask] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [newComment, setNewComment] = useState("");
+  const [showSubtasks, setShowSubtasks] = useState(true);
 
   const loadTaskDetails = useCallback(async () => {
     if (!taskId || isNaN(taskId)) {
@@ -24,17 +23,9 @@ const TaskCommentPage = ({ currentUserId, taskId, onClose }) => {
       return;
     }
 
-    console.log(`Fetching task details for taskId: ${taskId}`);
     setIsLoading(true);
     try {
       const data = await fetchTaskDetails(taskId);
-      console.log("Fetched task data:", {
-        task_id: data.task_id,
-        title: data.title,
-        assigned_to: data.assigned_to,
-        comment_count: data.comments?.length || 0,
-      });
-
       const assignedUser = members.find((m) => m.id === data.assigned_to) || {};
       setTask({
         id: data.task_id,
@@ -51,7 +42,8 @@ const TaskCommentPage = ({ currentUserId, taskId, onClose }) => {
           avatar: assignedUser.avatarUrl || placeholderMember,
         },
         comments: (data.comments || []).map((comment) => {
-          const commentUser = members.find((m) => m.id === comment.user_id) || {};
+          const commentUser =
+            members.find((m) => m.id === comment.user_id) || {};
           return {
             comment_id: comment.comment_id,
             user_id: comment.user_id,
@@ -82,7 +74,6 @@ const TaskCommentPage = ({ currentUserId, taskId, onClose }) => {
       return;
     }
     try {
-      console.log("Saving comment for taskId:", taskId, "by user:", currentUserId);
       await addComment(taskId, currentUserId, newComment);
       setNewComment("");
       await loadTaskDetails();
@@ -135,16 +126,29 @@ const TaskCommentPage = ({ currentUserId, taskId, onClose }) => {
         <div className="divider active"></div>
 
         <div className="task-subtasks active">
+          <div className="subtask-header">
+            <h5>Subtasks</h5>
+            <button
+              className="toggle-subtasks-btn"
+              onClick={() => setShowSubtasks((prev) => !prev)}
+            >
+              {showSubtasks ? "Ẩn" : "Hiện"}
+            </button>
+          </div>
+
           {task.subTasks.length === 0 ? (
             <div className="no-subtask-message">Không có subtask</div>
           ) : (
+            showSubtasks &&
             task.subTasks.map((subTask, index) => (
               <div key={subTask.id}>
                 <div className="subtask">
                   <span className="subtask-count">{index + 1}.</span>
                   <span className="subtask-text">{subTask.text}</span>
                   <span
-                    className={`subtask-status ${subTask.completed ? "completed" : ""}`}
+                    className={`subtask-status ${
+                      subTask.completed ? "completed" : ""
+                    }`}
                   >
                     <FontAwesomeIcon
                       icon={subTask.completed ? fasCheckCircle : farCircle}
@@ -167,7 +171,6 @@ const TaskCommentPage = ({ currentUserId, taskId, onClose }) => {
             alt="avatar"
             className="task-avatar"
             onError={(e) => {
-              console.log(`Failed to load avatar for user ${task.assigned_to.username}`);
               e.target.src = placeholderMember;
             }}
           />
@@ -186,7 +189,6 @@ const TaskCommentPage = ({ currentUserId, taskId, onClose }) => {
                     alt="avatar"
                     className="comment-avatar"
                     onError={(e) => {
-                      console.log(`Failed to load avatar for user ${comment.username}`);
                       e.target.src = placeholderMember;
                     }}
                   />

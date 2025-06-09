@@ -20,7 +20,12 @@ exports.getTasks = async (req, res) => {
       ? Number(req.query.selectedUserId)
       : req.userId;
 
-    console.log("Fetching tasks:", { projectId, sprintId, mode, selectedUserId });
+    console.log("Fetching tasks:", {
+      projectId,
+      sprintId,
+      mode,
+      selectedUserId,
+    });
 
     const where = {};
 
@@ -107,7 +112,11 @@ exports.getTaskDetails = async (req, res) => {
       console.log("Task not found for taskId:", taskId);
       return res.status(404).json({ message: "Task not found" });
     }
-    console.log("Task details fetched:", { task_id: task.task_id, title: task.title, assigned_to: task.assigned_to });
+    console.log("Task details fetched:", {
+      task_id: task.task_id,
+      title: task.title,
+      assigned_to: task.assigned_to,
+    });
     res.status(200).json(task);
   } catch (error) {
     console.error("Error fetching task details:", error);
@@ -126,7 +135,11 @@ exports.addComment = async (req, res) => {
       return res.status(404).json({ message: "Task not found" });
     }
 
-    const comment = await TaskComment.create({ task_id, user_id, comment_text });
+    const comment = await TaskComment.create({
+      task_id,
+      user_id,
+      comment_text,
+    });
     console.log("Comment added:", comment.comment_id);
     res.status(201).json({ message: "Comment added successfully", comment });
   } catch (error) {
@@ -139,8 +152,12 @@ exports.addComment = async (req, res) => {
 exports.updateChecklistItem = async (req, res) => {
   const { checklistId } = req.params;
   // Lấy is_completed và item_description từ req.body một cách cẩn thận
-  const is_completed = req.body.hasOwnProperty('is_completed') ? req.body.is_completed : undefined;
-  const item_description = req.body.hasOwnProperty('item_description') ? req.body.item_description : undefined;
+  const is_completed = req.body.hasOwnProperty("is_completed")
+    ? req.body.is_completed
+    : undefined;
+  const item_description = req.body.hasOwnProperty("item_description")
+    ? req.body.item_description
+    : undefined;
   const userId = req.userId;
   const isUserTeamLead = req.isTeamLead; // Được set bởi verifyToken middleware
 
@@ -149,10 +166,25 @@ exports.updateChecklistItem = async (req, res) => {
   console.log("Timestamp:", new Date().toISOString());
   console.log("Request received for checklistId:", checklistId);
   console.log("Request body received:", JSON.stringify(req.body));
-  console.log("Parsed is_completed:", is_completed, "(type:", typeof is_completed, ")");
-  console.log("Parsed item_description:", item_description, "(type:", typeof item_description, ")");
+  console.log(
+    "Parsed is_completed:",
+    is_completed,
+    "(type:",
+    typeof is_completed,
+    ")"
+  );
+  console.log(
+    "Parsed item_description:",
+    item_description,
+    "(type:",
+    typeof item_description,
+    ")"
+  );
   console.log("User ID from token:", userId);
-  console.log("Is User Team Lead (from verifyToken middleware):", isUserTeamLead);
+  console.log(
+    "Is User Team Lead (from verifyToken middleware):",
+    isUserTeamLead
+  );
   // KẾT THÚC LOG QUAN TRỌNG
 
   try {
@@ -164,50 +196,77 @@ exports.updateChecklistItem = async (req, res) => {
       console.log("SERVER LOG: Checklist item not found for ID:", checklistId);
       return res.status(404).json({ message: "Checklist item not found" });
     }
-    console.log("SERVER LOG: Found checklist item. Task assigned to:", checklist.task.assigned_to);
+    console.log(
+      "SERVER LOG: Found checklist item. Task assigned to:",
+      checklist.task.assigned_to
+    );
 
     let needsSave = false;
 
     // Trường hợp 1: Cập nhật item_description (chỉ team lead)
-    if (item_description !== undefined) { // Chỉ xử lý nếu item_description được cung cấp
-      console.log("SERVER LOG: Attempting to update item_description to:", item_description);
-      if (!isUserTeamLead) {
-        console.log(`SERVER LOG: User ${userId} is NOT a team lead. Denying update for item_description.`);
-        return res.status(403).json({ message: "Only team leads can edit subtask descriptions." });
-      }
-      console.log(`SERVER LOG: User ${userId} IS a team lead. Allowing update for item_description.`);
+    if (isUserTeamLead) {
+      console.log(
+        "SERVER LOG: Attempting to update item_description to:",
+        item_description
+      );
+      console.log(
+        `SERVER LOG: User ${userId} IS a team lead. Allowing update for item_description.`
+      );
       checklist.item_description = item_description;
       needsSave = true;
     }
 
     // Trường hợp 2: Cập nhật is_completed (chỉ người được giao)
-    if (is_completed !== undefined) { // Chỉ xử lý nếu is_completed được cung cấp
-      console.log("SERVER LOG: Attempting to update is_completed to:", is_completed);
-      if (typeof is_completed !== 'boolean') {
-         console.log("SERVER LOG: Invalid is_completed value provided. Must be boolean. Received:", is_completed);
-         return res.status(400).json({ message: "Invalid is_completed value. Must be boolean."});
+    if (is_completed !== undefined) {
+      // Chỉ xử lý nếu is_completed được cung cấp
+      console.log(
+        "SERVER LOG: Attempting to update is_completed to:",
+        is_completed
+      );
+      if (typeof is_completed !== "boolean") {
+        console.log(
+          "SERVER LOG: Invalid is_completed value provided. Must be boolean. Received:",
+          is_completed
+        );
+        return res
+          .status(400)
+          .json({ message: "Invalid is_completed value. Must be boolean." });
       }
       if (checklist.task.assigned_to !== userId) {
         // Nếu muốn team lead cũng có thể tick:
         // if (checklist.task.assigned_to !== userId && !isUserTeamLead) {
-        console.log(`SERVER LOG: User ${userId} is NOT assigned to this task (assigned to ${checklist.task.assigned_to}). Denying update for is_completed.`);
-        return res.status(403).json({ message: "Only the assigned user can update subtask completion status." });
+        console.log(
+          `SERVER LOG: User ${userId} is NOT assigned to this task (assigned to ${checklist.task.assigned_to}). Denying update for is_completed.`
+        );
+        return res.status(403).json({
+          message:
+            "Only the assigned user can update subtask completion status.",
+        });
       }
-      console.log(`SERVER LOG: User ${userId} IS assigned to this task. Allowing update for is_completed.`);
+      console.log(
+        `SERVER LOG: User ${userId} IS assigned to this task. Allowing update for is_completed.`
+      );
       checklist.is_completed = is_completed;
       needsSave = true;
     }
 
     if (!needsSave) {
       // Điều này xảy ra nếu client gửi body rỗng hoặc body không chứa is_completed hoặc item_description
-      console.log("SERVER LOG: No valid data provided for update (neither is_completed nor item_description was present or valid).");
-      return res.status(400).json({ message: "No valid data for update. Provide 'is_completed' or 'item_description'." });
+      console.log(
+        "SERVER LOG: No valid data provided for update (neither is_completed nor item_description was present or valid)."
+      );
+      return res.status(400).json({
+        message:
+          "No valid data for update. Provide 'is_completed' or 'item_description'.",
+      });
     }
 
     await checklist.save();
-    console.log("SERVER LOG: Checklist item updated successfully for ID:", checklistId);
+    console.log(
+      "SERVER LOG: Checklist item updated successfully for ID:",
+      checklistId
+    );
     res.status(200).json({ message: "Checklist item updated successfully." });
-
   } catch (error) {
     console.error("SERVER LOG: Error updating checklist item:", error);
     res.status(500).json({ message: "Server error: " + error.message });
@@ -227,7 +286,9 @@ exports.deleteChecklistItem = async (req, res) => {
     }
     if (!isTeamLead) {
       console.log("Unauthorized: Not a team lead");
-      return res.status(403).json({ message: "Only team leads can delete subtasks" });
+      return res
+        .status(403)
+        .json({ message: "Only team leads can delete subtasks" });
     }
 
     await checklist.destroy();
@@ -244,7 +305,12 @@ exports.updateTask = async (req, res) => {
   const { status, progress_percentage } = req.body;
   const userId = req.userId;
 
-  console.log("Updating task:", { taskId, status, progress_percentage, userId });
+  console.log("Updating task:", {
+    taskId,
+    status,
+    progress_percentage,
+    userId,
+  });
 
   try {
     const task = await Task.findByPk(taskId);
@@ -253,12 +319,18 @@ exports.updateTask = async (req, res) => {
       return res.status(404).json({ message: "Task not found" });
     }
     if (task.assigned_to !== userId) {
-      console.log("Unauthorized: User is not assigned to task", { userId, assignedTo: task.assigned_to });
-      return res.status(403).json({ message: "Only assigned users can update tasks" });
+      console.log("Unauthorized: User is not assigned to task", {
+        userId,
+        assignedTo: task.assigned_to,
+      });
+      return res
+        .status(403)
+        .json({ message: "Only assigned users can update tasks" });
     }
 
     if (status !== undefined) task.status = status;
-    if (progress_percentage !== undefined) task.progress_percentage = progress_percentage;
+    if (progress_percentage !== undefined)
+      task.progress_percentage = progress_percentage;
 
     await task.save();
     console.log("Task updated:", taskId);
@@ -283,7 +355,9 @@ exports.deleteTask = async (req, res) => {
     }
     if (!isTeamLead) {
       console.log("Unauthorized: Not a team lead");
-      return res.status(403).json({ message: "Only team leads can delete tasks" });
+      return res
+        .status(403)
+        .json({ message: "Only team leads can delete tasks" });
     }
 
     await task.destroy();
@@ -332,7 +406,9 @@ exports.createSprint = async (req, res) => {
     });
 
     console.log("Sprint created:", sprint.sprint_id);
-    res.status(201).json({ message: "Sprint created", sprintId: sprint.sprint_id });
+    res
+      .status(201)
+      .json({ message: "Sprint created", sprintId: sprint.sprint_id });
   } catch (error) {
     console.error("Error creating sprint:", error);
     res.status(500).json({ message: "Server error: " + error.message });
@@ -340,7 +416,15 @@ exports.createSprint = async (req, res) => {
 };
 
 exports.createTask = async (req, res) => {
-  const { title, description, sprint_id, due_date, status, subtasks, assigned_to } = req.body;
+  const {
+    title,
+    description,
+    sprint_id,
+    due_date,
+    status,
+    subtasks,
+    assigned_to,
+  } = req.body;
   console.log("Creating task:", { title, sprint_id, assigned_to });
 
   try {

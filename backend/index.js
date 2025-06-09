@@ -4,7 +4,7 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 
 dotenv.config({ path: "./.env" }); // File .env database
-dotenv.config({ path: "./.github.env" }); // File .env cho GitHub
+dotenv.config({ path: "./.env.github" }); // File .env cho GitHub
 
 app.use(cors());
 app.use(express.json());

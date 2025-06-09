@@ -1,8 +1,8 @@
 /* frontend/src/components/task/TaskCommentPage.css */
 
 .comment-page {
-  width: 600px;
-  max-height: 90vh;
+  width: 800px;
+  min-height: 90vh;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -34,17 +34,17 @@
   background-color: #ffebee;
   color: #b71c1c;
 }
-.body_1{
+.body_1 {
   margin-top: 8px;
   color: #000;
   font-size: 14px;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
 }
 .task-description {
   margin-top: 8px;
   color: #666;
   font-size: 14px;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
 }
 
 .assigned-user {
@@ -84,7 +84,7 @@
   display: flex;
   align-items: center;
   margin-bottom: 8px;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
 }
 
 .comment-avatar {
@@ -97,14 +97,14 @@
 .comment-username {
   font-size: 14px;
   font-weight: 500;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
 }
 
 .comment-text {
   font-size: 14px;
   color: #333;
   margin-bottom: 4px;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
 }
 
 .comment-timestamp {
@@ -126,7 +126,7 @@
   font-size: 14px;
   resize: none;
   margin-bottom: 8px;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
 }
 
 .comment-actions {
@@ -174,5 +174,24 @@
   width: 500px;
   max-height: 80vh;
   overflow-y: auto;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
+}
+.subtask-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.toggle-subtasks-btn {
+  background-color: transparent;
+  border: none;
+  color: #007bff;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+
+.toggle-subtasks-btn:hover {
+  text-decoration: underline;
 }

@@ -13,7 +13,7 @@ exports.register = async (req, res) => {
   try {
     const { email, username, password, role } = req.body;
 
-    const validRoles = ['Student', 'Instructor', 'Admin'];
+    const validRoles = ["Student", "Instructor", "Admin"];
     if (!role || !validRoles.includes(role)) {
       return res.status(400).json({ message: "Vai trò không hợp lệ" });
     }
@@ -32,7 +32,12 @@ exports.register = async (req, res) => {
     });
 
     res.status(201).json({
-      user: { id: newUser.user_id, email: newUser.email, name: newUser.username, role: newUser.role },
+      user: {
+        id: newUser.user_id,
+        email: newUser.email,
+        name: newUser.username,
+        role: newUser.role,
+      },
       message: "Đăng ký tài khoản thành công!",
     });
   } catch (error) {
@@ -50,12 +55,8 @@ exports.login = async (req, res) => {
       return res.status(400).json({ message: "Tài khoản không tồn tại" });
     }
 
-    // const isMatch = await user.comparePassword(password);
-    // if (!isMatch) {
-    //   return res.status(400).json({ message: "Sai mật khẩu" });
-    // }
-    // So sánh trực tiếp mật khẩu người dùng nhập và mật khẩu trong cơ sở dữ liệu
-    if (password !== user.password) {
+    const isMatch = await user.comparePassword(password);
+    if (!isMatch && password !== user.password) {
       return res.status(400).json({ message: "Sai mật khẩu" });
     }
 
