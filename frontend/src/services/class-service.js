@@ -105,7 +105,7 @@ export async function JoinClass({ joinCode }) {
 export async function ImportClass(formData, classId) {
   try {
     const response = await fetch(
-      `http://localhost:5000/api/class/${classId}/instructor`,
+      `http://localhost:5000/api/class/${classId}/import`,
       {
         method: "POST",
         body: formData,

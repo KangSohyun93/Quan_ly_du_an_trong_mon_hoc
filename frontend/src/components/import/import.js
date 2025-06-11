@@ -12,7 +12,7 @@ const ImportHeader = ({ classId }) => {
     try {
       const form = event.target;
       const formData = new FormData();
-      formData.append("avatar", form.avatar.files[0]);
+      formData.append("file_class", form.file_class.files[0]);
       const data = await ImportClass(formData, classId);
       alert("Import thành công!");
       window.location.reload();
@@ -53,7 +53,7 @@ const ImportHeader = ({ classId }) => {
         </label>
         <input
           type="file"
-          name="avatar"
+          name="file_class"
           id="upload_file"
           className="import-file-input"
           onChange={handleFileChange}

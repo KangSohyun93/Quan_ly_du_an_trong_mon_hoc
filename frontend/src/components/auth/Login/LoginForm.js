@@ -25,6 +25,14 @@ function LoginForm() {
     try {
       const userData = await loginUser({ email, password });
       console.log("Đăng nhập thành công:", userData);
+      if (userData.user.is_active === false) {
+        // Nếu tài khoản bị khóa, hiển thị thông báo lỗi
+        setError(
+          "Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên."
+        );
+        setLoading(false);
+        return;
+      }
       localStorage.setItem("user", JSON.stringify(userData.user));
       sessionStorage.setItem("token", userData.token);
       // Chuyển hướng sau khi đăng nhập

@@ -15,30 +15,29 @@ const { Op } = require("sequelize");
 const jwt = require("jsonwebtoken");
 
 exports.importClass = async (req, res) => {
+  console.log("🔥 Đã vào controller importClass");
   try {
     const classId = req.params.id;
     if (!req.file) return res.status(400).send("No file uploaded");
 
     const filePath = req.file.path;
+    const workbook = xlsx.readFile(filePath); // ✅ Đọc file từ ổ đĩa
+    const sheet = workbook.Sheets[workbook.SheetNames[0]];
+    const data = xlsx.utils.sheet_to_json(sheet, { header: 1 }); // Dạng mảng
 
-    const workbook = xlsx.readFile(filePath);
-    const sheetName = workbook.SheetNames[0];
-    const worksheet = workbook.Sheets[sheetName];
-    const data = xlsx.utils.sheet_to_json(worksheet);
+    console.log(Object.keys(data[0]));
 
     for (let i = 1; i < data.length; i++) {
       const row = data[i];
-      const groupNumber = row.__EMPTY;
-      const email = row.__EMPTY_1?.trim().toLowerCase();
-      const isLeader = row.__EMPTY_2 === "Yes";
-      const groupName = row.__EMPTY_3;
-      const projectName = row.__EMPTY_4;
-      const description = row.__EMPTY_5;
-      const toolsUsed = row.__EMPTY_6;
-      const linkGit = row.__EMPTY_7;
-
-      if (!email) continue;
-
+      const groupNumber = row[0]; // cột 0
+      const email = row[1]?.trim().toLowerCase(); // cột 1
+      const isLeader = row[2]?.toLowerCase() === "yes"; // cột 2
+      const groupName = row[3];
+      const projectName = row[4];
+      const description = row[5];
+      const toolsUsed = row[6];
+      const linkGit = row[7];
+      if (!email || !groupNumber) continue;
       // Tìm user theo email
       const user = await User.findOne({ where: { email } });
       if (!user) continue;

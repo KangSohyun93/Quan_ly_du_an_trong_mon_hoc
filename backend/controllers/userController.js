@@ -229,9 +229,9 @@ exports.changePassword = async (req, res) => {
       return res.status(404).json({ message: "Người dùng không tồn tại" });
     }
 
-    //const isMatch = await user.comparePassword(oldPassword);
-    // so sánh truc tiếp mật khẩu người dùng nhập và mật khẩu trong cơ sở dữ liệu
-    const isMatch = oldPassword === user.password;
+    const isMatch =
+      (await user.comparePassword(oldPassword)) || // Nếu bạn sử dụng bcrypt để so sánh mật khẩu
+      oldPassword === user.password; // Nếu không mã hóa mật khẩu
     if (!isMatch) {
       return res.status(400).json({ message: "Mật khẩu cũ không đúng" });
     }
