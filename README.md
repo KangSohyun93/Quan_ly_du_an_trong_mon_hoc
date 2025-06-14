@@ -75,8 +75,8 @@ cd frontend
 npm start
 
 IV.	Một số tài khoản để test thử hệ thống
-            Tài khoản	            Mật khẩu
-Admin	    admin1@example.com	    hashed_password_34
-Instructor	smith@example.com	    hashed_password_31
-Student	    student1@example.com	hashed_password_1
-Leader	    student4@example.com	hashed_password_4
+            Tài khoản	             Mật khẩu
+Admin	      admin1@example.com	    hashed_password_34
+Instructor	 smith@example.com	     hashed_password_31
+Student	    student1@example.com	  hashed_password_1
+Leader	     student4@example.com	  hashed_password_4
