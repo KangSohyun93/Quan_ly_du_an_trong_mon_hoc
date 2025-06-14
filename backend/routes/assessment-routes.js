@@ -11,7 +11,7 @@ const {
   InstructorEvaluation,
   User,
   GroupMember, // Added for student check
-} = require("../models");
+} = require("./models");
 
 router.get(
   "/groups/:groupId/projects/:projectId/peerassessments/:assessorId",
